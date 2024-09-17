@@ -1,0 +1,10 @@
+# Temporary files
+*.swp
+~*
+
+# Compilation files
+*.o
+*.a
+a.out
+pipex
+minishell
