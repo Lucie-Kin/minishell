@@ -1,23 +1,20 @@
-// THIS IS MINISHELL DEBUT PROJECT //
-
 CC = cc 
 CFLAGS = -Wall -Werror -Wextra
 LDFLAGS = -lncurses -lreadline -lhistory
 RM = rm -f
 
 NAME = minishell
-
+HDR = minishell.h
 SRC = main.c
-
 OBJ = $(SRC:.c=.o)
 
-c.o.:
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-all: $(NAME)
+%.o: %.c $(HDR)
+	$(CC) $(CFLAGS) -I. -o $@ -c $<
 
 clean:
 	$(RM) $(OBJ)
