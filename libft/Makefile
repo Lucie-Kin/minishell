@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Werror -fPIC
 NAME = libft.a
 
 HDR_LIBFT = libft.h
-SRC_LIBFT = $(wildcard */*.c)
+SRC_LIBFT = $(wildcard *.c)
 OBJ_LIBFT = $(SRC_LIBFT:.c=.o)
 
 all: $(NAME)

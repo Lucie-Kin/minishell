@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   check_file.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:35:43 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 18:14:25 by libousse         ###   ########.fr       */
+/*   Created: 2024/09/10 16:02:55 by libousse          #+#    #+#             */
+/*   Updated: 2024/09/17 17:47:23 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_bzero(void *s, size_t n)
+int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 {
-	size_t	i;
-	char	*dest;
-
-	i = 0;
-	dest = s;
-	while (i < n)
+	if (mode == W_OK && access(file, F_OK) < 0)
 	{
-		dest[i] = 0;
-		++i;
+		errno = 0;
+		return (1);
 	}
-	return ;
+	else if (access(file, mode) < 0)
+	{
+		if (catch_err)
+		{
+			pl->exit_code = errno;
+			pl->err_msg = compose_err_msg(SHELL_NAME, file,
+					strerror(pl->exit_code));
+			if (pl->exit_code == EACCES)
+				pl->exit_code = EPERM;
+		}
+		return (0);
+	}
+	return (1);
 }

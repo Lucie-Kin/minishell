@@ -1,14 +1,20 @@
 CC = cc 
 CFLAGS = -Wall -Werror -Wextra
-LDFLAGS = -lncurses -lreadline -lhistory
+LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
 RM = rm -f
 
 NAME = minishell
 HDR = minishell.h
-SRC = main.c
+SRC = main.c $(wildcard parser/*.c) $(wildcard executor/*.c) $(wildcard utils/*.c)
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
+LIBFT_DIR = libft
+LIBFT_BIN = $(LIBFT_DIR)/libft.a
+
+all: $(LIBFT_BIN) $(NAME)
+
+$(LIBFT_BIN):
+	$(MAKE) -C libft
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
