@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/12 14:52:17 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/09/16 16:17:27 by lchauffo         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 // AUTHORISED FUNCTIONS //
 // readline, rl_clear_history, rl_on_new_line,
 // rl_replace_line, rl_redisplay, add_history,
