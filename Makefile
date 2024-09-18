@@ -1,5 +1,5 @@
 CC = cc 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Wextra #-Werror
 LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
 RM = rm -f
 

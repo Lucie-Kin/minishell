@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 17:57:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:31:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	char	*raw_cmdl;
+
+	raw_cmdl = readline("$ ");
+	printf("Entered command is: \"%s\"\n", raw_cmdl);
+	free(raw_cmdl);
+	return (0);
+
+	/*
 	t_pl	pl;
 
 	// Init stuff
@@ -23,6 +31,7 @@ int	main(int argc, char **argv, char **envp)
 		return (free_pipeline_resources_in_parent(&pl));
 	// Pipeline itself should be good
 	return (execute_pipeline(&pl));
+	*/
 }
 
 /*
