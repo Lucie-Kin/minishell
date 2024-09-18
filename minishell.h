@@ -6,7 +6,7 @@
 /*   By: lchauffo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/09/17 18:07:37 by libousse         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:58:48 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_pl
 
 char	*compose_err_msg(char *cmd, char *arg, char *msg);
 int		output_error(t_pl *pl);
+int		output_error_UPDATE(int code, char *msg);
 
 /* Parser ------------------------------------------------------------------- */
 

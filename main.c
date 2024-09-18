@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/18 13:31:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:02:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*raw_cmdl;
 
+	if (!envp[0])
+		return (output_error_UPDATE(1, 
+				compose_err_msg(SHELL_NAME, 0, "No environment variable")));
 	raw_cmdl = readline("$ ");
 	printf("Entered command is: \"%s\"\n", raw_cmdl);
 	free(raw_cmdl);
