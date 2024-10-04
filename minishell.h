@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/09/17 18:07:37 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:18:14 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,29 @@
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
+# include <stdarg.h>
 # include <unistd.h>
 # include <dirent.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <curses.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+# include "libbn/libbn.h"
 
-# define SHELL_NAME "minishell"
+# define FALSE 0
+# define TRUE 1
+
+# define SHELL_NAME "bigerrno"
+# define MSG_EXPORT "declare -x"
+# define ERR_EXPORT "not a valid identifier"
+// errno -l : lister les macros d'erreur dans bash
+
+static const char	g_whitespaces[] = {' ', '\t', '\n', '\v', '\f', '\r', '\0'};
 
 typedef struct s_outf
 {
@@ -38,24 +49,32 @@ typedef struct s_outf
 
 typedef struct s_pl
 {
-	int		len;
+	int		len;//taille de...
 	int		index;
-	int		exit_code;
-	char	*err_msg;
+	int		exit_code;//code erreur en sortie
+	char	*err_msg;//message d'erreur en sortie
 	char	**path;
 	char	**envp;
-	char	***cmdl;
-	int		fd_pipe_len;
+	char	***cmdl;//liste des commandes
+	int		fd_pipe_len;//??
 	int		**fd_pipe;
 	int		**hd;
-	char	***inf;
-	t_outf	**outf;
+	char	***inf;//listes de infiles à lire
+	t_outf	**outf;//listes de outfiles où écrire
 	int		*favor_hd;
-	int		fd_hd;
-	int		fd_inf;
-	int		fd_outf;
-	int		fd_src[2];
+	int		fd_hd;//dans le child : fd du fichier temp pour lire les heredocs
+	int		fd_inf;//dans le child : le port du fichier d'entrée
+	int		fd_outf;//dans le child : le port du fichier de sortie
+	int		fd_src[2];//dans le child : pour les ports du pipes, read et write
 }	t_pl;
+
+typedef struct s_list
+{
+	char			*key;
+	char			*value;
+	struct s_list	*next;
+	struct s_list	*prev;
+}	t_list;
 
 /* Utils -------------------------------------------------------------------- */
 
@@ -102,5 +121,23 @@ void	set_output_source(t_pl *pl);
 int		redirect_cmd_io(t_pl *pl);
 
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+
+/* Built-in utils ----------------------------------------------------------- */
+
+t_list	*add_node(t_list **env2, char *key, char *value);
+t_list	*find_key(t_list **env2, char *key);
+char	**convert_charchar(t_list **env2);
+void	update_pwd(t_list **env2);
+void	exec_in_child(t_list **env2, char *cmd, int pipefd[2]);
+char	*find_absolute_path(int pipefd[2]);
+char	*get_absolute_path(t_list **env2);
+void	change_directory(char *path);
+
+/* Built-ins --------------------------------------------------------------- */
+
+void	bigerrno_cd(int argc, char **arg, t_list **env2, int cd);
+void	bigerrno_echo(char **arg, int echo);
+void	bigerrno_pwd(t_list **env2);
+void	bigerrno_exit(char **arg, int exit, int *code_error);
 
 #endif
