@@ -1,39 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   get_pid.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:38:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 00:30:40 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/13 11:55:43 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/13 14:40:44 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+int	get_pid(const char *first_arg)
 {
-	size_t		i;
-	char		*d;
-	const char	*s;
+	int		pid;
+	char	*tmp1;
+	char	*tmp2;
 
-	if (!dest && !src)
-		return (dest);
-	else if (!n)
-		return (dest);
-	else if (dest == src)
-		return (dest);
-	else if (dest < src)
-		return (ft_memcpy(dest, src, n));
-	i = n - 1;
-	d = dest;
-	s = src;
-	while (i > 0)
-	{
-		d[i] = s[i];
-		--i;
-	}
-	d[i] = s[i];
-	return (dest);
+	if (!first_arg)
+		return (0);
+	tmp1 = ft_strjoin("ps aux | grep ", first_arg);
+	tmp2 = ft_strjoin(tmp1, " | grep -v grep | awk '{print $2}' | tail -n 1");
+	free(tmp1);
+	if (!tmp2)
+		return (0);
+	// Circular pipeline to receive the number
+	free(tmp2);
+	pid = 12345;
+	return (pid);
 }

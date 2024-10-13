@@ -1,39 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   array_get.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:38:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 00:30:40 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/04 23:58:53 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/06 11:51:48 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+size_t	get_array_length(void **array)
 {
-	size_t		i;
-	char		*d;
-	const char	*s;
+	size_t	i;
 
-	if (!dest && !src)
-		return (dest);
-	else if (!n)
-		return (dest);
-	else if (dest == src)
-		return (dest);
-	else if (dest < src)
-		return (ft_memcpy(dest, src, n));
-	i = n - 1;
-	d = dest;
-	s = src;
-	while (i > 0)
+	if (!array)
+		return (0);
+	i = 0;
+	while (array[i])
+		++i;
+	return (i);
+}
+
+size_t	find_array_index(void **array, int (*condition)(void *element))
+{
+	size_t	i;
+
+	if (!array || !condition)
+		return (0);
+	i = 0;
+	while (array[i])
 	{
-		d[i] = s[i];
-		--i;
+		if (condition(array[i]))
+			return (i);
+		++i;
 	}
-	d[i] = s[i];
-	return (dest);
+	return (i);
 }

@@ -6,5 +6,4 @@
 *.o
 *.a
 a.out
-pipex
 minishell

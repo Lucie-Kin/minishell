@@ -1,39 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:38:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 00:30:40 by libousse         ###   ########.fr       */
+/*   Created: 2024/04/22 09:41:42 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/03 16:09:08 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+int	ft_toupper(int c)
 {
-	size_t		i;
-	char		*d;
-	const char	*s;
-
-	if (!dest && !src)
-		return (dest);
-	else if (!n)
-		return (dest);
-	else if (dest == src)
-		return (dest);
-	else if (dest < src)
-		return (ft_memcpy(dest, src, n));
-	i = n - 1;
-	d = dest;
-	s = src;
-	while (i > 0)
-	{
-		d[i] = s[i];
-		--i;
-	}
-	d[i] = s[i];
-	return (dest);
+	if (ft_islower(c))
+		return (c - 32);
+	return (c);
 }

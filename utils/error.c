@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*compose_err_msg(char *cmd, char *arg, char *msg)
+char	*compose_err_msg(const char *cmd, const char *arg, const char *msg)
 {
 	char	*str1;
 	char	*str2;

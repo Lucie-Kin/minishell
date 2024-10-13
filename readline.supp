@@ -7,3 +7,11 @@
    fun:readline
    ...
 }
+{
+   readline_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:add_history
+   ...
+}
