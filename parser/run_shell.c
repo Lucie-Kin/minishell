@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_shell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 16:05:59 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:58:19 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ static void	process_current_line(t_sh *sh)
 		sh->rl.tokens = 0;
 		if (sh->ex)
 		{
-			//if only_builtin -> execute builtin and no pipe
+			//if 1 command and isbuiltin -> execute builtin without forking
 			sh->exit_code = execute_pipeline(sh);
-			//pop_head_ex(sh); // It's a linked list, so you need a loop or smth
+			pop_head_ex(sh); // It's a linked list, so you need a loop or smth
 		}
 	}
 	unlink_heredocs(sh);

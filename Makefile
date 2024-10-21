@@ -6,8 +6,8 @@ RM = rm -f
 NAME = minishell
 HDR = minishell.h
 
-SRC = main.c $(wildcard parser/*.c) $(wildcard executor/*.c) $(wildcard utils/*.c) \
-	$(wildcard libbn/*.c) $(wildcard built-in/*.c)
+SRC = main.c $(wildcard parser/*.c) $(wildcard executor/*.c) \
+	$(wildcard utils/*.c) $(wildcard libbn/*.c) $(wildcard built-in/*.c)
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR = libft

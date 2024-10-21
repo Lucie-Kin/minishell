@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/20 14:14:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:52:47 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(void);
 char	***get_pl_cmdl(t_sh *sh, size_t len);
+void	*destroy_pl_cmdl(char ***cmdl);
 char	***get_pl_inf(t_pl *pl, char **hd_dup);
+void	*destroy_pl_inf(char ***inf);
 t_outf	**get_pl_outf(t_pl *pl);
+void	*destroy_pl_outf(t_outf **outf);
 void	clean_pl_tokens(t_pl *pl);
 char	*process_ansi_c_quoting(char *s, size_t *i, char **quote);
 char	*get_escaped_token(const char *s);

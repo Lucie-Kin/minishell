@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 14:45:52 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:58:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	pop_head_ex(t_sh *sh)
 	exit_code = sh->ex->pl.exit_code;
 	next = sh->ex->next;
 	free_entire_array((void **)sh->ex->pl.path, free);
+	free_entire_array((void **)sh->ex->pl.fd_pipe, free);
 	destroy_pl_cmdl(sh->ex->pl.cmdl);
 	destroy_pl_inf(sh->ex->pl.inf);
 	destroy_pl_outf(sh->ex->pl.outf);

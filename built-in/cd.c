@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 16:29:30 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:09:18 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_list	*find_key(t_list **env2, char *key)
 		return (perror("No env or key found\n"), NULL);
 	while (list)
 	{
-		if (isstrstr(list->key, key) == TRUE)
+		if (bn_isstrstr(list->key, key) == TRUE)
 			return (list);
 		list = list->next;
 	}
@@ -55,7 +55,7 @@ void	change_directory(char *path)
 		perror("2 Failed to change directory");
 }
 
-void	bigerrno_cd(char **arg, t_list **env2)
+void	bigerrno_cd(t_list **env2, char **arg)
 {
 	int	arg_len;
 
@@ -78,7 +78,6 @@ void	bigerrno_cd(char **arg, t_list **env2)
 		change_directory(arg[1]);
 	update_pwd(env2);
 }
-
 
 // sh->ex->pl.cmdl[sh->ex->pl.index]
 // sh->ex->pl.cmdl[sh->ex->pl.index][index] == cd

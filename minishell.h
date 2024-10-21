@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 15:24:19 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:51:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
 // errno -l : lister les macros d'erreur dans bash
-
-static const char	g_whitespaces[] = {' ', '\t', '\n', '\v', '\f', '\r', '\0'};
 
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
@@ -121,11 +119,33 @@ typedef struct s_list
 	struct s_list	*prev;
 }	t_list;
 
+/* Parser ------------------------------------------------------------------- */
+
+int		get_pid(const char *first_arg);
+void	run_shell(t_sh *sh);
+void	free_shell(t_sh *sh);
+char	*get_clean_token(const char *s);
+
+/* Executor ----------------------------------------------------------------- */
+
+int		execute_pipeline(t_sh *sh);
+int		execute_subprocess(t_pl *pl);
+int		pop_head_ex(t_sh *sh);
+void	destroy_all_ex(t_sh *sh);
+
+int		**open_pipes(t_pl *pl);
+void	close_pipes(int **pipes, int len);
+void	close_unused_pipes(int index, int **pipes, int pipe_len);
+int		set_last_infile_fd(t_pl *pl, int catch_err);
+int		set_last_outfile_fd(t_pl *pl, int catch_err);
+int		redirect_cmd_io(t_pl *pl);
+
+int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+
 /* Utils -------------------------------------------------------------------- */
 
 char	*compose_err_msg(const char *cmd, const char *arg, const char *msg);
-int		output_error(t_pl *pl);
-int		output_error_UPDATE(int code, char *msg);
+int		output_error(int code, char *msg);
 
 char	*insert_str_before_char(const char *s, size_t i, const char *to_insert);
 char	*remove_str(const char *s, size_t i, size_t len_to_remove);
@@ -144,42 +164,24 @@ void	free_entire_array(void **array, void (*free_element)(void *));
 
 void	set_pwd_backup(t_sh *sh, const char *value);
 
-/* Parser ------------------------------------------------------------------- */
-
-int		get_pid(const char *first_arg);
-void	run_shell(t_sh *sh);
-void	free_shell(t_sh *sh);
-char	*get_clean_token(const char *s);
-char	*get_escaped_token_for_echo(const char *s, int *is_c_found);
-char	*get_literal_token_for_export(const char *s);
-
-/* Executor ----------------------------------------------------------------- */
-
-int		execute_pipeline(t_sh *sh);
-int		execute_subprocess(t_pl *pl);
-
-int		**open_pipes(t_pl *pl);
-void	close_pipes(int **pipes, int len);
-void	close_unused_pipes(int index, int **pipes, int pipe_len);
-int		set_last_infile_fd(t_pl *pl, int catch_err);
-int		set_last_outfile_fd(t_pl *pl, int catch_err);
-int		redirect_cmd_io(t_pl *pl);
-
-int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
-
-void	*destroy_pl_cmdl(char ***cmdl);
-void	*destroy_pl_inf(char ***inf);
-void	*destroy_pl_outf(t_outf **outf);
-void	destroy_all_ex(t_sh *sh);
-int		pop_head_ex(t_sh *sh);
-
-/* Utils list -------------------------------------------------------------- */
+/* Utils list --------------------------------------------------------------- */
 
 t_list	*lst_last(t_list *last);
 t_list	*lstadd_back(t_list **lst, t_list *new);
 t_list	*lst_new(char *key, char *value);
 void	lst_clear(t_list **lst);
 int		list_size(t_list **lst);
+
+/* Built-ins ---------------------------------------------------------------- */
+
+void	bigerrno_cd(t_list **env2, char **arg);
+void	bigerrno_echo(char **arg);
+void	bigerrno_env(t_list **env2, char **arg);
+void	bigerrno_exit(char **arg, int *code_error, char **msg);
+void	bigerrno_export(t_list **env2, t_list **hidden, char **arg);
+char	*bigerrno_getenv(t_list **env2, char *key);
+void	bigerrno_pwd(t_list **env2);
+void	bigerrno_unset(t_list **env2, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
@@ -195,17 +197,22 @@ char	*get_absolute_path(t_list **env2);
 void	change_directory(char *path);
 int		valid_keyvalue(char *key, char *value);
 void	print_in_p_order(t_list **env2);
-
-/* Built-ins --------------------------------------------------------------- */
-
-void	bigerrno_cd(int argc, char **arg, t_list **env2, int cd);
-void	bigerrno_echo(char **arg, int echo);
-void	bigerrno_pwd(t_list **env2);
-void	bigerrno_exit(char **arg, int exit, int *code_error);
-void	*destroy_pl_cmdl(char ***cmdl);
-void	*destroy_pl_inf(char ***inf);
-void	*destroy_pl_outf(t_outf **outf);
-void	destroy_all_ex(t_sh *sh);
-int		pop_head_ex(t_sh *sh);
+char	*get_literal_token(const char *s);
+char	*get_echo_escaped_token(const char *s, int *is_c_found);
+t_list	*find_smallest_p(t_list **p_order);
+t_list	*find_biggest_p(t_list **p_order);
+t_list	*next_smallest(t_list **p_order, t_list *smallest);
+void	lst_clear(t_list **lst);
+void	clear_node(t_list *node);
+void	swap_param(void **to_be_swap, void **swap_with);
+void	swap_node(t_list **s1, t_list **s2);
+int		valid_keyvalue(char *key, char *value);
+void	print_list(t_list **list, int export);
+t_list	*alpha_order_list(t_list **env2);
+int		init_expand(char ***expand);
+int		remove_tab_elements(char ***tab, int to_remove);
+char	**clean_expand(char **expand);
+char	**alpha_order(char ***order);
+void	print_wildcard(char **print);
 
 #endif

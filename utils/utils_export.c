@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 14:38:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:25:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ t_list	*alpha_order_list(t_list **env2)
 	{
 		if (ft_strcmp(ordered->value, ordered->next->value) > 0)
 		{
-			if (ft_strcmp(ordered->value, start) == 0)
-				start = ordered->next->value;
-			swap_node(ordered, ordered->next);
+			if (ft_strcmp(ordered->value, start->value) == 0)
+				start = ordered->next;
+			swap_node(&ordered, &ordered->next);
 			ordered = start;
 		}
 		else

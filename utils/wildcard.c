@@ -6,14 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 18:26:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 14:38:50 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:59:23 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "../minishell.h"
-#include "test.h"
-
-//bash: gnl/get_next_line.c: Permission denied --> Feature not included
+#include "../minishell.h"
 
 int	end_with_wildcard(char *arg_i, char **expand, int j)
 {

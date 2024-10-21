@@ -6,12 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 16:30:56 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:56:21 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//Add char	*get_escaped_token(const char *s, int *is_c_found)
 
 void	echo_option(char **arg, int *skip_newline, int *with_backlash,
 		int *count)
@@ -20,14 +19,14 @@ void	echo_option(char **arg, int *skip_newline, int *with_backlash,
 	*with_backlash = 0;
 	*count = 1;
 	while (arg[*count] && arg[*count][0] == '-'
-		&& (ft_iter(&arg[*count][1], 'n') == TRUE
-		|| ft_iter(&arg[*count][1], 'e') == TRUE))
+		&& (bn_countiter(&arg[*count][1], 'n') > 0
+		|| bn_countiter(&arg[*count][1], 'e') > 0))
 	{
 		if (arg[*skip_newline][1] == 'n')
 			*skip_newline = 2;
 		else if (arg[*skip_newline][1] == 'e')
-			*with_backlash++;
-		*count++;
+			(*with_backlash)++;
+		(*count)++;
 	}
 }
 
@@ -39,7 +38,7 @@ void	bigerrno_echo(char **arg)
 	int		count;
 	char	*parsed;
 
-	echo_option(arg, skip_nl, with_backlash, count);
+	echo_option(arg, &skip_nl, &with_backlash, &count);
 	to_be_echoed = count;
 	while (arg[to_be_echoed])
 	{
@@ -47,7 +46,7 @@ void	bigerrno_echo(char **arg)
 			write(1, " ", 1);
 		if (with_backlash > 0)
 		{
-			parsed = get_escaped_token_for_echo(arg[to_be_echoed], &skip_nl);
+			parsed = get_echo_escaped_token(arg[to_be_echoed], &skip_nl);
 			write(1, parsed, ft_strlen(parsed));
 			if (skip_nl == 1)
 				break ;

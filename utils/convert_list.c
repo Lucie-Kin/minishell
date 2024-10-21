@@ -6,14 +6,14 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:28:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/18 13:48:47 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:45:21 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // ranger la liste selon l'ordre des pointeurs
-//!\\ si SHLVL n'existe pas ajouter + compte le nombre shellception //!\\ 
+//!\\ si SHLVL n'existe pas ajouter + compte le nombre shellception !!! 
 // new = lst_new(key , ft_strdup(env[i] + size));
 
 //-----------------------------------------------------------------------------

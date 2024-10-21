@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_escaped_token_for_echo.c                       :+:      :+:    :+:   */
+/*   echo_escaped_token.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:59:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/09 18:31:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:54:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	process_hexadecimal_value(char *s);
 	an actual ASCII character. It's replaced with '\0' and also acts as the -n 
 	option.
 */
-char	*get_escaped_token_for_echo(const char *s, int *is_c_found)
+char	*get_echo_escaped_token(const char *s, int *is_c_found)
 {
 	size_t	i;
 	char	*parsed;

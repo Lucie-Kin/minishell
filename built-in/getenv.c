@@ -6,13 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/04 15:58:19 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:19:16 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	bigerrno_getenv(t_list **env2, char *key)
+char	*bigerrno_getenv(t_list **env2, char *key)
 {
 	t_list	*var;
 

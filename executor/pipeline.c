@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 16:24:28 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:55:51 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,10 @@ static int	temporary_exit_feature(t_sh *sh)
 
 static int	free_pipeline_resources(t_pl *pl)
 {
-	free_entire_array((void **)pl->path, free);
 	close_pipes(pl->fd_pipe, pl->fd_pipe_len);
-	free_entire_array((void **)pl->fd_pipe, free);
-	destroy_pl_cmdl(pl->cmdl);
-	destroy_pl_inf(pl->inf);
-	destroy_pl_outf(pl->outf);
-	return (output_error(pl));
+	output_error(pl->exit_code, pl->err_msg);
+	pl->err_msg = 0;
+	return (pl->exit_code);
 }
 
 static void	fork_subprocesses(t_sh *sh, int *pid)

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 16:35:18 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:09:44 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	add_or_update_var(t_list **env2, char **key_value)
 	}
 	var = find_key(env2, key);
 	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
-		var->value = ft_strjoin(var->value, get_literal_token_for_export(key_value[1]));
+		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
 	else if (var && key_value[1])
 	{
 		free(var->value);
-		var->value = ft_strdup(get_literal_token_for_export(key_value[1]));
+		var->value = ft_strdup(get_literal_token(key_value[1]));
 	}
 	else if (key_value[1])
-		add_node(env2, key_value[0], get_literal_token_for_export(key_value[1]));
+		add_node(env2, key_value[0], get_literal_token(key_value[1]));
 	else
 		perror(ERR_EXPORT);
 	if (var->value)
@@ -65,7 +65,7 @@ char	**parse_key_value(char *to_separate)
 //t_struct invisible_env >> key=0 -> value=readline(first entry);
 // ./minishell or /directory/minishell == argv(0)
 //gérer if in readline '=', then add new entry
-//when bash, increment SHLVL++ //!\\ 
+//when bash, increment SHLVL++ !!!
 
 t_list	*update_var(t_list **hidden, t_list *var, t_list **start)
 {
@@ -92,7 +92,6 @@ void	update_env(t_list **env2, t_list **hidden)
 {
 	t_list	*start;
 	t_list	*var;
-	char	*key;
 
 	if (!hidden)
 		return ;
@@ -115,7 +114,7 @@ void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
 	int		n;
 
 	n = 0;
-	update_env(&env2, hidden);
+	update_env(env2, hidden);
 	alpha_order = alpha_order_list(env2);
 	if (!arg[1])
 		print_list(&alpha_order, TRUE);
@@ -134,5 +133,5 @@ void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
 			n++;
 		}
 	}
-	free_list(alpha_order);
+	lst_clear(&alpha_order);
 }

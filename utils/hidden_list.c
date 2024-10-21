@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/16 18:41:39 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:19:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	update_hidden(t_list **hidden, char *token)
 	if (size != -1)
 	{
 		key = bn_strldup(token, size);
-		if (size != ft_strlen(token))
+		if (size != (int)ft_strlen(token))
 			value = ft_strdup(token + size + 1);
 		else
 			value = ft_strdup("");

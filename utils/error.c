@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 18:19:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:04:32 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,7 @@ char	*compose_err_msg(const char *cmd, const char *arg, const char *msg)
 	return (str1);
 }
 
-int	output_error(t_pl *pl)
-{
-	if (pl->exit_code)
-	{
-		ft_putstr_fd(pl->err_msg, 2);
-		free(pl->err_msg);
-		pl->err_msg = 0;
-	}
-	return (pl->exit_code);
-}
-
-int	output_error_UPDATE(int code, char *msg)
+int	output_error(int code, char *msg)
 {
 	if (code)
 	{
