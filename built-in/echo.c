@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/07 12:32:21 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:30:56 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,31 +31,31 @@ void	echo_option(char **arg, int *skip_newline, int *with_backlash,
 	}
 }
 
-void	bigerrno_echo(char **arg, int echo)
+void	bigerrno_echo(char **arg)
 {
 	int		to_be_echoed;
-	int		skip_newline;
+	int		skip_nl;
 	int		with_backlash;
 	int		count;
 	char	*parsed;
 
-	echo_option(arg + echo, skip_newline, with_backlash, count);
-	to_be_echoed = echo + count;
+	echo_option(arg, skip_nl, with_backlash, count);
+	to_be_echoed = count;
 	while (arg[to_be_echoed])
 	{
-		if (to_be_echoed != echo + count)
+		if (to_be_echoed != count)
 			write(1, " ", 1);
 		if (with_backlash > 0)
 		{
-			parsed = get_escaped_token(arg[to_be_echoed], &skip_newline);
+			parsed = get_escaped_token_for_echo(arg[to_be_echoed], &skip_nl);
 			write(1, parsed, ft_strlen(parsed));
-			if (skip_newline == 1)
+			if (skip_nl == 1)
 				break ;
 		}
 		else
 			write(1, arg[to_be_echoed], ft_strlen(arg[to_be_echoed]));
 		to_be_echoed++;
 	}
-	if (skip_newline == 0)
+	if (skip_nl == 0)
 		write(1, "\n", 1);
 }

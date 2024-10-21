@@ -6,13 +6,14 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 15:26:28 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:26:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // PATH >> verif si PATH=::, alors replace:: par getcwd, actual path
+//if isbuiltin, execute builtin and ignore execve //!\\ 
 static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 
 int	resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath)

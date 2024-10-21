@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 14:47:49 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:24:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	temporary_exit_feature(t_sh *sh)
 	if (sh->ex->pl.cmdl[0] && sh->ex->pl.cmdl[0][0]
 			&& !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
 	{
-		sh->keep_running = 0;
+		sh->keep_running = FALSE;
 		free_pipeline_resources(&sh->ex->pl);
 		return (1);
 	}

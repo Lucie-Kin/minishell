@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 20:19:33 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:42:39 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ int	main(int argc, char **argv, char **envp)
 	*/
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
-	sh.pid = ft_itoa(get_pid(sh.first_arg));
-	sh.envp = envp;
-	run_shell(&sh);
+	sh.pid = ft_itoa(get_pid(sh.first_arg));//bonus replace cmd getpid
+	sh.envp = envp;//use convert_list.c
+	run_shell(&sh);//increase SHLVL in env
 	free_shell(&sh);
 	/* When forking a subshell, increment `level` within said subshell. */
 	if (sh.level == 0)

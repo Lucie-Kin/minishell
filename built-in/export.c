@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 14:38:08 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:35:18 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	add_or_update_var(t_list **env2, char **key_value)
 	}
 	var = find_key(env2, key);
 	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
-		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
+		var->value = ft_strjoin(var->value, get_literal_token_for_export(key_value[1]));
 	else if (var && key_value[1])
 	{
 		free(var->value);
-		var->value = ft_strdup(get_literal_token(key_value[1]));
+		var->value = ft_strdup(get_literal_token_for_export(key_value[1]));
 	}
 	else if (key_value[1])
-		add_node(env2, key_value[0], get_literal_token(key_value[1]));
+		add_node(env2, key_value[0], get_literal_token_for_export(key_value[1]));
 	else
 		perror(ERR_EXPORT);
 	if (var->value)
@@ -108,7 +108,7 @@ void	update_env(t_list **env2, t_list **hidden)
 	*hidden = start;
 }
 
-void	bigerrno_export(t_list **env2, t_list **hidden, char **arg, int export)
+void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
 {
 	t_list	*alpha_order;
 	char	**key_value;
@@ -117,13 +117,13 @@ void	bigerrno_export(t_list **env2, t_list **hidden, char **arg, int export)
 	n = 0;
 	update_env(&env2, hidden);
 	alpha_order = alpha_order_list(env2);
-	if (!arg[export + 1])
+	if (!arg[1])
 		print_list(&alpha_order, TRUE);
 	else
 	{
-		while (arg[export + 1 + n])
+		while (arg[1 + n])
 		{
-			key_value = parse_key_value(arg[export + 1 + n]);
+			key_value = parse_key_value(arg[1 + n]);
 			if (key_value[2])
 				perror(ERR_EXPORT);
 			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)

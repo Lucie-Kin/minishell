@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/18 15:47:22 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:31:58 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,17 @@ void	error_management(char *cmd, char *wrong_arg, char *msg_error)
 	printf("%s: \'%s\': %s", cmd, wrong_arg, msg_error);
 }
 
-void	bigerrno_env(t_list **env2, char **arg, int env)
+void	bigerrno_env(t_list **env2, char **arg)
 {
-	if (!arg[env + 1])
+	if (!arg[1])
 		print_in_p_order(env2);
-	else if (arg[env +1])
+	else if (arg[1])
 	{
-		if (access(arg[env + 1], F_OK) == TRUE)
-			return (error_management(arg[env], arg[env + 1],
+		if (access(arg[1], F_OK) == TRUE)
+			return (error_management(arg[0], arg[1],
 					"Permission denied"));
 		else
-			return (error_management(arg[env], arg[env + 1],
+			return (error_management(arg[0], arg[1],
 					"No such file or directory"));
 	}
 }

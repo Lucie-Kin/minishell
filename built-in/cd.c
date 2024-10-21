@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/02 17:11:22 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:29:30 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,33 @@ void	change_directory(char *path)
 		perror("2 Failed to change directory");
 }
 
-void	bigerrno_cd(int argc, char **arg, t_list **env2, int cd)
+void	bigerrno_cd(char **arg, t_list **env2)
 {
+	int	arg_len;
+
+	arg_len = bn_linelen(arg);
 	if (!env2)
 		return (perror("env is NULL\n"));
-	if ((argc - cd) > 2)
+	if ((arg_len) > 2)
 		perror("Too many arguments");
-	else if (!arg[cd + 1])
+	else if (!arg[1])
 		change_directory(find_key(env2, "HOME")->value);
-	else if (arg[cd + 1][0] == '~' && arg[cd + 1][0] == '\0')
+	else if (arg[1][0] == '~' && arg[1][0] == '\0')
 		change_directory(get_absolute_path(env2));
-	else if (ft_strcmp(arg[cd + 1], "-") == 0)
+	else if (ft_strcmp(arg[1], "-") == 0)
 	{
 		if (!(chdir(find_key(env2, "OLDPWD")->value) == 0 || chdir(add_node
 					(env2, "OLDPWD", getcwd(NULL, 0))->value) == 0))
 			perror("3 Failed to change directory");
 	}
 	else
-		change_directory(arg[cd + 1]);
+		change_directory(arg[1]);
 	update_pwd(env2);
 }
+
+
+// sh->ex->pl.cmdl[sh->ex->pl.index]
+// sh->ex->pl.cmdl[sh->ex->pl.index][index] == cd
+// nombre de cmd = sh->ex->pl.len
+// char **cmdl
+// ["cd", "truc", "machin", NULL]

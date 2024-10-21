@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/05 17:07:41 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:36:01 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ void	node_clear(t_list *node)
 	free(node);
 }
 
-void	bigerrno_unset(t_list **env2, char **arg, int unset)
+void	bigerrno_unset(t_list **env2, char **arg)
 {
 	int		n;
 	t_list	*node;
 
 	n = 1;
-	while (arg[unset + n])
+	while (arg[n])
 	{
-		node = find_key(env2, arg[unset + n]);
+		node = find_key(env2, arg[n]);
 		if (node)
 			node_clear(node);
 		n++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_shell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 14:48:57 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:05:59 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	unlink_heredocs(t_sh *sh);
 
 void	run_shell(t_sh *sh)
 {
-	sh->keep_running = 1;
+	sh->keep_running = TRUE;
 	set_pwd_backup(sh, getenv("PWD"));
 	init_prompt(sh);
 	while (sh->keep_running)
@@ -89,6 +89,7 @@ static void	process_current_line(t_sh *sh)
 		sh->rl.tokens = 0;
 		if (sh->ex)
 		{
+			//if only_builtin -> execute builtin and no pipe
 			sh->exit_code = execute_pipeline(sh);
 			//pop_head_ex(sh); // It's a linked list, so you need a loop or smth
 		}
