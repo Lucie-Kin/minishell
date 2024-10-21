@@ -1,10 +1,10 @@
 # Temporary files
 *.swp
 ~*
+.heredoc*
 
 # Compilation files
 *.o
 *.a
 a.out
-pipex
 minishell

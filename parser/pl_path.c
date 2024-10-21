@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   pl_path.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:38:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 00:30:40 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/19 18:21:48 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/19 18:26:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parser.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+char	**get_pl_path(void)
 {
-	size_t		i;
-	char		*d;
-	const char	*s;
+	size_t	i;
+	char	**path;
+	char	*tmp;
 
-	if (!dest && !src)
-		return (dest);
-	else if (!n)
-		return (dest);
-	else if (dest == src)
-		return (dest);
-	else if (dest < src)
-		return (ft_memcpy(dest, src, n));
-	i = n - 1;
-	d = dest;
-	s = src;
-	while (i > 0)
+	path = ft_split(getenv("PATH"), ':');
+	if (!path)
+		return (0);
+	i = 0;
+	while (path[i])
 	{
-		d[i] = s[i];
-		--i;
+		tmp = ft_strjoin(path[i], "/");
+		if (!tmp)
+		{
+			free_entire_array((void **)path, free);
+			return (0);
+		}
+		free(path[i]);
+		path[i] = tmp;
+		++i;
 	}
-	d[i] = s[i];
-	return (dest);
+	return (path);
 }

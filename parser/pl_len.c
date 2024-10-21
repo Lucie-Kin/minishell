@@ -1,35 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_file.c                                       :+:      :+:    :+:   */
+/*   pl_len.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/10 16:02:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 17:47:23 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/18 17:10:40 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/18 17:10:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parser.h"
 
-int	check_file(t_pl *pl, char *file, int mode, int catch_err)
+size_t	get_pl_len(char **tokens)
 {
-	if (mode == W_OK && access(file, F_OK) < 0)
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 1;
+	while (tokens[i])
 	{
-		errno = 0;
-		return (1);
+		if (!ft_strcmp(tokens[i], "|"))
+			++len;
+		++i;
 	}
-	else if (access(file, mode) < 0)
-	{
-		if (catch_err)
-		{
-			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg(SHELL_NAME, file,
-					strerror(pl->exit_code));
-			if (pl->exit_code == EACCES)
-				pl->exit_code = EPERM;
-		}
-		return (0);
-	}
-	return (1);
+	return (len);
 }

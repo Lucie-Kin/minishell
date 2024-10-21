@@ -6,72 +6,88 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 17:33:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:47:49 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	fork_subprocesses(t_pl *pl, int *pid);
-static int	wait_for_subprocesses(t_pl *pl, int *pid, int catch_err);
+static int	temporary_exit_feature(t_sh *sh);
+static int	free_pipeline_resources(t_pl *pl);
+static void	fork_subprocesses(t_sh *sh, int *pid);
+static void	wait_for_subprocesses(t_sh *sh, int *pid);
 
-int	execute_pipeline(t_pl *pl)
+int	execute_pipeline(t_sh *sh)
 {
 	int	*pid;
-	int	last_subprocess_exit_code;
 
-	pl->fd_pipe = open_pipes(pl);
-	if (!pl->fd_pipe)
-		return (free_pipeline_resources_in_parent(pl));
-	pid = ft_calloc(pl->len + 1, sizeof(int));
+	if (temporary_exit_feature(sh))
+		return (0);
+	sh->ex->pl.fd_pipe = open_pipes(&sh->ex->pl);
+	if (!sh->ex->pl.fd_pipe)
+		return (free_pipeline_resources(&sh->ex->pl));
+	pid = ft_calloc(sh->ex->pl.len + 1, sizeof(int));
 	if (!pid)
 	{
-		pl->exit_code = ENOMEM;
-		return (free_pipeline_resources_in_parent(pl));
+		sh->ex->pl.exit_code = ENOMEM;
+		return (free_pipeline_resources(&sh->ex->pl));
 	}
-	if (!fork_subprocesses(pl, pid))
-		return (pl->exit_code);
-	free_pipeline_resources_in_parent(pl);
-	last_subprocess_exit_code = wait_for_subprocesses(pl, pid, 1);
+	fork_subprocesses(sh, pid);
+	free_pipeline_resources(&sh->ex->pl);
+	wait_for_subprocesses(sh, pid);
 	free(pid);
-	return (last_subprocess_exit_code);
+	return (sh->ex->pl.exit_code);
 }
 
-int	free_pipeline_resources_in_parent(t_pl *pl)
+static int	temporary_exit_feature(t_sh *sh)
 {
-	pl->index = -1;
-	free_path(pl->path);
-	free_cmdl(pl->cmdl);
+	// This is temporary code
+	if (sh->ex->pl.cmdl[0] && sh->ex->pl.cmdl[0][0]
+			&& !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
+	{
+		sh->keep_running = 0;
+		free_pipeline_resources(&sh->ex->pl);
+		return (1);
+	}
+	return (0);
+}
+
+static int	free_pipeline_resources(t_pl *pl)
+{
+	free_entire_array((void **)pl->path, free);
 	close_pipes(pl->fd_pipe, pl->fd_pipe_len);
-	free_pipes(pl->fd_pipe);
-	free(pl->favor_hd);
-	free_heredocs(pl->hd);
-	free_infiles(pl->inf);
-	free_outfiles(pl->outf);
+	free_entire_array((void **)pl->fd_pipe, free);
+	destroy_pl_cmdl(pl->cmdl);
+	destroy_pl_inf(pl->inf);
+	destroy_pl_outf(pl->outf);
 	return (output_error(pl));
 }
 
-static int	fork_subprocesses(t_pl *pl, int *pid)
+static void	fork_subprocesses(t_sh *sh, int *pid)
 {
-	while (++pl->index < pl->len)
+	int	child_exit_code;
+
+	while (sh->ex->pl.index < sh->ex->pl.len)
 	{
-		pid[pl->index] = fork();
-		if (pid[pl->index] < 0)
+		pid[sh->ex->pl.index] = fork();
+		if (pid[sh->ex->pl.index] < 0)
 		{
-			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg("fork", 0, strerror(pl->exit_code));
-			free_pipeline_resources_in_parent(pl);
-			wait_for_subprocesses(pl, pid, 0);
-			free(pid);
-			return (0);
+			sh->ex->pl.exit_code = errno;
+			sh->ex->pl.err_msg = compose_err_msg("fork", 0,
+					strerror(sh->ex->pl.exit_code));
+			break ;
 		}
-		else if (!pid[pl->index])
+		else if (!pid[sh->ex->pl.index])
 		{
 			free(pid);
-			execute_subprocess(pl);
+			child_exit_code = execute_subprocess(&sh->ex->pl);
+			destroy_all_ex(sh);
+			free_shell(sh);
+			exit(child_exit_code);
 		}
+		++sh->ex->pl.index;
 	}
-	return (1);
+	return ;
 }
 
 /*
@@ -84,7 +100,7 @@ static int	fork_subprocesses(t_pl *pl, int *pid)
 	The macros in `wait_for_subprocesses` are part of `waitpid` and are not 
 	extra functions.
 */
-static int	wait_for_subprocesses(t_pl *pl, int *pid, int catch_err)
+static void	wait_for_subprocesses(t_sh *sh, int *pid)
 {
 	int	i;
 	int	status;
@@ -93,21 +109,17 @@ static int	wait_for_subprocesses(t_pl *pl, int *pid, int catch_err)
 	i = 0;
 	while (pid[i])
 	{
-		if (waitpid(pid[i], &status, 0) < 0 && catch_err)
-		{
-			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg("waitpid", 0,
-					strerror(pl->exit_code));
-			output_error(pl);
-		}
-		else if (WIFEXITED(status))
-			pl->exit_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			signal_number = WTERMSIG(status);
-			pl->exit_code = 128 + signal_number;
-		}
+		waitpid(pid[i], &status, 0);
 		++i;
 	}
-	return (pl->exit_code);
+	if (sh->ex->pl.exit_code)
+		return ;
+	else if (WIFEXITED(status))
+		sh->ex->pl.exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		signal_number = WTERMSIG(status);
+		sh->ex->pl.exit_code = 128 + signal_number;
+	}
+	return ;
 }

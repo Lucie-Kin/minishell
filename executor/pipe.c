@@ -34,7 +34,7 @@ int	**open_pipes(t_pl *pl)
 			pl->exit_code = errno;
 			pl->err_msg = compose_err_msg("pipe", 0, strerror(pl->exit_code));
 			close_pipes(pipes, i);
-			free_pipes(pipes);
+			free_entire_array((void **)pipes, free);
 			return (0);
 		}
 		++i;
@@ -87,19 +87,6 @@ void	close_unused_pipes(int index, int **pipes, int pipe_len)
 	return ;
 }
 
-void	free_pipes(int **pipes)
-{
-	int	i;
-
-	if (!pipes)
-		return ;
-	i = 0;
-	while (pipes[i])
-		free(pipes[i++]);
-	free(pipes);
-	return ;
-}
-
 static int	**allocate_pipes(int pipe_len)
 {
 	int	i;
@@ -114,7 +101,7 @@ static int	**allocate_pipes(int pipe_len)
 		pipes[i] = malloc(2 * sizeof(int));
 		if (!pipes[i])
 		{
-			free_pipes(pipes);
+			free_entire_array((void **)pipes, free);
 			return (0);
 		}
 		++i;

@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   pwd_backup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 09:36:02 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 15:26:59 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/09/21 12:05:17 by libousse          #+#    #+#             */
+/*   Updated: 2024/09/21 12:07:39 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isalnum(int c)
+void	set_pwd_backup(t_sh *sh, const char *value)
 {
-	return (ft_isalpha(c) || ft_isdigit(c));
+	if (value)
+	{
+		free(sh->pwd_backup);
+		sh->pwd_backup = ft_strdup(value);
+	}
+	return ;
 }

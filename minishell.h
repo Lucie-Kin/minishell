@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/16 17:08:01 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:24:19 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@
 
 # define FALSE 0
 # define TRUE 1
+# define SEP 28
+# define LOGOP_COLON 0
+# define LOGOP_OR    1
+# define LOGOP_AND   2
 
 # define SHELL_NAME "bigerrno"
 # define MSG_EXPORT "declare -x"
@@ -41,6 +45,7 @@
 
 static const char	g_whitespaces[] = {' ', '\t', '\n', '\v', '\f', '\r', '\0'};
 
+/* `pl` stands for "pipeline" */
 typedef struct s_outf
 {
 	char	*filename;
@@ -49,24 +54,63 @@ typedef struct s_outf
 
 typedef struct s_pl
 {
-	int		len;//taille de...
-	int		index;
-	int		exit_code;//code erreur en sortie
-	char	*err_msg;//message d'erreur en sortie
+	size_t	len;
+	size_t	index;
+	int		exit_code;
+	char	*err_msg;
 	char	**path;
 	char	**envp;
-	char	***cmdl;//liste des commandes
-	int		fd_pipe_len;//??
+	char	***cmdl;
+	char	***inf;
+	t_outf	**outf;
+	int		fd_pipe_len;
 	int		**fd_pipe;
-	int		**hd;
-	char	***inf;//listes de infiles à lire
-	t_outf	**outf;//listes de outfiles où écrire
-	int		*favor_hd;
-	int		fd_hd;//dans le child : fd du fichier temp pour lire les heredocs
-	int		fd_inf;//dans le child : le port du fichier d'entrée
-	int		fd_outf;//dans le child : le port du fichier de sortie
-	int		fd_src[2];//dans le child : pour les ports du pipes, read et write
+	int		fd_src[2];
 }	t_pl;
+
+/* `ex` stands for `execution` */
+typedef struct s_ex	t_ex;
+struct s_ex
+{
+	int		logic_operator;
+	size_t	open_subshells;
+	t_pl	pl;
+	size_t	close_subshells;
+	t_ex	*next;
+};
+
+/* `rl` stands for "readline" */
+typedef struct s_rl_arr
+{
+	char	*value;
+	int		is_heredoc;
+	int		backslashes;
+	char	**delimiters;
+}	t_rl_arr;
+
+typedef struct s_rl
+{
+	char		*user;
+	char		*prompt;
+	char		**buf;
+	t_rl_arr	**arr;
+	char		**tokens;
+	char		**hd;
+}	t_rl;
+
+/* `sh` stands for "shell" */
+typedef struct s_sh
+{
+	char	*first_arg;
+	char	*pid;
+	int		level;
+	int		keep_running;
+	int		exit_code;
+	char	*pwd_backup;
+	char	**envp;
+	t_rl	rl;
+	t_ex	*ex;
+}	t_sh;
 
 typedef struct s_list
 {
@@ -79,49 +123,55 @@ typedef struct s_list
 
 /* Utils -------------------------------------------------------------------- */
 
-char	*compose_err_msg(char *cmd, char *arg, char *msg);
+char	*compose_err_msg(const char *cmd, const char *arg, const char *msg);
 int		output_error(t_pl *pl);
+int		output_error_UPDATE(int code, char *msg);
+
+char	*insert_str_before_char(const char *s, size_t i, const char *to_insert);
+char	*remove_str(const char *s, size_t i, size_t len_to_remove);
+char	*concatenate_strings(char **arr, const char *separator);
+char	**duplicate_strings(char **arr);
+
+size_t	get_array_length(void **array);
+size_t	find_array_index(void **array, int (*condition)(void *element));
+void	insert_array_element(void ***array, void *to_insert, size_t index);
+void	insert_array_elements(void ***array, void **to_insert, size_t index);
+void	*extract_array_element(void **array, size_t index);
+void	**extract_array_elements(void **array, size_t from, size_t to);
+void	remove_array_elements(void **array, size_t from, size_t to,
+			void (*free_element)(void *));
+void	free_entire_array(void **array, void (*free_element)(void *));
+
+void	set_pwd_backup(t_sh *sh, const char *value);
 
 /* Parser ------------------------------------------------------------------- */
 
-int		init_pipeline(t_pl *pl, int argc, char **argv, char **envp);
-
-char	***parse_cmdl(char **args, int arg_len);
-void	free_cmdl(char ***cmdl);
-
-int		*get_favor_hd_array(t_pl *pl);
-int		**get_heredocs(int pl_len, char *delimiter, int *exit_code);
-
-char	***get_infiles(int pl_len, char *infile);
-t_outf	**get_outfiles(int pl_len, char *outfile, int flags);
+int		get_pid(const char *first_arg);
+void	run_shell(t_sh *sh);
+void	free_shell(t_sh *sh);
+char	*get_clean_token(const char *s);
+char	*get_escaped_token_for_echo(const char *s, int *is_c_found);
+char	*get_literal_token_for_export(const char *s);
 
 /* Executor ----------------------------------------------------------------- */
 
-int		execute_pipeline(t_pl *pl);
-int		free_pipeline_resources_in_parent(t_pl *pl);
-void	execute_subprocess(t_pl *pl);
+int		execute_pipeline(t_sh *sh);
+int		execute_subprocess(t_pl *pl);
 
 int		**open_pipes(t_pl *pl);
 void	close_pipes(int **pipes, int len);
 void	close_unused_pipes(int index, int **pipes, int pipe_len);
-void	free_pipes(int **pipes);
-
-char	**split_path(char **envp);
-void	free_path(char **path);
-
-int		check_file(t_pl *pl, char *file, int mode, int catch_err);
-int		create_heredoc(char *tmp_filename, char *delimiter, int *code);
-void	set_last_heredoc_fd_and_free_unused_ones(t_pl *pl);
-void	free_heredocs(int **heredocs);
 int		set_last_infile_fd(t_pl *pl, int catch_err);
-void	free_infiles(char ***files);
 int		set_last_outfile_fd(t_pl *pl, int catch_err);
-void	free_outfiles(t_outf **files);
-void	set_input_source(t_pl *pl);
-void	set_output_source(t_pl *pl);
 int		redirect_cmd_io(t_pl *pl);
 
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+
+void	*destroy_pl_cmdl(char ***cmdl);
+void	*destroy_pl_inf(char ***inf);
+void	*destroy_pl_outf(t_outf **outf);
+void	destroy_all_ex(t_sh *sh);
+int		pop_head_ex(t_sh *sh);
 
 /* Utils list -------------------------------------------------------------- */
 
@@ -152,5 +202,10 @@ void	bigerrno_cd(int argc, char **arg, t_list **env2, int cd);
 void	bigerrno_echo(char **arg, int echo);
 void	bigerrno_pwd(t_list **env2);
 void	bigerrno_exit(char **arg, int exit, int *code_error);
+void	*destroy_pl_cmdl(char ***cmdl);
+void	*destroy_pl_inf(char ***inf);
+void	*destroy_pl_outf(t_outf **outf);
+void	destroy_all_ex(t_sh *sh);
+int		pop_head_ex(t_sh *sh);
 
 #endif

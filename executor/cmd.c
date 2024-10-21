@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   resolve_cmd.c                                      :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/15 15:45:56 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:26:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 	int		i;
 	char	*cwd;
 
+	if (!pl->path)
+		return (0);
 	i = 0;
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
