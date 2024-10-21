@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/02 17:18:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:08:01 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_list
 {
 	char			*key;
 	char			*value;
+	int				withvalue;
 	struct s_list	*next;
 	struct s_list	*prev;
 }	t_list;
@@ -122,16 +123,28 @@ int		redirect_cmd_io(t_pl *pl);
 
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 
+/* Utils list -------------------------------------------------------------- */
+
+t_list	*lst_last(t_list *last);
+t_list	*lstadd_back(t_list **lst, t_list *new);
+t_list	*lst_new(char *key, char *value);
+void	lst_clear(t_list **lst);
+int		list_size(t_list **lst);
+
 /* Built-in utils ----------------------------------------------------------- */
 
 t_list	*add_node(t_list **env2, char *key, char *value);
 t_list	*find_key(t_list **env2, char *key);
+void	swap_node(t_list **s1, t_list **s2);
+void	swap_param(void **to_be_swap, void **swap_with);
 char	**convert_charchar(t_list **env2);
 void	update_pwd(t_list **env2);
 void	exec_in_child(t_list **env2, char *cmd, int pipefd[2]);
 char	*find_absolute_path(int pipefd[2]);
 char	*get_absolute_path(t_list **env2);
 void	change_directory(char *path);
+int		valid_keyvalue(char *key, char *value);
+void	print_in_p_order(t_list **env2);
 
 /* Built-ins --------------------------------------------------------------- */
 

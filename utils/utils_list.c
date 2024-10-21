@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:21:27 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/09/29 19:32:13 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:44:26 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_list	*lst_last(t_list *last)
 {
@@ -49,20 +49,6 @@ t_list	*lst_new(char *key, char *value)
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);
-}
-
-void	lst_clear(t_list **lst)
-{
-	t_list	*tmp;
-
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->key);
-		free((*lst)->value);
-		free(*lst);
-		*lst = tmp;
-	}
 }
 
 int	list_size(t_list **lst)

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:05:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/02 17:33:46 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:31:18 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,22 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include "../libft/libft.h"
 
-int	bn_isstrstr(char *str1, char *str2);
+# define FALSE 0
+# define TRUE 1
+
+int		bn_isstrstr(char *str1, char *str2);
 int		bn_linelen(char **file);
 char	**bn_joinline(char **file, char *line);
-int	bn_iter(char *s, char iter);
-char	*ft_strldup(char *src, size_t size);
-void	free_tab(char **tab);
-int		ft_strnlen(char *s, char c);
-char	*ft_malloc(int size);
+int		bn_onlychar(char *s, char iter);
+char	*bn_strldup(char *src, size_t size);
+void	bn_freetab(char **tab);
+int		bn_strnlen(char *s, char c);
+char	*bn_malloc(int size);
+int		bn_firstocc(char *s, char c);
+int		bn_countiter(char *s, char c);
+void	bn_swapparam(void **to_be_swap, void **swap_with);
+void	bn_swapstr(char **to_be_swap, char **swap_with);
 
 #endif

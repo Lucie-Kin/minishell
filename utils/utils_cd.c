@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:35:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/02 17:27:27 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:38:17 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*find_absolute_path(int pipefd[2])
 	abs_path = ft_split(line, ':');
 	free(line);
 	home = ft_strdup(abs_path[5]);
-	free_tab(abs_path);
+	bn_freetab(abs_path);
 	return (home);
 }
 
@@ -83,7 +83,7 @@ t_list	*add_node(t_list **env2, char *key, char *value)
 
 void	update_pwd(t_list **env2)
 {
-	t_list	*pwd;char **en
+	t_list	*pwd;
 	t_list	*oldpwd;
 
 	pwd = *env2;
@@ -96,8 +96,9 @@ void	update_pwd(t_list **env2)
 		return (perror("Key not found\n"));
 	free(oldpwd->value);
 	oldpwd->value = ft_strdup(pwd->value);
-	// printf("\nOldpwd pointing to: %p, %s=%s\n", oldpwd, oldpwd->key, oldpwd->value);
 	free(pwd->value);
 	pwd->value = getcwd(NULL, 0);
-	// printf("\nPwd pointing to: %p, %s=%s\n", pwd, pwd->key, pwd->value);
 }
+	// printf("\nOldpwd pointing to: %p, %s=%s\n",
+	// 	oldpwd, oldpwd->key, oldpwd->value);
+	// printf("\nPwd pointing to: %p, %s=%s\n", pwd, pwd->key, pwd->value);

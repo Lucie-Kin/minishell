@@ -6,152 +6,132 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/03 18:31:31 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:38:08 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	swap_param(void **to_be_swap, void **swap_with)
+void	add_or_update_var(t_list **env2, char **key_value)
 {
-	void	*tmp;
+	t_list	*var;
+	char	*key;
+	int		size;
 
-	tmp = *to_be_swap;
-	*to_be_swap = *swap_with;
-	*swap_with = tmp;
+	size = ft_strlen(key_value[0]);
+	key = ft_strdup(key_value[0]);
+	if (key_value[1] && key_value[0][size] == '+')
+	{
+		free(key);
+		key = bn_strldup(key_value[0], size - 1);
+	}
+	var = find_key(env2, key);
+	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
+		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
+	else if (var && key_value[1])
+	{
+		free(var->value);
+		var->value = ft_strdup(get_literal_token(key_value[1]));
+	}
+	else if (key_value[1])
+		add_node(env2, key_value[0], get_literal_token(key_value[1]));
+	else
+		perror(ERR_EXPORT);
+	if (var->value)
+		var->withvalue = TRUE;
 }
 
-void	swap_node(t_list **s1, t_list **s2)
+char	**parse_key_value(char *to_separate)
 {
-	swap_param((void **)(*s1)->key, (void **)(*s2)->key);
-	swap_param((void **)(*s1)->value, (void **)(*s2)->value);
+	char	*separator;
+	char	**key_value;
+	int		end;
+
+	if (!to_separate)
+		return (NULL);
+	separator = ft_strchr(to_separate, '=');
+	if (separator)
+		*separator = ';';
+	end = ft_strlen(to_separate);
+	if (separator == &to_separate[end])
+	{
+		key_value = ft_calloc(sizeof(char *), 2);
+		key_value[0] = ft_strdup(to_separate);
+	}
+	else
+		key_value = ft_split(to_separate, ';');
+	return (key_value);
+}
+//t_struct invisible_env >> key=0 -> value=readline(first entry);
+// ./minishell or /directory/minishell == argv(0)
+//gérer if in readline '=', then add new entry
+//when bash, increment SHLVL++ //!\\ 
+
+t_list	*update_var(t_list **hidden, t_list *var, t_list **start)
+{
+	t_list	*tmp;
+	int		size;
+
+	size = ft_strlen((*hidden)->key);
+	if ((*hidden)->key[size] == '+')
+		var->value = ft_strjoin(var->value, (*hidden)->value);
+	else
+	{
+		free(var->value);
+		var->value = ft_strdup((*hidden)->value);
+	}
+	var->withvalue = TRUE;
+	if (*hidden == *start)
+		*start = (*hidden)->next;
+	tmp = (*hidden)->next;
+	clear_node(*hidden);
+	return (tmp);
 }
 
-t_list	*alpha_order_list(t_list **env2)
+void	update_env(t_list **env2, t_list **hidden)
 {
 	t_list	*start;
-	t_list	*ordered;
+	t_list	*var;
+	char	*key;
 
-	ordered = *env2;
-	start = *env2;
-	while (ordered && ordered->next)
+	if (!hidden)
+		return ;
+	start = *hidden;
+	while (*hidden)
 	{
-		if (ft_strcmp(ordered->value, ordered->next->value) > 0)
-		{
-			if (ft_strcmp(ordered->value, start) == 0)
-				start = ordered->next->value;
-			swap_node(ordered, ordered->next);
-			ordered = start;
-		}
+		var = find_key(env2, (*hidden)->key);
+		if (ft_strcmp((*hidden)->key, "_") != 0 && var)
+			*hidden = update_var(hidden, var, &start);
 		else
-			ordered = ordered->next;
+			*hidden = (*hidden)->next;
 	}
-	return (start);
+	*hidden = start;
 }
 
-int	iskey(char *key)
-{
-	int	i;
-
-	i = 0;
-	if (key[0] == '_' && !key[1])
-		return (FALSE);
-	else if (ft_isdigit(key[0]) == TRUE)
-		return (FALSE);
-	else if (ft_isalpha(key[0]) == TRUE || key[0] == '_')
-	{
-		while (key[++i])
-		{
-			if (!(ft_isalnum(key[i]) == TRUE || key[i] == '_'))
-				return (FALSE);
-		}
-		return (TRUE);
-	}
-	return (FALSE);
-}
-
-char	*findtwin_and_erase(char *s, char c)
-{
-	int		i;
-	int		j;
-	int		twin;
-	char	*clean;
-
-	i = 0;
-	j = 0;
-	twin = 0;
-	if (!s)
-		return (NULL);
-	clean = ft_calloc(ft_strlen(s) - 1, sizeof(char));
-	while (s[i])
-	{
-		if (s[i++] == c && twin < 2)
-			twin++;
-		else
-			clean[j++] = s[i++];
-	}
-	if (twin == 2)
-		return (clean);
-	free(clean);
-	return (NULL);
-}
-
-char	*parse_value(char *value)
-{
-	char	*tmp;
-
-	if (findtwin_and_erase(value, '\"'))
-	
-	if (value[0] == '\"' && value[ft_strlen(value)] == '\"')
-	{
-		tmp = ft_strdup(value + 1);
-	}
-	// interprete \\ = \ --> \\  + accepte tous les caractères ASCII
-	else if (value[0] == '\'' && value[ft_strlen(value)] == '\'')
-	// n'interprete pas \\ = \ et \ --> \\\\ 
-	else
-	// n'accepte aucun caractère interprétables
-	;
-}
-
-void	bigerrno_export(t_list **env2, char **arg, int export)
+void	bigerrno_export(t_list **env2, t_list **hidden, char **arg, int export)
 {
 	t_list	*alpha_order;
-	t_list	*var;
 	char	**key_value;
 	int		n;
-	char	*separator;
 
 	n = 0;
+	update_env(&env2, hidden);
 	alpha_order = alpha_order_list(env2);
 	if (!arg[export + 1])
-		print_list(&alpha_order, MSG_EXPORT, TRUE);
+		print_list(&alpha_order, TRUE);
 	else
 	{
 		while (arg[export + 1 + n])
 		{
-			separator = ft_strchr(arg[export + 1 + n], '=');
-			if (separator)
-				*separator = ';';
-			key_value = ft_split(arg[export + 1 + n], ';');
+			key_value = parse_key_value(arg[export + 1 + n]);
 			if (key_value[2])
-				strerror(ERR_EXPORT);
-			else if (iskey(key_value[0]) == TRUE)
-			{
-				var = find_key(&alpha_order, key_value[0]);
-				if (var && isvalue(key_value[1]) == TRUE)
-					var->value = key_value[1];
-				else if (isvalue(key_value[1]) == TRUE)
-					add_node(env2, key_value[0], key_value[1]);
-				else
-					strerror(ERR_EXPORT);
-			}
+				perror(ERR_EXPORT);
+			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)
+				add_or_update_var(env2, key_value);
 			else
-				strerror(ERR_EXPORT);
-			free_tab(key_value);
+				perror(ERR_EXPORT);
+			bn_freetab(key_value);
 			n++;
-			// Find if key exists == update value // parse key
-			// else create new_node
 		}
 	}
 	free_list(alpha_order);

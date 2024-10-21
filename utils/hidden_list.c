@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bn_linelen.c                                       :+:      :+:    :+:   */
+/*   hidden_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/28 17:09:18 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/16 17:18:08 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
+/*   Updated: 2024/10/16 18:41:39 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libbn.h"
+#include "../minishell.h"
 
-int	bn_linelen(char **file)
+void	update_hidden(t_list **hidden, char *token)
 {
-	int	count;
+	t_list	*new;
+	char	*key;
+	char	*value;
+	int		size;
 
-	count = 0;
-	if (!file)
-		return (-1);
-	while (file[count])
-		count++;
-	return (count);
+	if (!token)
+		return ;
+	size = bn_firstocc(token, '=');
+	if (size != -1)
+	{
+		key = bn_strldup(token, size);
+		if (size != ft_strlen(token))
+			value = ft_strdup(token + size + 1);
+		else
+			value = ft_strdup("");
+		new = lst_new(key, value);
+		lstadd_back(hidden, new);
+	}
 }

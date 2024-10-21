@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bn_linelen.c                                       :+:      :+:    :+:   */
+/*   bn_swapstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/28 17:09:18 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/16 17:18:08 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/10/14 14:29:10 by lchauffo          #+#    #+#             */
+/*   Updated: 2024/10/14 14:29:47 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libbn.h"
 
-int	bn_linelen(char **file)
+void	bn_swapstr(char **to_be_swap, char **swap_with)
 {
-	int	count;
+	char	*tmp;
 
-	count = 0;
-	if (!file)
-		return (-1);
-	while (file[count])
-		count++;
-	return (count);
+	tmp = ft_strdup(*to_be_swap);
+	free(*to_be_swap);
+	*to_be_swap = ft_strdup(*swap_with);
+	free(*swap_with);
+	*swap_with = ft_strdup(tmp);
+	free(tmp);
 }
