@@ -6,7 +6,7 @@ RM = rm -f
 NAME = minishell
 HDR = minishell.h
 SRC = main.c $(wildcard parser/*.c) $(wildcard parser/pipex/*.c) \
-	$(wildcard executor/*.c) $(wildcard utils/*.c)
+	  $(wildcard executor/*.c) $(wildcard utils/*.c)
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR = libft

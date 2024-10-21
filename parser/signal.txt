@@ -10,9 +10,17 @@ input is of course part of what's in history.
 - A shell, which includes Bigerrno, shouldn't be able to be put to the 
 background using the SIGTSTP signal (Ctrl-Z). Since Bigerrno is a mere program, 
 our role is to make sure to ignore SIGTSTP.
-- We'll actually ignore more than this one signal. All of them besides those 
-required by the subject: SIGINT (Ctrl-C), EOT (Ctrl-D) and SIGQUIT (Ctrl-\). 
-Note that SIGKILL is the only signal we're unable to catch.
+- Besides ignoring SIGTSTP, handle SIGINT (Ctrl-C), EOT (Ctrl-D) and SIGQUIT 
+(Ctrl-\). 
+
+--------------------------------------------------------------------------------
+
+	cat << EOF
+	hello \
+	[Ctrl-D]
+
+There's a first prompt for the backslash, which is interrupted by the signal, 
+and then a second prompt which can be interrupted for the next heredoc line.
 
 --------------------------------------------------------------------------------
 

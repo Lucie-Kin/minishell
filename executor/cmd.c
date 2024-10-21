@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   resolve_cmd.c                                      :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 17:37:11 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/19 18:21:33 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 	int		i;
 	char	*joined;
 
+	if (!pl->path)
+		return (0);
 	i = 0;
 	while (pl->path[i])
 	{

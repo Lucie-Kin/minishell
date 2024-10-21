@@ -1,41 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   array_get.c                                        :+:      :+:    :+:   */
+/*   pl_path.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/04 23:58:53 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/17 18:25:18 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/19 18:21:48 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/19 18:26:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parser.h"
 
-size_t	get_array_length(void **array)
+char	**get_pl_path(void)
 {
 	size_t	i;
+	char	**path;
+	char	*tmp;
 
-	if (!array)
+	path = ft_split(getenv("PATH"), ':');
+	if (!path)
 		return (0);
 	i = 0;
-	while (array[i])
-		++i;
-	return (i);
-}
-
-size_t	find_array_index(void **array, int (*condition)(void *element))
-{
-	size_t	i;
-
-	if (!array || !condition)
-		return (0);
-	i = 0;
-	while (array[i])
+	while (path[i])
 	{
-		if (condition(array[i]))
-			return (i);
+		tmp = ft_strjoin(path[i], "/");
+		if (!tmp)
+		{
+			free_entire_array((void **)path, free);
+			return (0);
+		}
+		free(path[i]);
+		path[i] = tmp;
 		++i;
 	}
-	return (i);
+	return (path);
 }

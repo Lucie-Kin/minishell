@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:13:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 00:46:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/19 20:46:11 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	**tokenize(const char *s, int meta_space, int (*cmp)(int))
 		return (0);
 	if (meta_space)
 		dup = surround_metacharacters_with_spaces(dup);
-	place_split_points(dup, FS, cmp);
-	tokens = ft_split(dup, FS);
+	place_split_points(dup, SEP, cmp);
+	tokens = ft_split(dup, SEP);
 	free(dup);
 	if (tokens && !tokens[0])
 	{
@@ -74,6 +74,11 @@ static char	*insert_spaces(char *s, size_t i)
 	tmp = 0;
 	if (i && !ft_isspace(s[i - 1]) && s[i - 1] != s[i] && s[i - 1] != '\\')
 		tmp = insert_str_before_char(s, i, " ");
+	if (tmp)
+	{
+		free(s);
+		s = tmp;
+	}
 	if (s[i + 1] && !ft_isspace(s[i + 1]) && s[i + 1] != s[i])
 		tmp = insert_str_before_char(s, i + 1, " ");
 	if (tmp)

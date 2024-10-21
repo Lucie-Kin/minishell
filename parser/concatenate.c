@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:51:01 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/09 18:33:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:10:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ char	*get_prefix_for_backslashes(t_sh *sh, size_t i, int *is_input_needed)
 	size_t	nbr_backslashes;
 	char	**tokens;
 
-	*is_input_needed = 0;
+	if (is_input_needed)
+		*is_input_needed = 0;
 	nbr_backslashes = count_backslashes(sh->rl.arr[i]->value);
 	if (nbr_backslashes)
 		sh->rl.arr[i]->backslashes = nbr_backslashes;
-	if (!(nbr_backslashes % 2))
+	if (!(nbr_backslashes % 2) || sh->rl.arr[i]->is_heredoc)
 		return (0);
-	*is_input_needed = 1;
+	if (is_input_needed)
+		*is_input_needed = 1;
 	if (nbr_backslashes == 1)
 		return (0);
 	else if (sh->rl.arr[i]->delimiters)

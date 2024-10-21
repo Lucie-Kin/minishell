@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 12:00:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/19 20:19:33 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,18 @@ int	main(int argc, char **argv, char **envp)
 		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
 		variable is different and is there to tell whether "exit" should be 
 		printed. It's the one you increment when forking for a subshell.
+		- Try to allow the env to be empty, instead of returning an error. For 
+		the prompt, `whoami` to get the username, and `uname -n` to get the 
+		hostname. Don't even care about whether the PATH var exists or not, 
+		search in /bin. If you don't find them because the system is not like 
+		other girls, just write "user" and "host" in the prompt.
+		- Free the hidden var list, not just the environment (export/env).
+		- Should the PATH be split in the command subprocess, or in the 
+		pipeline subprocess? For now it's at pipeline level.
 	*/
+	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
 	sh.pid = ft_itoa(get_pid(sh.first_arg));
-	sh.level = 0;
 	sh.envp = envp;
 	run_shell(&sh);
 	free_shell(&sh);
