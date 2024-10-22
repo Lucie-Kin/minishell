@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:55:51 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 19:57:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		{
 			free(pid);
 			child_exit_code = execute_subprocess(&sh->ex->pl);
+			output_error(sh->ex->pl.exit_code, sh->ex->pl.err_msg);
 			destroy_all_ex(sh);
 			free_shell(sh);
 			exit(child_exit_code);

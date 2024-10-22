@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:58:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 20:00:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 void	interpreter(t_sh *sh)
 {
@@ -36,6 +36,17 @@ void	interpreter(t_sh *sh)
 	The first node of the list has a logop of ';' (0).
 	The first exit code is 0, meaning success.
 	*/
+
+	/*
+		Isolate first pipeline.
+
+		If parentheses, know that it can be in different tokens. Count them fuckers.
+
+		Then, everything is a pipeline until a logop or a closing parenthese is found.
+
+		Get them closing parentheses, boy! Get 'em, come on!
+	*/
+	
 	if (!sh->rl.tokens || !sh->rl.tokens[0])
 		return ;
 	sh->ex = ft_calloc(1, sizeof(t_ex));
@@ -43,9 +54,9 @@ void	interpreter(t_sh *sh)
 		return ;
 	sh->ex->pl.len = get_pl_len(sh->rl.tokens);
 	sh->ex->pl.path = get_pl_path();
-	sh->ex->pl.envp = sh->envp;
+	sh->ex->pl.envp = sh->envp;/* Remove it at next merge */
 	sh->ex->pl.fd_pipe_len = sh->ex->pl.len - 1;
-	sh->ex->pl.cmdl = get_pl_cmdl(sh, sh->ex->pl.len);
+	sh->ex->pl.cmdl = get_pl_cmdl(sh->rl.tokens, sh->ex->pl.len);
 	sh->ex->pl.inf = get_pl_inf(&sh->ex->pl, duplicate_strings(sh->rl.hd));
 	sh->ex->pl.outf = get_pl_outf(&sh->ex->pl);
 	if (!sh->ex->pl.cmdl || !sh->ex->pl.inf || !sh->ex->pl.outf)

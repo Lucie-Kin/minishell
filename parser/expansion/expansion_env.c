@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 16:37:40 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:53:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static char	*handle_potential_var(t_sh *sh, char *s, size_t *i, char **quote);
 static char	*get_var_name(const char *s, size_t i);

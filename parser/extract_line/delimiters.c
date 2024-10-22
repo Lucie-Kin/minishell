@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:05:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/08 12:37:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:56:24 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static void	update_delimiter_to_clean_version(char **delimiter);
 static char	**free_array_if_empty(char **tokens);

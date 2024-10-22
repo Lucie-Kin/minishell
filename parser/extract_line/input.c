@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 18:06:34 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/16 17:14:08 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:58:37 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 void	append_heredoc_lines_with_a_newline_char(t_sh *sh)
 {

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:52:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:36:32 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(void);
-char	***get_pl_cmdl(t_sh *sh, size_t len);
+char	***get_pl_cmdl(char	**tokens, size_t len);
 void	*destroy_pl_cmdl(char ***cmdl);
 char	***get_pl_inf(t_pl *pl, char **hd_dup);
 void	*destroy_pl_inf(char ***inf);

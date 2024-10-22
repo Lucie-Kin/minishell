@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:07:20 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/10 17:49:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:58:51 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 char	*find_unclosed_quote(const char *s)
 {

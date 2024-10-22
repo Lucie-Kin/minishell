@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:39:10 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/18 23:25:04 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:47:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static int	inner_loop(char ***inf, char ***cmdl, size_t i, char **hd_dup);
 static void	extract_name(char ***curr_inf, char **curr_src, size_t j, size_t k);

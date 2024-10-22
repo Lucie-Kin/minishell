@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:08:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 01:23:47 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ int	main(int argc, char **argv, char **envp)
 		search in /bin. If you don't find them because the system is not like 
 		other girls, just write "user" and "host" in the prompt.
 		- Free the hidden var list, not just the environment (export/env).
+		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
+		and you can add `--trace-children=yes` to find out in which child 
+		process you need to close them.
 	*/
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];

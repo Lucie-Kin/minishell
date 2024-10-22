@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 17:45:00 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/14 16:46:12 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:57:30 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static size_t	find_index_of_first_heredoc_line(t_sh *sh);
 static char		*concatenate_all_input_lines(t_sh *sh);

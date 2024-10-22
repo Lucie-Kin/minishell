@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:10:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/13 16:56:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:55:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static char	**expand_asterisk_wildcard(const char *s);
 

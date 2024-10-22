@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 20:42:13 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:57:18 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 				const char *delimiter);

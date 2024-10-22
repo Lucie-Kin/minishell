@@ -6,58 +6,55 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 20:10:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 01:02:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//if isbuiltin, execute builtin and ignore execve !!!
-static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+static int	search_cmd_on_path(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+static void	handle_not_found(t_pl *pl, char *cmd_name);
+static int	is_not_directory(const char *path);
+static int	is_directory(const char *path);
 
 int	resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 {
-	if (!cmd_name)//si la commande n'existe pas, fullpath est à NULL
-		*cmd_fullpath = 0;
-	else if (access(cmd_name, X_OK) >= 0)//le path est dans la cmd, cmd existe
-		*cmd_fullpath = ft_strdup(cmd_name);//on passe telquel dans fullpath
-	else//cmd pas vérifiable telquel et non-NULL
+	if (!cmd_name)
+		return (1);
+	else if (access(cmd_name, X_OK) < 0)
 	{
-		pl->exit_code = errno;//si ca échoue, retourne errno
-		if (get_fullpath(pl, cmd_name, cmd_fullpath))//si PATH/cmd fonctionne
-			pl->exit_code = 0;
-		else if (pl->exit_code == ENOENT)//127-No such file or directory
-		{
-			pl->exit_code = 127;
-			pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");
-			return (0);
-		}
-		else
-		{
-			pl->err_msg = compose_err_msg(cmd_name, 0, strerror(pl->exit_code));
-			return (0);
-		}
+		if (pl->path && !ft_strchr(cmd_name, '/'))
+			return (search_cmd_on_path(pl, cmd_name, cmd_fullpath));
+		handle_not_found(pl, cmd_name);
+		return (0);
 	}
+	else if (pl->path && !ft_strchr(cmd_name, '/'))
+	{
+		pl->exit_code = 127;
+		pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");
+		return (0);
+	}
+	else if (is_directory(cmd_name))
+	{
+		pl->exit_code = 126;
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(EISDIR));
+		return (0);
+	}
+	*cmd_fullpath = ft_strdup(cmd_name);
 	return (1);
 }
 
-/* `getcwd` is used in the parser if PATH var doesn't exist */
-static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath)
+static int	search_cmd_on_path(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 {
 	size_t	i;
 	char	*joined;
 
-	if (!pl->path)
-		return (0);
 	i = 0;
-	while (pl->path[i])
+	while (pl->path && pl->path[i])
 	{
 		joined = ft_strjoin(pl->path[i], cmd_name);
 		if (!joined)
-		{
-			pl->exit_code = ENOMEM;
-			return (0);
-		}
+			break ;
 		else if (access(joined, X_OK) >= 0)
 		{
 			*cmd_fullpath = joined;
@@ -66,5 +63,57 @@ static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 		free(joined);
 		++i;
 	}
+	pl->exit_code = 127;
+	pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");
 	return (0);
+}
+
+static void	handle_not_found(t_pl *pl, char *cmd_name)
+{
+	if (access(cmd_name, F_OK) >= 0)
+	{
+		pl->exit_code = 126;
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(EACCES));
+	}
+	else if (is_not_directory(cmd_name))
+	{
+		pl->exit_code = 126;
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(ENOTDIR));
+	}
+	else
+	{
+		pl->exit_code = 127;
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(ENOENT));
+	}
+	return ;
+}
+
+/* Has trailing forward slashes, exists, but is not a directory */
+static int	is_not_directory(const char *path)
+{
+	int		exists;
+	int		is_dir;
+	char	*tmp;
+
+	if (!path)
+		return (0);
+	tmp = ft_strchr(path, '/');
+	if (!tmp)
+		return (0);
+	tmp = ft_substr(path, 0, tmp - path);
+	if (!tmp)
+		return (0);
+	exists = access(tmp, F_OK) >= 0;
+	is_dir = is_directory(tmp);
+	free(tmp);
+	return (exists && !is_dir);
+}
+
+static int	is_directory(const char *path)
+{
+	struct stat	path_stat;
+
+	if (!path || stat(path, &path_stat) < 0)
+		return (0);
+	return (S_ISDIR(path_stat.st_mode));
 }

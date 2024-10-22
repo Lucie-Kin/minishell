@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:26:09 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:56:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:15:31 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	execute_subprocess(t_pl *pl)
 	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
 	if (!handle_redirections(pl))
 		return (close_file_descriptors(pl));
+	// if (isbuiltin) -> `execute_builtin` -> `close_file_descriptors`
+	// Should close STDIN, STDOUT and STDERR as well, no?
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (close_file_descriptors(pl));
 	close_file_descriptors(pl);

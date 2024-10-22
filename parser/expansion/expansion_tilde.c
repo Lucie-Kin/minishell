@@ -6,43 +6,39 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/16 22:44:04 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:35:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static size_t	get_tilde_index(const char *s);
+static char	*get_full_tilde_string(const char *s, size_t i, size_t len,
+	const char *var);
 
 char	*expand_tilde(const char *s)
 {
 	size_t	i;
-	char	*key;
+	size_t	len;
 	char	*var;
-	char	*tmp1;
-	char	*tmp2;
 
-	// These tests were made at home. Test at school to confirm.
 	i = get_tilde_index(s);
-	if (!ft_strcmp(s + i, "~"))
-		key = "HOME";
-	else if (!ft_strcmp(s + i, "~+"))
-		key = "PWD";
-	else if (!ft_strcmp(s + i, "~-"))
-		key = "OLDPWD";
-	else
-		return (0);
-	var = getenv(key);
-	if (!var && !ft_strcmp(key, "HOME"))
+	len = 2;
+	var = 0;
+	if (!ft_strncmp(s + i, "~", 1) && (!s[i + 1] || s[i + 1] == '/'))
 	{
-		// var = `actual home value`;
+		len = 1;
+		var = getenv("HOME");
+		if (!var)
+		{
+			// var = `get_absolute_path`;
+		}
 	}
-	tmp1 = ft_strdup(s);
-	if (tmp1)
-		tmp1[i] = 0;
-	tmp2 = ft_strjoin(tmp1, var);
-	free(tmp1);
-	return (tmp2);
+	else if (!ft_strncmp(s + i, "~+", 2) && (!s[i + 1] || s[i + 1] == '/'))
+		var = getenv("PWD");
+	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 1] || s[i + 1] == '/'))
+		var = getenv("OLDPWD");
+	return (get_full_tilde_string(s, i, len, var));
 }
 
 static size_t	get_tilde_index(const char *s)
@@ -66,4 +62,23 @@ static size_t	get_tilde_index(const char *s)
 			return (0);
 	}
 	return (i);
+}
+
+static char	*get_full_tilde_string(const char *s, size_t i, size_t len,
+	const char *var)
+{
+	char	*tmp1;
+	char	*tmp2;
+	char	*tmp3;
+
+	if (!s || !var)
+		return (0);
+	tmp1 = ft_substr(s, 0, i);
+	tmp2 = ft_strjoin(tmp1, var);
+	free(tmp1);
+	tmp1 = ft_substr(s, i + len, ft_strlen(s + i + len));
+	tmp3 = ft_strjoin(tmp2, tmp1);
+	free(tmp1);
+	free(tmp2);
+	return (tmp3);
 }

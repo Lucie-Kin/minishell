@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:51:35 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 15:57:32 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:47:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static void	clean_pl_cmdl_tokens(t_pl *pl);
 static void	clean_pl_inf_tokens(t_pl *pl);

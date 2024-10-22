@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:51 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/15 14:42:05 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:56:37 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static int	no_right_operand_missing(char **cmdl_tokens);
 static int	are_all_parentheses_closed(char **cmdl_tokens, char **prefix,

@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:04:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 20:49:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:59:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 int	check_for_syntax_errors(const char *s)
 {

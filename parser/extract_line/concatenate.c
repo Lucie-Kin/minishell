@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:51:01 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/15 17:10:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:56:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static size_t	count_backslashes(const char *s);
 static int		is_token_heredoc_chevrons(void *token);

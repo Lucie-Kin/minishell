@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 17:09:01 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 00:07:51 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:48:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../parser.h"
 
 static int	set_outf_arr(char ***cmdl, t_outf **outf, size_t i);
 static int	set_outf_arr_elem(char **cmdl, t_outf *outf, size_t *j, size_t *k);
