@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:51:00 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:39:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	run_shell(t_sh *sh)
 
 void	free_shell(t_sh *sh)
 {
+	close(STDIN_FILENO);
+	readline("\001\e]0;Terminal\a\002");
 	rl_clear_history();
 	free(sh->pid);
 	free(sh->user);

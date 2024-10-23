@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:52:21 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:41:08 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,16 @@ int	main(int argc, char **argv, char **envp)
 	/*
 		- Duplicate the environment and use your own `getenv` function.
 		- On exit, free the hidden var list, not just the environment.
-		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
-		and you can add `--trace-children=yes` to find out in which child 
-		process you need to close them.
 
 		- You can increment the SHLVL variable when executing a new bigerrno 
 		(and not when forking for a subshell), as every shell increments it. 
 		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
 		variable is different and is there to tell whether "exit" should be 
 		printed. It's the one you increment when forking for a subshell.
+
+		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
+		and you can add `--trace-children=yes` to find out in which child 
+		process you need to close them.
 	*/
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
