@@ -6,14 +6,14 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:26:09 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 16:15:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:57:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	handle_redirections(t_pl *pl);
-static int	close_file_descriptors(t_pl *pl);
+static int	close_file_descriptors(t_pl *pl, int std);
 
 int	execute_subprocess(t_pl *pl)
 {
@@ -22,12 +22,11 @@ int	execute_subprocess(t_pl *pl)
 	cmd_fullpath = 0;
 	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
 	if (!handle_redirections(pl))
-		return (close_file_descriptors(pl));
-	// if (isbuiltin) -> `execute_builtin` -> `close_file_descriptors`
-	// Should close STDIN, STDOUT and STDERR as well, no?
+		return (close_file_descriptors(pl, 1));
+	// if (isbuiltin) -> `execute_builtin` -> `close_file_descriptors(pl, 1)`
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
-		return (close_file_descriptors(pl));
-	close_file_descriptors(pl);
+		return (close_file_descriptors(pl, 1));
+	close_file_descriptors(pl, 0);
 	if (cmd_fullpath)
 	{
 		execve(cmd_fullpath, pl->cmdl[pl->index], pl->envp);
@@ -37,8 +36,6 @@ int	execute_subprocess(t_pl *pl)
 		free(cmd_fullpath);
 	}
 	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
 	return (pl->exit_code);
 }
 
@@ -55,7 +52,9 @@ static int	handle_redirections(t_pl *pl)
 		pl->fd_src[0] = pl->fd_pipe[pl->index - 1][0];
 	else if (pl->index > 0)
 		close(pl->fd_pipe[pl->index - 1][0]);
-	if (pl->fd_src[1] < 0 && pl->index < pl->len - 1)
+	if (pl->fd_src[1] < 0 && pl->index == pl->len - 1 && pl->circular)
+		pl->fd_src[1] = pl->fd_circ[1];
+	else if (pl->fd_src[1] < 0 && pl->index < pl->len - 1)
 		pl->fd_src[1] = pl->fd_pipe[pl->index][1];
 	else if (pl->index < pl->len - 1)
 		close(pl->fd_pipe[pl->index][1]);
@@ -66,11 +65,18 @@ static int	handle_redirections(t_pl *pl)
 	return (1);
 }
 
-static int	close_file_descriptors(t_pl *pl)
+static int	close_file_descriptors(t_pl *pl, int std)
 {
 	if (pl->fd_src[0] >= 0)
 		close(pl->fd_src[0]);
 	if (pl->fd_src[1] >= 0)
 		close(pl->fd_src[1]);
+	if (pl->circular)
+	{
+		close(pl->fd_circ[0]);
+		close(pl->fd_circ[1]);
+	}
+	if (std)
+		close(STDIN_FILENO);
 	return (pl->exit_code);
 }

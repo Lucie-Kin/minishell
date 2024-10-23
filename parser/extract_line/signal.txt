@@ -39,3 +39,27 @@ input; yes you have "\n" even if it's the first prompt of the unclosed quote
 but there was a prompt for something else before that), you join all the lines 
 into the final history entry, and don't send input to the executor.
 
+--------------------------------------------------------------------------------
+
+[FROM SLACK]
+"I found that if you do `bash | ls` it kind of breaks and exits out of the 
+child bash when you do pwd or echo, and I wondered if  minishell should do 
+something like that too or is that just undefined behavior?"
+
+Do you know why bash exits as soon as it tries to write to the standard output? 
+It's similar to the reason why a case like `cat | ls` behaves the way it does: 
+ls will immediately print its output and exit, cat will block and read from the 
+standard input, and only once you try to send a line of text through the pipe 
+between them does cat end with a SIGPIPE, because that pipe has been closed on 
+the other end.
+
+The puzzling part of bash is that it gets the prompt on the screen without 
+using the standard output. When I run our minishell like `./minishell | ls`, 
+just getting the prompt out involves using the standard output, so it 
+immediately gets a SIGPIPE and exits. I think that's perfectly reasonable 
+behavior: you've effectively broken the standard output, your shell and all its 
+children cannot write to the terminal anymore, even just calling printf or 
+readline would immediately crash your minishell with a SIGPIPE. Accounting for 
+a situation like that is pretty far beyond the scope of the project, if you ask 
+me.
+

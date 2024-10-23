@@ -6,30 +6,45 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 19:09:18 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:39:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_absolute_path(t_list **env2)
+void	update_pwd(t_list **env2)
 {
-	int		pipefd[2];
-	int		cpid;
-	char	*abs_path;
+	t_list	*pwd;
+	t_list	*oldpwd;
 
-	if (pipe(pipefd) == -1)
-		return (perror("Impossible pipe creation\n"), NULL);
-	cpid = fork();
-	if (cpid == -1)
-		return (perror("Impossible fork creation\n"), NULL);
-	if (cpid == 0)
-		exec_in_child(env2, "getent passwd $(whoami)", pipefd);
-	wait(NULL);
-	abs_path = find_absolute_path(pipefd);
-	close(pipefd[1]);
-	close(pipefd[0]);
-	return (abs_path);
+	pwd = *env2;
+	oldpwd = *env2;
+	pwd = find_key(env2, "PWD");
+	if (!pwd)
+		return (perror("Key not found\n"));
+	oldpwd = find_key(env2, "OLDPWD");
+	if (!oldpwd)
+		return (perror("Key not found\n"));
+	free(oldpwd->value);
+	oldpwd->value = ft_strdup(pwd->value);
+	free(pwd->value);
+	pwd->value = getcwd(NULL, 0);
+}
+// printf("\nOldpwd pointing to: %p, %s=%s\n",
+// 	oldpwd, oldpwd->key, oldpwd->value);
+// printf("\nPwd pointing to: %p, %s=%s\n", pwd, pwd->key, pwd->value);
+
+t_list	*add_node(t_list **env2, char *key, char *value)
+{
+	t_list	*new;
+	t_list	*lst;
+
+	lst = *env2;
+	new = lst_new(ft_strdup(key), ft_strdup(value));
+	if (!new)
+		return (lst_clear(&lst), NULL);
+	lstadd_back(&lst, new);
+	return (new);
 }
 
 t_list	*find_key(t_list **env2, char *key)
@@ -66,8 +81,6 @@ void	bigerrno_cd(t_list **env2, char **arg)
 		perror("Too many arguments");
 	else if (!arg[1])
 		change_directory(find_key(env2, "HOME")->value);
-	else if (arg[1][0] == '~' && arg[1][0] == '\0')
-		change_directory(get_absolute_path(env2));
 	else if (ft_strcmp(arg[1], "-") == 0)
 	{
 		if (!(chdir(find_key(env2, "OLDPWD")->value) == 0 || chdir(add_node
@@ -78,9 +91,3 @@ void	bigerrno_cd(t_list **env2, char **arg)
 		change_directory(arg[1]);
 	update_pwd(env2);
 }
-
-// sh->ex->pl.cmdl[sh->ex->pl.index]
-// sh->ex->pl.cmdl[sh->ex->pl.index][index] == cd
-// nombre de cmd = sh->ex->pl.len
-// char **cmdl
-// ["cd", "truc", "machin", NULL]

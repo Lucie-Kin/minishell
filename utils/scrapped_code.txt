@@ -1,0 +1,79 @@
+/* GET HOME PATH ------------------------------------------------------------ */
+
+char	*get_absolute_path(t_list **env2)
+{
+	int		pipefd[2];
+	int		cpid;
+	char	*abs_path;
+
+	if (pipe(pipefd) == -1)
+		return (perror("Impossible pipe creation\n"), NULL);
+	cpid = fork();
+	if (cpid == -1)
+		return (perror("Impossible fork creation\n"), NULL);
+	if (cpid == 0)
+		exec_in_child(env2, "getent passwd $(whoami)", pipefd);
+	wait(NULL);
+	abs_path = find_absolute_path(pipefd);
+	close(pipefd[1]);
+	close(pipefd[0]);
+	return (abs_path);
+}
+
+void	exec_in_child(t_list **env2, char *cmd, int pipefd[2])
+{
+	char	**args;
+	char	**path;
+	char	*join;
+	int		i;
+
+	i = 0;
+	dup2(pipefd[0], STDIN_FILENO);
+	dup2(pipefd[1], STDOUT_FILENO);
+	args = ft_split(cmd, ' ');
+	path = ft_split(find_key(env2, "PATH")->value, ':');
+	while (path[i])
+	{
+		join = ft_strjoin(path[i], cmd);
+		if (access(join, X_OK) == 0)
+			execve(join, args, convert_charchar(env2));
+		free(join);
+		i++;
+	}
+}
+
+char	**convert_charchar(t_list **env2)
+{
+	char	**copy;
+	int		i;
+
+	i = 0;
+	copy = malloc(sizeof(char *) * list_size(env2));
+	if (!copy)
+		return (perror("Failure to convert t_list ** to char **"), NULL);
+	while (copy[i])
+	{
+		copy[i] = ft_strdup((*env2)->key);
+		copy[i] = ft_strjoin(copy[i], "=");
+		copy[i] = ft_strjoin(copy[i], (*env2)->value);
+		i++;
+	}
+	return (copy);
+}
+
+// login:x:101942:4224:Name Surname:/home/login:/bin/zsh
+char	*find_absolute_path(int pipefd[2])
+{
+	char	*line;
+	char	**abs_path;
+	char	*home;
+
+	line = get_next_line(pipefd[0]);
+	abs_path = ft_split(line, ':');
+	free(line);
+	home = ft_strdup(abs_path[5]);
+	bn_freetab(abs_path);
+	return (home);
+}
+
+/* -------------------------------------------------------------------------- */

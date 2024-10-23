@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 19:57:42 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:24:10 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static int	temporary_exit_feature(t_sh *sh)
 static int	free_pipeline_resources(t_pl *pl)
 {
 	close_pipes(pl->fd_pipe, pl->fd_pipe_len);
+	if (pl->circular)
+		close(pl->fd_circ[1]);
 	output_error(pl->exit_code, pl->err_msg);
 	pl->err_msg = 0;
 	return (pl->exit_code);

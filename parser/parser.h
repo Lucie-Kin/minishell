@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:36:32 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:19:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	add_input_to_history(t_sh *sh);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
 void	expansion(t_sh *sh);
-char	*expand_tilde(const char *s);
+char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
 char	**expand_wildcard(const char *s);
 void	free_rl_arr_element(void *ptr);

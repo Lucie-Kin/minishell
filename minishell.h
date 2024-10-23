@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 00:50:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:35:37 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_pl
 {
 	size_t	len;
 	size_t	index;
+	int		circular;
 	int		exit_code;
 	char	*err_msg;
 	char	**path;
@@ -64,6 +65,7 @@ typedef struct s_pl
 	int		fd_pipe_len;
 	int		**fd_pipe;
 	int		fd_src[2];
+	int		fd_circ[2];
 }	t_pl;
 
 /* `ex` stands for `execution` */
@@ -101,10 +103,12 @@ typedef struct s_sh
 {
 	char	*first_arg;
 	char	*pid;
+	char	*user;
+	char	*host;
+	char	*home;
 	int		level;
 	int		keep_running;
 	int		exit_code;
-	char	*pwd_backup;
 	char	**envp;
 	t_rl	rl;
 	t_ex	*ex;
@@ -121,7 +125,11 @@ typedef struct s_list
 
 /* Parser ------------------------------------------------------------------- */
 
-int		get_pid(const char *first_arg);
+int		get_pid(t_sh *sh, const char *first_arg);
+char	*get_username(t_sh *sh);
+char	*get_hostname(t_sh *sh);
+char	*get_home_path(t_sh *sh, const char *username);
+
 void	run_shell(t_sh *sh);
 void	free_shell(t_sh *sh);
 char	*get_clean_token(const char *s);
@@ -162,8 +170,6 @@ void	remove_array_elements(void **array, size_t from, size_t to,
 			void (*free_element)(void *));
 void	free_entire_array(void **array, void (*free_element)(void *));
 
-void	set_pwd_backup(t_sh *sh, const char *value);
-
 /* Utils list --------------------------------------------------------------- */
 
 t_list	*lst_last(t_list *last);
@@ -180,7 +186,7 @@ void	bigerrno_env(t_list **env2, char **arg);
 void	bigerrno_exit(char **arg, int *code_error, char **msg);
 void	bigerrno_export(t_list **env2, t_list **hidden, char **arg);
 char	*bigerrno_getenv(t_list **env2, char *key);
-void	bigerrno_pwd(t_list **env2);
+void	bigerrno_pwd(void);
 void	bigerrno_unset(t_list **env2, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
@@ -189,11 +195,7 @@ t_list	*add_node(t_list **env2, char *key, char *value);
 t_list	*find_key(t_list **env2, char *key);
 void	swap_node(t_list **s1, t_list **s2);
 void	swap_param(void **to_be_swap, void **swap_with);
-char	**convert_charchar(t_list **env2);
 void	update_pwd(t_list **env2);
-void	exec_in_child(t_list **env2, char *cmd, int pipefd[2]);
-char	*find_absolute_path(int pipefd[2]);
-char	*get_absolute_path(t_list **env2);
 void	change_directory(char *path);
 int		valid_keyvalue(char *key, char *value);
 void	print_in_p_order(t_list **env2);

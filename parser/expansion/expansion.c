@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:53:35 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:19:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static char	**get_expanded_token(t_sh *sh, const char *s)
 	if (!s)
 		return (0);
 	arr = 0;
-	tmp = expand_tilde(s);
+	tmp = expand_tilde(sh, s);
 	if (tmp)
 	{
 		insert_array_element((void ***)&arr, (void **)tmp, 0);

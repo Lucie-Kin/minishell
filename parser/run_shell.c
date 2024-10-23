@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 13:49:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:51:00 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static void	unlink_heredocs(t_sh *sh);
 void	run_shell(t_sh *sh)
 {
 	sh->keep_running = TRUE;
-	set_pwd_backup(sh, getenv("PWD"));
 	init_prompt(sh);
 	while (sh->keep_running)
 	{
@@ -36,7 +35,9 @@ void	free_shell(t_sh *sh)
 {
 	rl_clear_history();
 	free(sh->pid);
-	free(sh->pwd_backup);
+	free(sh->user);
+	free(sh->host);
+	free(sh->home);
 	// free env
 	free(sh->rl.user);
 	free(sh->rl.prompt);

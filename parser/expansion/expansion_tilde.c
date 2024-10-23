@@ -6,22 +6,24 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 18:35:02 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:34:27 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
 static size_t	get_tilde_index(const char *s);
-static char	*get_full_tilde_string(const char *s, size_t i, size_t len,
-	const char *var);
+static char		*get_full_tilde_string(const char *s, size_t i, size_t len,
+					const char *var);
 
-char	*expand_tilde(const char *s)
+char	*expand_tilde(t_sh *sh, const char *s)
 {
 	size_t	i;
 	size_t	len;
 	char	*var;
 
+	if (!s)
+		return (0);
 	i = get_tilde_index(s);
 	len = 2;
 	var = 0;
@@ -30,13 +32,11 @@ char	*expand_tilde(const char *s)
 		len = 1;
 		var = getenv("HOME");
 		if (!var)
-		{
-			// var = `get_absolute_path`;
-		}
+			var = sh->home;
 	}
-	else if (!ft_strncmp(s + i, "~+", 2) && (!s[i + 1] || s[i + 1] == '/'))
+	else if (!ft_strncmp(s + i, "~+", 2) && (!s[i + 2] || s[i + 2] == '/'))
 		var = getenv("PWD");
-	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 1] || s[i + 1] == '/'))
+	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 2] || s[i + 2] == '/'))
 		var = getenv("OLDPWD");
 	return (get_full_tilde_string(s, i, len, var));
 }
@@ -71,7 +71,7 @@ static char	*get_full_tilde_string(const char *s, size_t i, size_t len,
 	char	*tmp2;
 	char	*tmp3;
 
-	if (!s || !var)
+	if (!var)
 		return (0);
 	tmp1 = ft_substr(s, 0, i);
 	tmp2 = ft_strjoin(tmp1, var);
