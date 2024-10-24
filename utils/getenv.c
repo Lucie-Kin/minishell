@@ -1,51 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_end.c                                        :+:      :+:    :+:   */
+/*   getenv.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 13:43:54 by lchauffo          #+#    #+#             */
+/*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
 /*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	lst_clear(t_env **lst)
+char	*bigerrno_getenv(t_env **env2, char *key)
 {
-	t_env	*tmp;
+	t_env	*var;
 
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->key);
-		free((*lst)->value);
-		free(*lst);
-		*lst = tmp;
-	}
-}
-
-void	clear_node(t_env *node)
-{
-	if (node->prev == NULL)
-	{
-		if (node->next == NULL)
-			lst_clear(&node);
-		else
-			node->next->prev = NULL;
-	}
-	else
-	{
-		if (node->next == NULL)
-			node->prev->next = NULL;
-		else
-		{
-			node->prev->next = node->next;
-			node->next->prev = node->prev;
-		}
-	}
-	free(node->key);
-	free(node->value);
-	free(node);
+	var = find_key(env2, key);
+	if (var)
+		return (var->value);
+	return (NULL);
 }

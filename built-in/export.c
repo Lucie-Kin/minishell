@@ -6,15 +6,15 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 19:09:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 20:03:32 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_or_update_var(t_list **env2, char **key_value)
+void	add_or_update_var(t_env **env2, char **key_value)
 {
-	t_list	*var;
+	t_env	*var;
 	char	*key;
 	int		size;
 
@@ -67,9 +67,9 @@ char	**parse_key_value(char *to_separate)
 //gérer if in readline '=', then add new entry
 //when bash, increment SHLVL++ !!!
 
-t_list	*update_var(t_list **hidden, t_list *var, t_list **start)
+t_env	*update_var(t_env **hidden, t_env *var, t_env **start)
 {
-	t_list	*tmp;
+	t_env	*tmp;
 	int		size;
 
 	size = ft_strlen((*hidden)->key);
@@ -88,10 +88,10 @@ t_list	*update_var(t_list **hidden, t_list *var, t_list **start)
 	return (tmp);
 }
 
-void	update_env(t_list **env2, t_list **hidden)
+void	update_env(t_env **env2, t_env **hidden)
 {
-	t_list	*start;
-	t_list	*var;
+	t_env	*start;
+	t_env	*var;
 
 	if (!hidden)
 		return ;
@@ -107,14 +107,15 @@ void	update_env(t_list **env2, t_list **hidden)
 	*hidden = start;
 }
 
-void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
+void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg)
 {
-	t_list	*alpha_order;
+	t_env	*alpha_order;
 	char	**key_value;
 	int		n;
 
 	n = 0;
 	update_env(env2, hidden);
+	update_env(env2, local);
 	alpha_order = alpha_order_list(env2);
 	if (!arg[1])
 		print_list(&alpha_order, TRUE);
@@ -123,7 +124,7 @@ void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
 		while (arg[1 + n])
 		{
 			key_value = parse_key_value(arg[1 + n]);
-			if (key_value[2])
+			if (bn_linelen(key_value) > 2)
 				perror(ERR_EXPORT);
 			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)
 				add_or_update_var(env2, key_value);
@@ -134,4 +135,5 @@ void	bigerrno_export(t_list **env2, t_list **hidden, char **arg)
 		}
 	}
 	lst_clear(&alpha_order);
+	lst_clear(local);
 }

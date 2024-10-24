@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_shell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:58:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:27:32 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	free_shell(t_sh *sh)
 	rl_clear_history();
 	free(sh->pid);
 	free(sh->pwd_backup);
-	// free env
+	lst_clear(&sh->env);
 	free(sh->rl.user);
 	free(sh->rl.prompt);
 	free_entire_array((void **)sh->rl.buf, free);
@@ -70,6 +70,22 @@ void	free_rl_arr_element(void *ptr)
 	return ;
 }
 
+static void	process_cmd(t_sh *sh)
+{
+	while (sh->ex)
+	{
+		if (sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]))
+			update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+		else if (sh->ex->pl.len == 1
+			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local))
+			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
+					sh->ex->pl.cmdl[0]);
+		else
+			sh->exit_code = execute_pipeline(sh);
+		pop_head_ex(sh);
+	}
+}
+
 static void	process_current_line(t_sh *sh)
 {
 	char	*cmdl;
@@ -87,12 +103,7 @@ static void	process_current_line(t_sh *sh)
 		interpreter(sh);
 		free_entire_array((void **)sh->rl.tokens, free);
 		sh->rl.tokens = 0;
-		if (sh->ex)
-		{
-			//if 1 command and isbuiltin -> execute builtin without forking
-			sh->exit_code = execute_pipeline(sh);
-			pop_head_ex(sh); // It's a linked list, so you need a loop or smth
-		}
+		process_cmd(sh);
 	}
 	unlink_heredocs(sh);
 	free_entire_array((void **)sh->rl.arr, free_rl_arr_element);

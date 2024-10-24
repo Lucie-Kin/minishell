@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subprocess.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:26:09 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:56:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:40:59 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	handle_redirections(t_pl *pl);
 static int	close_file_descriptors(t_pl *pl);
 
-int	execute_subprocess(t_pl *pl)
+int	execute_subprocess(t_pl *pl, t_sh *sh)
 {
 	char	*cmd_fullpath;
 
@@ -23,12 +23,15 @@ int	execute_subprocess(t_pl *pl)
 	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
 	if (!handle_redirections(pl))
 		return (close_file_descriptors(pl));
+	if (execute_builtin(&sh->env, &sh->hidden, &sh->local,
+			sh->ex->pl.cmdl[pl->index]))
+		return (close_file_descriptors(pl));
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (close_file_descriptors(pl));
 	close_file_descriptors(pl);
 	if (cmd_fullpath)
 	{
-		execve(cmd_fullpath, pl->cmdl[pl->index], pl->envp);
+		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
 		pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
 				strerror(pl->exit_code));

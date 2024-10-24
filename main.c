@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:08:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:09:16 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
 	sh.pid = ft_itoa(get_pid(sh.first_arg));
-	sh.envp = envp;//use convert_list.c
+	sh.env = convert_to_list(envp);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.level == 0)

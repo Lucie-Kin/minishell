@@ -3,30 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 20:10:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:43:31 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//if isbuiltin, execute builtin and ignore execve !!!
 static int	get_fullpath(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 
 int	resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 {
-	if (!cmd_name)//si la commande n'existe pas, fullpath est à NULL
+	if (!cmd_name)
 		*cmd_fullpath = 0;
-	else if (access(cmd_name, X_OK) >= 0)//le path est dans la cmd, cmd existe
-		*cmd_fullpath = ft_strdup(cmd_name);//on passe telquel dans fullpath
-	else//cmd pas vérifiable telquel et non-NULL
+	else if (access(cmd_name, X_OK) >= 0)
+		*cmd_fullpath = ft_strdup(cmd_name);
+	else
 	{
-		pl->exit_code = errno;//si ca échoue, retourne errno
-		if (get_fullpath(pl, cmd_name, cmd_fullpath))//si PATH/cmd fonctionne
+		pl->exit_code = errno;
+		if (get_fullpath(pl, cmd_name, cmd_fullpath))
 			pl->exit_code = 0;
-		else if (pl->exit_code == ENOENT)//127-No such file or directory
+		else if (pl->exit_code == ENOENT)
 		{
 			pl->exit_code = 127;
 			pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");

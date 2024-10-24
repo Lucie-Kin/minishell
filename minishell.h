@@ -6,12 +6,16 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 19:51:54 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:53:03 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# ifndef DBUG
+#  define DBUG 0
+# endif
 
 # include <errno.h>
 # include <stdio.h>
@@ -57,7 +61,6 @@ typedef struct s_pl
 	int		exit_code;
 	char	*err_msg;
 	char	**path;
-	char	**envp;
 	char	***cmdl;
 	char	***inf;
 	t_outf	**outf;
@@ -96,6 +99,15 @@ typedef struct s_rl
 	char		**hd;
 }	t_rl;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	int				withvalue;
+	struct s_env	*next;
+	struct s_env	*prev;
+}	t_env;
+
 /* `sh` stands for "shell" */
 typedef struct s_sh
 {
@@ -105,19 +117,12 @@ typedef struct s_sh
 	int		keep_running;
 	int		exit_code;
 	char	*pwd_backup;
-	char	**envp;
+	t_env	*env;
+	t_env	*hidden;
+	t_env	*local;
 	t_rl	rl;
 	t_ex	*ex;
 }	t_sh;
-
-typedef struct s_list
-{
-	char			*key;
-	char			*value;
-	int				withvalue;
-	struct s_list	*next;
-	struct s_list	*prev;
-}	t_list;
 
 /* Parser ------------------------------------------------------------------- */
 
@@ -129,7 +134,7 @@ char	*get_clean_token(const char *s);
 /* Executor ----------------------------------------------------------------- */
 
 int		execute_pipeline(t_sh *sh);
-int		execute_subprocess(t_pl *pl);
+int		execute_subprocess(t_pl *pl, t_sh *sh);
 int		pop_head_ex(t_sh *sh);
 void	destroy_all_ex(t_sh *sh);
 
@@ -164,55 +169,62 @@ void	free_entire_array(void **array, void (*free_element)(void *));
 
 void	set_pwd_backup(t_sh *sh, const char *value);
 
+int		only_var(char **arg);
+void	update_hidden(t_env **hidden, char **token);
 /* Utils list --------------------------------------------------------------- */
 
-t_list	*lst_last(t_list *last);
-t_list	*lstadd_back(t_list **lst, t_list *new);
-t_list	*lst_new(char *key, char *value);
-void	lst_clear(t_list **lst);
-int		list_size(t_list **lst);
+t_env	*convert_to_list(char **env);
+char	**convert_to_tab(t_env *env);
+t_env	*lst_last(t_env *last);
+t_env	*lstadd_back(t_env **lst, t_env *new);
+t_env	*lst_new(char *key, char *value);
+void	lst_clear(t_env **lst);
+int		list_size(t_env **lst);
 
 /* Built-ins ---------------------------------------------------------------- */
 
-void	bigerrno_cd(t_list **env2, char **arg);
+int		isbuiltin(char **cmd, t_env *local);
+int		execute_builtin(t_env **env, t_env **hidden, t_env **local, char **arg);
+void	bigerrno_cd(t_env **env2, t_env **local, char **arg);
 void	bigerrno_echo(char **arg);
-void	bigerrno_env(t_list **env2, char **arg);
+void	bigerrno_env(t_env **env2, t_env **local, char **arg);
 void	bigerrno_exit(char **arg, int *code_error, char **msg);
-void	bigerrno_export(t_list **env2, t_list **hidden, char **arg);
-char	*bigerrno_getenv(t_list **env2, char *key);
-void	bigerrno_pwd(t_list **env2);
-void	bigerrno_unset(t_list **env2, char **arg);
+void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg);
+char	*bigerrno_getenv(t_env **env2, char *key);
+void	bigerrno_pwd(t_env **env2);
+void	bigerrno_unset(t_env **env2, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-t_list	*add_node(t_list **env2, char *key, char *value);
-t_list	*find_key(t_list **env2, char *key);
-void	swap_node(t_list **s1, t_list **s2);
+t_env	*add_node(t_env **env2, char *key, char *value);
+t_env	*find_key(t_env **env2, char *key);
+void	swap_node(t_env **s1, t_env **s2);
 void	swap_param(void **to_be_swap, void **swap_with);
-char	**convert_charchar(t_list **env2);
-void	update_pwd(t_list **env2);
-void	exec_in_child(t_list **env2, char *cmd, int pipefd[2]);
+char	**convert_charchar(t_env **env2);
+void	update_pwd(t_env **env2);
+void	exec_in_child(t_env **env2, char *cmd, int pipefd[2]);
 char	*find_absolute_path(int pipefd[2]);
-char	*get_absolute_path(t_list **env2);
+char	*get_absolute_path(t_env **env2);
 void	change_directory(char *path);
 int		valid_keyvalue(char *key, char *value);
-void	print_in_p_order(t_list **env2);
+void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
 char	*get_echo_escaped_token(const char *s, int *is_c_found);
-t_list	*find_smallest_p(t_list **p_order);
-t_list	*find_biggest_p(t_list **p_order);
-t_list	*next_smallest(t_list **p_order, t_list *smallest);
-void	lst_clear(t_list **lst);
-void	clear_node(t_list *node);
+t_env	*find_smallest_p(t_env **p_order);
+t_env	*find_biggest_p(t_env **p_order);
+t_env	*next_smallest(t_env **p_order, t_env *smallest);
+void	lst_clear(t_env **lst);
+void	clear_node(t_env *node);
 void	swap_param(void **to_be_swap, void **swap_with);
-void	swap_node(t_list **s1, t_list **s2);
+void	swap_node(t_env **s1, t_env **s2);
 int		valid_keyvalue(char *key, char *value);
-void	print_list(t_list **list, int export);
-t_list	*alpha_order_list(t_list **env2);
+void	print_list(t_env **list, int export);
+t_env	*alpha_order_list(t_env **env2);
 int		init_expand(char ***expand);
 int		remove_tab_elements(char ***tab, int to_remove);
 char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
 void	print_wildcard(char **print);
+char	**parse_key_value(char *to_separate);
 
 #endif

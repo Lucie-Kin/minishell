@@ -6,17 +6,17 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 19:09:18 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:50:48 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_absolute_path(t_list **env2)
+char	*get_username(t_env **env2)
 {
 	int		pipefd[2];
 	int		cpid;
-	char	*abs_path;
+	char	*username;
 
 	if (pipe(pipefd) == -1)
 		return (perror("Impossible pipe creation\n"), NULL);
@@ -24,7 +24,29 @@ char	*get_absolute_path(t_list **env2)
 	if (cpid == -1)
 		return (perror("Impossible fork creation\n"), NULL);
 	if (cpid == 0)
-		exec_in_child(env2, "getent passwd $(whoami)", pipefd);
+		exec_in_child(env2, "/bin/whoami", pipefd);
+	wait(NULL);
+	username = get_next_line(pipefd[0]);
+	close(pipefd[1]);
+	close(pipefd[0]);
+	return (username);
+}
+
+char	*get_absolute_path(t_env **env2)
+{
+	int		pipefd[2];
+	int		cpid;
+	char	*abs_path;
+	char	*abs_cmd;
+
+	abs_cmd = ft_strjoin("/bin/getent passwd ", get_username(env2));
+	if (pipe(pipefd) == -1)
+		return (perror("Impossible pipe creation\n"), NULL);
+	cpid = fork();
+	if (cpid == -1)
+		return (perror("Impossible fork creation\n"), NULL);
+	if (cpid == 0)
+		exec_in_child(env2, abs_cmd, pipefd);
 	wait(NULL);
 	abs_path = find_absolute_path(pipefd);
 	close(pipefd[1]);
@@ -32,9 +54,9 @@ char	*get_absolute_path(t_list **env2)
 	return (abs_path);
 }
 
-t_list	*find_key(t_list **env2, char *key)
+t_env	*find_key(t_env **env2, char *key)
 {
-	t_list	*list;
+	t_env	*list;
 
 	list = *env2;
 	if (!key || !list)
@@ -55,28 +77,30 @@ void	change_directory(char *path)
 		perror("2 Failed to change directory");
 }
 
-void	bigerrno_cd(t_list **env2, char **arg)
+void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 {
 	int	arg_len;
 
 	arg_len = bn_linelen(arg);
-	if (!env2)
+	if (!env)
 		return (perror("env is NULL\n"));
 	if ((arg_len) > 2)
 		perror("Too many arguments");
+	else if (!arg[1] && find_key(local, "HOME"))
+		change_directory(find_key(local, "HOME")->value);
 	else if (!arg[1])
-		change_directory(find_key(env2, "HOME")->value);
+		change_directory(find_key(env, "HOME")->value);
 	else if (arg[1][0] == '~' && arg[1][0] == '\0')
-		change_directory(get_absolute_path(env2));
+		change_directory(get_absolute_path(env));
 	else if (ft_strcmp(arg[1], "-") == 0)
 	{
-		if (!(chdir(find_key(env2, "OLDPWD")->value) == 0 || chdir(add_node
-					(env2, "OLDPWD", getcwd(NULL, 0))->value) == 0))
+		if (!(chdir(find_key(env, "OLDPWD")->value) == 0 || chdir(add_node
+					(env, "OLDPWD", getcwd(NULL, 0))->value) == 0))
 			perror("3 Failed to change directory");
 	}
 	else
 		change_directory(arg[1]);
-	update_pwd(env2);
+	update_pwd(env);
 }
 
 // sh->ex->pl.cmdl[sh->ex->pl.index]

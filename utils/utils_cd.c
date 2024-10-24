@@ -6,13 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:35:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/14 13:38:17 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**convert_charchar(t_list **env2)
+char	**convert_charchar(t_env **env2)
 {
 	char	**copy;
 	int		i;
@@ -20,7 +20,7 @@ char	**convert_charchar(t_list **env2)
 	i = 0;
 	copy = malloc(sizeof(char *) * list_size(env2));
 	if (!copy)
-		return (perror("Failure to convert t_list ** to char **"), NULL);
+		return (perror("Failure to convert t_env ** to char **"), NULL);
 	while (copy[i])
 	{
 		copy[i] = ft_strdup((*env2)->key);
@@ -31,7 +31,7 @@ char	**convert_charchar(t_list **env2)
 	return (copy);
 }
 
-void	exec_in_child(t_list **env2, char *cmd, int pipefd[2])
+void	exec_in_child(t_env **env2, char *cmd, int pipefd[2])
 {
 	char	**args;
 	char	**path;
@@ -68,10 +68,10 @@ char	*find_absolute_path(int pipefd[2])
 	return (home);
 }
 
-t_list	*add_node(t_list **env2, char *key, char *value)
+t_env	*add_node(t_env **env2, char *key, char *value)
 {
-	t_list	*new;
-	t_list	*lst;
+	t_env	*new;
+	t_env	*lst;
 
 	lst = *env2;
 	new = lst_new(ft_strdup(key), ft_strdup(value));
@@ -81,10 +81,10 @@ t_list	*add_node(t_list **env2, char *key, char *value)
 	return (new);
 }
 
-void	update_pwd(t_list **env2)
+void	update_pwd(t_env **env2)
 {
-	t_list	*pwd;
-	t_list	*oldpwd;
+	t_env	*pwd;
+	t_env	*oldpwd;
 
 	pwd = *env2;
 	oldpwd = *env2;

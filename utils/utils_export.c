@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 18:25:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	swap_param(void **to_be_swap, void **swap_with)
 	*swap_with = tmp;
 }
 
-void	swap_node(t_list **s1, t_list **s2)
+void	swap_node(t_env **s1, t_env **s2)
 {
 	swap_param((void **)(*s1)->key, (void **)(*s2)->key);
 	swap_param((void **)(*s1)->value, (void **)(*s2)->value);
@@ -55,9 +55,9 @@ int	valid_keyvalue(char *key, char *value)
 	return (FALSE);
 }
 
-void	print_list(t_list **list, int export)
+void	print_list(t_env **list, int export)
 {
-	t_list	*tmp;
+	t_env	*tmp;
 
 	tmp = *list;
 	if (!tmp)
@@ -80,10 +80,10 @@ void	print_list(t_list **list, int export)
 	}
 }
 
-t_list	*alpha_order_list(t_list **env2)
+t_env	*alpha_order_list(t_env **env2)
 {
-	t_list	*start;
-	t_list	*ordered;
+	t_env	*start;
+	t_env	*ordered;
 
 	ordered = *env2;
 	start = *env2;

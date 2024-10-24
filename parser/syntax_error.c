@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:04:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 20:49:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:18:53 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	check_for_syntax_errors(const char *s)
 {
 	// TODO
+	(void)s;
 	return (1);
 }
 

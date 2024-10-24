@@ -6,34 +6,43 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 18:56:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:13:59 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_in_p_order(t_list **env2)
+void	env_print(t_env *to_print)
 {
-	t_list	*smallest;
-	t_list	*next_small;
-	t_list	*biggest;
-	t_list	*p_order;
+	if (DBUG)
+		printf("p=%p\t%s=%s\n", to_print, to_print->key, to_print->value);
+	else
+		printf("%s=%s\n", to_print->key, to_print->value);
+}
 
-	p_order = *env2;
+void	print_in_p_order(t_env **to_print, t_env **not_to_print)
+{
+	t_env	*smallest;
+	t_env	*next_small;
+	t_env	*biggest;
+	t_env	*p_order;
+
+	p_order = *to_print;
 	smallest = find_smallest_p(&p_order);
 	biggest = find_biggest_p(&p_order);
 	if (!smallest || !biggest || !p_order)
-		return (perror("No env found"));
-	if (smallest->withvalue == TRUE)
-		printf("p=%p\t%s=%s\n", smallest, smallest->key, smallest->value);
+		return (perror("Nothing to be printed"));
+	if (smallest->withvalue == TRUE && !find_key(not_to_print, smallest->key))
+		env_print(smallest);
 	while (smallest != biggest)
 	{
 		next_small = next_smallest(&p_order, smallest);
-		if (next_small && next_small->withvalue == TRUE)
-			printf("p=%p\t%s=%s\n", next_small, next_small->key,
-				next_small->value);
+		if (next_small && next_small->withvalue == TRUE
+			&& !find_key(not_to_print, next_small->key))
+			env_print(next_small);
 		smallest = next_small;
 	}
+	lst_clear(not_to_print);
 }
 
 void	error_management(char *cmd, char *wrong_arg, char *msg_error)
@@ -41,10 +50,13 @@ void	error_management(char *cmd, char *wrong_arg, char *msg_error)
 	printf("%s: \'%s\': %s", cmd, wrong_arg, msg_error);
 }
 
-void	bigerrno_env(t_list **env2, char **arg)
+void	bigerrno_env(t_env **env, t_env **local, char **arg)
 {
 	if (!arg[1])
-		print_in_p_order(env2);
+	{
+		print_in_p_order(local, NULL);
+		print_in_p_order(env, local);
+	}
 	else if (arg[1])
 	{
 		if (access(arg[1], F_OK) == TRUE)

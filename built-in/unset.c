@@ -6,16 +6,16 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 16:36:01 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	node_clear(t_list *node)
+void	node_clear(t_env *node)
 {
-	t_list	*tmp_p;
-	t_list	*tmp_n;
+	t_env	*tmp_p;
+	t_env	*tmp_n;
 
 	tmp_p = node->prev;
 	tmp_n = node->next;
@@ -26,10 +26,10 @@ void	node_clear(t_list *node)
 	free(node);
 }
 
-void	bigerrno_unset(t_list **env2, char **arg)
+void	bigerrno_unset(t_env **env2, char **arg)
 {
 	int		n;
-	t_list	*node;
+	t_env	*node;
 
 	n = 1;
 	while (arg[n])

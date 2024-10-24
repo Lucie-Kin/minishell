@@ -1,6 +1,7 @@
 CC = cc 
 CFLAGS = -Wall -Wextra #-Werror
 LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
+DBUG_FLAG = -DDBUG=1
 RM = rm -f
 
 NAME = minishell
@@ -14,6 +15,10 @@ LIBFT_DIR = libft
 LIBFT_BIN = $(LIBFT_DIR)/libft.a
 
 all: $(LIBFT_BIN) $(NAME)
+
+debug_env: CFLAGS += $(DBUG_FLAGS)
+
+debug_env: re
 
 $(LIBFT_BIN):
 	$(MAKE) -C libft
@@ -32,4 +37,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug_env

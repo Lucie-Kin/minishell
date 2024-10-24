@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpreter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:58:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:47:26 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	interpreter(t_sh *sh)
 		return ;
 	sh->ex->pl.len = get_pl_len(sh->rl.tokens);
 	sh->ex->pl.path = get_pl_path();
-	sh->ex->pl.envp = sh->envp;
 	sh->ex->pl.fd_pipe_len = sh->ex->pl.len - 1;
 	sh->ex->pl.cmdl = get_pl_cmdl(sh, sh->ex->pl.len);
 	sh->ex->pl.inf = get_pl_inf(&sh->ex->pl, duplicate_strings(sh->rl.hd));

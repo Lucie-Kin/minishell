@@ -6,13 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:21:27 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/18 13:44:26 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_list	*lst_last(t_list *last)
+t_env	*lst_last(t_env *last)
 {
 	if (!last)
 		return (NULL);
@@ -21,9 +21,9 @@ t_list	*lst_last(t_list *last)
 	return (last);
 }
 
-t_list	*lstadd_back(t_list **lst, t_list *new)
+t_env	*lstadd_back(t_env **lst, t_env *new)
 {
-	t_list	*tmp;
+	t_env	*tmp;
 
 	if (!new)
 		return (NULL);
@@ -39,11 +39,11 @@ t_list	*lstadd_back(t_list **lst, t_list *new)
 	return (*lst);
 }
 
-t_list	*lst_new(char *key, char *value)
+t_env	*lst_new(char *key, char *value)
 {
-	t_list	*node;
+	t_env	*node;
 
-	node = malloc(sizeof(t_list));
+	node = malloc(sizeof(t_env));
 	node->key = key;
 	node->value = value;
 	node->next = NULL;
@@ -51,10 +51,10 @@ t_list	*lst_new(char *key, char *value)
 	return (node);
 }
 
-int	list_size(t_list **lst)
+int	list_size(t_env **lst)
 {
 	int		size;
-	t_list	*loc;
+	t_env	*loc;
 
 	size = 0;
 	loc = *lst;
