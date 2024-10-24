@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getenv.c                                           :+:      :+:    :+:   */
+/*   ft_strcasecmp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/21 18:19:16 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/24 10:46:07 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/24 10:49:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-char	*bigerrno_getenv(t_list **env2, char *key)
+int	ft_strcasecmp(const char *s1, const char *s2)
 {
-	t_list	*var;
+	size_t	i;
 
-	var = find_key(env2, key);
-	if (var)
-		return (var->value);
-	return (NULL);
+	i = 0;
+	while (s1[i] && ft_toupper(s1[i]) == ft_toupper(s2[i]))
+		++i;
+	return ((unsigned char)ft_toupper(s1[i])
+		- (unsigned char)ft_toupper(s2[i]));
 }

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:19:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 23:39:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
 char	**expand_wildcard(const char *s);
+char	**get_wildcards(const char *s);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);

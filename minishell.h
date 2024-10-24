@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 16:35:37 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/23 23:54:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ char	*insert_str_before_char(const char *s, size_t i, const char *to_insert);
 char	*remove_str(const char *s, size_t i, size_t len_to_remove);
 char	*concatenate_strings(char **arr, const char *separator);
 char	**duplicate_strings(char **arr);
+void	sort_strings(char **arr);
 
 size_t	get_array_length(void **array);
 size_t	find_array_index(void **array, int (*condition)(void *element));
@@ -185,12 +186,12 @@ void	bigerrno_echo(char **arg);
 void	bigerrno_env(t_list **env2, char **arg);
 void	bigerrno_exit(char **arg, int *code_error, char **msg);
 void	bigerrno_export(t_list **env2, t_list **hidden, char **arg);
-char	*bigerrno_getenv(t_list **env2, char *key);
 void	bigerrno_pwd(void);
 void	bigerrno_unset(t_list **env2, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
+char	*get_env(t_list **env2, char *key);
 t_list	*add_node(t_list **env2, char *key, char *value);
 t_list	*find_key(t_list **env2, char *key);
 void	swap_node(t_list **s1, t_list **s2);
@@ -211,10 +212,5 @@ void	swap_node(t_list **s1, t_list **s2);
 int		valid_keyvalue(char *key, char *value);
 void	print_list(t_list **list, int export);
 t_list	*alpha_order_list(t_list **env2);
-int		init_expand(char ***expand);
-int		remove_tab_elements(char ***tab, int to_remove);
-char	**clean_expand(char **expand);
-char	**alpha_order(char ***order);
-void	print_wildcard(char **print);
 
 #endif
