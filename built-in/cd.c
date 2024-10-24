@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 18:50:48 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:56:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,25 @@ char	*get_absolute_path(t_env **env2)
 	return (abs_path);
 }
 
-t_env	*find_key(t_env **env2, char *key)
+t_env	*find_key(t_env **env2, char *key, int print_err)
 {
 	t_env	*list;
 
 	list = *env2;
 	if (!key || !list)
-		return (perror("No env or key found\n"), NULL);
+	{
+		if (print_err)
+			perror("No env or key found\n");
+		return (NULL);
+	}
 	while (list)
 	{
 		if (bn_isstrstr(list->key, key) == TRUE)
 			return (list);
 		list = list->next;
 	}
-	perror("Key not found\n");
+	if (print_err)
+		perror("Key not found\n");
 	return (NULL);
 }
 
@@ -86,15 +91,15 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 		return (perror("env is NULL\n"));
 	if ((arg_len) > 2)
 		perror("Too many arguments");
-	else if (!arg[1] && find_key(local, "HOME"))
-		change_directory(find_key(local, "HOME")->value);
+	else if (!arg[1] && find_key(local, "HOME", FALSE))//
+		change_directory(find_key(local, "HOME", FALSE)->value);
 	else if (!arg[1])
-		change_directory(find_key(env, "HOME")->value);
+		change_directory(find_key(env, "HOME", TRUE)->value);
 	else if (arg[1][0] == '~' && arg[1][0] == '\0')
 		change_directory(get_absolute_path(env));
 	else if (ft_strcmp(arg[1], "-") == 0)
 	{
-		if (!(chdir(find_key(env, "OLDPWD")->value) == 0 || chdir(add_node
+		if (!(chdir(find_key(env, "OLDPWD", TRUE)->value) == 0 || chdir(add_node
 					(env, "OLDPWD", getcwd(NULL, 0))->value) == 0))
 			perror("3 Failed to change directory");
 	}

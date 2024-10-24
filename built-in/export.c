@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 20:03:32 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:10:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	add_or_update_var(t_env **env2, char **key_value)
 		free(key);
 		key = bn_strldup(key_value[0], size - 1);
 	}
-	var = find_key(env2, key);
+	var = find_key(env2, key, TRUE);
 	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
 		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
 	else if (var && key_value[1])
@@ -94,11 +94,11 @@ void	update_env(t_env **env2, t_env **hidden)
 	t_env	*var;
 
 	if (!hidden)
-		return ;
+		return (perror("Nothing to update from hidden"));
 	start = *hidden;
 	while (*hidden)
 	{
-		var = find_key(env2, (*hidden)->key);
+		var = find_key(env2, (*hidden)->key, TRUE);
 		if (ft_strcmp((*hidden)->key, "_") != 0 && var)
 			*hidden = update_var(hidden, var, &start);
 		else
@@ -114,10 +114,12 @@ void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg)
 	int		n;
 
 	n = 0;
+	(void)hidden;
+	(void)local;
 	update_env(env2, hidden);
 	update_env(env2, local);
 	alpha_order = alpha_order_list(env2);
-	if (!arg[1])
+	if (bn_linelen(arg) == 1)
 		print_list(&alpha_order, TRUE);
 	else
 	{

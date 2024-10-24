@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:00:19 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	bigerrno_unset(t_env **env2, char **arg)
 	n = 1;
 	while (arg[n])
 	{
-		node = find_key(env2, arg[n]);
+		node = find_key(env2, arg[n], TRUE);
 		if (node)
 			node_clear(node);
 		n++;

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:35:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:58:31 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	exec_in_child(t_env **env2, char *cmd, int pipefd[2])
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	args = ft_split(cmd, ' ');
-	path = ft_split(find_key(env2, "PATH")->value, ':');
+	path = ft_split(find_key(env2, "PATH", TRUE)->value, ':');
 	while (path[i])
 	{
 		join = ft_strjoin(path[i], cmd);
@@ -88,10 +88,10 @@ void	update_pwd(t_env **env2)
 
 	pwd = *env2;
 	oldpwd = *env2;
-	pwd = find_key(env2, "PWD");
+	pwd = find_key(env2, "PWD", TRUE);
 	if (!pwd)
 		return (perror("Key not found\n"));
-	oldpwd = find_key(env2, "OLDPWD");
+	oldpwd = find_key(env2, "OLDPWD", TRUE);
 	if (!oldpwd)
 		return (perror("Key not found\n"));
 	free(oldpwd->value);

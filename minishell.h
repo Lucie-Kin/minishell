@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 18:53:03 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:18:15 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,8 @@ void	bigerrno_unset(t_env **env2, char **arg);
 /* Built-in utils ----------------------------------------------------------- */
 
 t_env	*add_node(t_env **env2, char *key, char *value);
-t_env	*find_key(t_env **env2, char *key);
-void	swap_node(t_env **s1, t_env **s2);
+t_env	*find_key(t_env **env2, char *key, int print_err);
+void	swap_node_content(t_env **s1, t_env **s2);
 void	swap_param(void **to_be_swap, void **swap_with);
 char	**convert_charchar(t_env **env2);
 void	update_pwd(t_env **env2);

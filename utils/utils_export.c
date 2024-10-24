@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:19:27 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	swap_param(void **to_be_swap, void **swap_with)
 	*swap_with = tmp;
 }
 
-void	swap_node(t_env **s1, t_env **s2)
+void	swap_node_content(t_env **s1, t_env **s2)
 {
 	swap_param((void **)(*s1)->key, (void **)(*s2)->key);
 	swap_param((void **)(*s1)->value, (void **)(*s2)->value);
@@ -84,20 +84,25 @@ t_env	*alpha_order_list(t_env **env2)
 {
 	t_env	*start;
 	t_env	*ordered;
+	int		swapped;
 
-	ordered = *env2;
 	start = *env2;
-	while (ordered && ordered->next)
+	if (!start)
+		return (NULL);
+	swapped = 1;
+	while (swapped)
 	{
-		if (ft_strcmp(ordered->value, ordered->next->value) > 0)
+		swapped = 0;
+		ordered = start;
+		while (ordered->next)
 		{
-			if (ft_strcmp(ordered->value, start->value) == 0)
-				start = ordered->next;
-			swap_node(&ordered, &ordered->next);
-			ordered = start;
-		}
-		else
+			if (ft_strcmp(ordered->key, ordered->next->key) > 0)
+			{
+				swap_node_content(&ordered, &ordered->next);
+				swapped = 1;
+			}
 			ordered = ordered->next;
+		}
 	}
 	return (start);
 }
