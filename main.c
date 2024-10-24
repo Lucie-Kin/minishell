@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 19:09:16 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:32:32 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,27 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (output_error(1,
 				compose_err_msg(SHELL_NAME, 0, "Too many arguments")));
-	if (!envp[0])
-		return (output_error(1,
-				compose_err_msg(SHELL_NAME, 0, "No environment variable")));
 	/*
-		- Duplicate the environment.
-		- Don't use `getenv`, rewrite the function and search your env copy.
-		- Set your $PWD on shell startup, don't trust its original value (also, 
-		the var may not even exist to begin with).
+		- Duplicate the environment and use your own `getenv` function.
+		- On exit, free the hidden var list, not just the environment.
+
 		- You can increment the SHLVL variable when executing a new bigerrno 
 		(and not when forking for a subshell), as every shell increments it. 
 		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
 		variable is different and is there to tell whether "exit" should be 
 		printed. It's the one you increment when forking for a subshell.
-		- Try to allow the env to be empty, instead of returning an error. For 
-		the prompt, `whoami` to get the username, and `uname -n` to get the 
-		hostname. Don't even care about whether the PATH var exists or not, 
-		search in /bin. If you don't find them because the system is not like 
-		other girls, just write "user" and "host" in the prompt.
-		- Free the hidden var list, not just the environment (export/env).
+
+		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
+		and you can add `--trace-children=yes` to find out in which child 
+		process you need to close them.
 	*/
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
-	sh.pid = ft_itoa(get_pid(sh.first_arg));
 	sh.env = convert_to_list(envp);
+	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));
+	sh.user = get_username(&sh);
+	sh.host = get_hostname(&sh);
+	sh.home = get_home_path(&sh, sh.user);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.level == 0)

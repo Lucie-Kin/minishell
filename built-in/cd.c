@@ -6,59 +6,49 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 15:56:42 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:49:33 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_username(t_env **env2)
+t_env	*add_node(t_env **env, char *key, char *value)
 {
-	int		pipefd[2];
-	int		cpid;
-	char	*username;
+	t_env	*new;
+	t_env	*lst;
 
-	if (pipe(pipefd) == -1)
-		return (perror("Impossible pipe creation\n"), NULL);
-	cpid = fork();
-	if (cpid == -1)
-		return (perror("Impossible fork creation\n"), NULL);
-	if (cpid == 0)
-		exec_in_child(env2, "/bin/whoami", pipefd);
-	wait(NULL);
-	username = get_next_line(pipefd[0]);
-	close(pipefd[1]);
-	close(pipefd[0]);
-	return (username);
+	lst = *env;
+	new = lst_new(ft_strdup(key), ft_strdup(value));
+	if (!new)
+		return (lst_clear(&lst), NULL);
+	lstadd_back(&lst, new);
+	return (new);
 }
 
-char	*get_absolute_path(t_env **env2)
+void	update_pwd(t_env **env)
 {
-	int		pipefd[2];
-	int		cpid;
-	char	*abs_path;
-	char	*abs_cmd;
+	t_env	*pwd;
+	t_env	*oldpwd;
 
-	abs_cmd = ft_strjoin("/bin/getent passwd ", get_username(env2));
-	if (pipe(pipefd) == -1)
-		return (perror("Impossible pipe creation\n"), NULL);
-	cpid = fork();
-	if (cpid == -1)
-		return (perror("Impossible fork creation\n"), NULL);
-	if (cpid == 0)
-		exec_in_child(env2, abs_cmd, pipefd);
-	wait(NULL);
-	abs_path = find_absolute_path(pipefd);
-	close(pipefd[1]);
-	close(pipefd[0]);
-	return (abs_path);
+	pwd = *env;
+	oldpwd = *env;
+	pwd = find_key(env, "PWD", TRUE);
+	if (!pwd)
+		return (perror("Key not found\n"));
+	oldpwd = find_key(env, "OLDPWD", TRUE);
+	if (!oldpwd)
+		return (perror("Key not found\n"));
+	free(oldpwd->value);
+	oldpwd->value = ft_strdup(pwd->value);
+	free(pwd->value);
+	pwd->value = getcwd(NULL, 0);
 }
 
-t_env	*find_key(t_env **env2, char *key, int print_err)
+t_env	*find_key(t_env **env, char *key, int print_err)
 {
 	t_env	*list;
 
-	list = *env2;
+	list = *env;
 	if (!key || !list)
 	{
 		if (print_err)
@@ -91,12 +81,10 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 		return (perror("env is NULL\n"));
 	if ((arg_len) > 2)
 		perror("Too many arguments");
-	else if (!arg[1] && find_key(local, "HOME", FALSE))//
+	else if (!arg[1] && find_key(local, "HOME", FALSE))
 		change_directory(find_key(local, "HOME", FALSE)->value);
 	else if (!arg[1])
 		change_directory(find_key(env, "HOME", TRUE)->value);
-	else if (arg[1][0] == '~' && arg[1][0] == '\0')
-		change_directory(get_absolute_path(env));
 	else if (ft_strcmp(arg[1], "-") == 0)
 	{
 		if (!(chdir(find_key(env, "OLDPWD", TRUE)->value) == 0 || chdir(add_node
@@ -107,9 +95,3 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 		change_directory(arg[1]);
 	update_pwd(env);
 }
-
-// sh->ex->pl.cmdl[sh->ex->pl.index]
-// sh->ex->pl.cmdl[sh->ex->pl.index][index] == cd
-// nombre de cmd = sh->ex->pl.len
-// char **cmdl
-// ["cd", "truc", "machin", NULL]

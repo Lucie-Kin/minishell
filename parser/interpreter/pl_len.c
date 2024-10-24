@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getenv.c                                           :+:      :+:    :+:   */
+/*   pl_len.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:43:11 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/10/18 17:10:40 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/22 15:48:11 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../parser.h"
 
-char	*get_env(t_env **env2, char *key)
+size_t	get_pl_len(char **tokens)
 {
-	t_env	*var;
+	size_t	i;
+	size_t	len;
 
-	var = find_key(env2, key, TRUE);
-	if (var)
-		return (var->value);
-	return (NULL);
+	i = 0;
+	len = 1;
+	while (tokens[i])
+	{
+		if (!ft_strcmp(tokens[i], "|"))
+			++len;
+		++i;
+	}
+	return (len);
 }

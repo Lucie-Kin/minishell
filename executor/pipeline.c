@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:35:33 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:38:00 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static int	temporary_exit_feature(t_sh *sh)
 static int	free_pipeline_resources(t_pl *pl)
 {
 	close_pipes(pl->fd_pipe, pl->fd_pipe_len);
+	if (pl->circular)
+		close(pl->fd_circ[1]);
 	output_error(pl->exit_code, pl->err_msg);
 	pl->err_msg = 0;
 	return (pl->exit_code);
@@ -77,7 +79,8 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		else if (!pid[sh->ex->pl.index])
 		{
 			free(pid);
-			child_exit_code = execute_subprocess(&sh->ex->pl, sh);
+			child_exit_code = execute_subprocess(&sh->ex->pl);
+			output_error(sh->ex->pl.exit_code, sh->ex->pl.err_msg);
 			destroy_all_ex(sh);
 			free_shell(sh);
 			exit(child_exit_code);

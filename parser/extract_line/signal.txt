@@ -1,0 +1,65 @@
+- Even if we can't resolve the unclosed quote because of a signal, the line is 
+added to history and simply not executed. Whatever has been appended with extra 
+input is of course part of what's in history.
+- If EOF while prompting for quote:
+	bash: unexpected EOF while looking for matching `"'
+	bash: syntax error: unexpected end of file
+
+--------------------------------------------------------------------------------
+
+- A shell, which includes Bigerrno, shouldn't be able to be put to the 
+background using the SIGTSTP signal (Ctrl-Z). Since Bigerrno is a mere program, 
+our role is to make sure to ignore SIGTSTP.
+- Besides ignoring SIGTSTP, handle SIGINT (Ctrl-C), EOT (Ctrl-D) and SIGQUIT 
+(Ctrl-\). 
+
+--------------------------------------------------------------------------------
+
+	cat << EOF
+	hello \
+	[Ctrl-D]
+
+There's a first prompt for the backslash, which is interrupted by the signal, 
+and then a second prompt which can be interrupted for the next heredoc line.
+
+--------------------------------------------------------------------------------
+
+- The current input is an array of lines.
+- Append the current line to the previous one, unless it heredoc content. 
+If so, leave them as individual lines. The delimiter is its own line, and you 
+continue non-heredoc content in another line if there's any.
+- If a Ctrl-C signal happens, discard the current line, join all the lines into 
+the final history entry, and don't send input to the executor.
+- If a Ctrl-D signal happens, and the current line is not empty, you ignore the 
+signal. If the line is empty, and the prompt is NOT for an unclosed quote: add 
+all the lines to history, which means that each individual lines are as many 
+history entries, then you exit. If it's empty and was for an unclosed quote, 
+the current line is merely "\n" (unless it was the first prompt of the current 
+input; yes you have "\n" even if it's the first prompt of the unclosed quote 
+but there was a prompt for something else before that), you join all the lines 
+into the final history entry, and don't send input to the executor.
+
+--------------------------------------------------------------------------------
+
+[FROM SLACK]
+"I found that if you do `bash | ls` it kind of breaks and exits out of the 
+child bash when you do pwd or echo, and I wondered if  minishell should do 
+something like that too or is that just undefined behavior?"
+
+Do you know why bash exits as soon as it tries to write to the standard output? 
+It's similar to the reason why a case like `cat | ls` behaves the way it does: 
+ls will immediately print its output and exit, cat will block and read from the 
+standard input, and only once you try to send a line of text through the pipe 
+between them does cat end with a SIGPIPE, because that pipe has been closed on 
+the other end.
+
+The puzzling part of bash is that it gets the prompt on the screen without 
+using the standard output. When I run our minishell like `./minishell | ls`, 
+just getting the prompt out involves using the standard output, so it 
+immediately gets a SIGPIPE and exits. I think that's perfectly reasonable 
+behavior: you've effectively broken the standard output, your shell and all its 
+children cannot write to the terminal anymore, even just calling printf or 
+readline would immediately crash your minishell with a SIGPIPE. Accounting for 
+a situation like that is pretty far beyond the scope of the project, if you ask 
+me.
+

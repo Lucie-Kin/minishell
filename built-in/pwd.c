@@ -6,18 +6,22 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 16:00:04 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:36:55 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	bigerrno_pwd(t_env **env2)
+void	bigerrno_pwd(void)
 {
-	t_env	*pwd;
+	char	*str;
 
-	pwd = find_key(env2, "PWD", TRUE);
-	if (!pwd)
-		perror("Failure get PWD");
-	printf("%s\n", pwd->value);
+	str = getcwd(NULL, 0);
+	if (!str)
+	{
+		perror("Failure getcwd");
+		return ;
+	}
+	printf("%s\n", str);
+	free(str);
 }

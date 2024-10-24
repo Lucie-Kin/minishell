@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 19:29:57 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:45:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	execute_builtin(t_env **env, t_env **hidden, t_env **local, char **arg)//fin
 	else if (ft_strcmp(arg[0], "export") == 0)
 		bigerrno_export(env, hidden, local, arg);
 	else if (ft_strcmp(arg[0], "pwd") == 0)
-		bigerrno_pwd(env);
+		bigerrno_pwd();
 	else if (ft_strcmp(arg[0], "unset") == 0)
 		bigerrno_unset(env, arg);
 	else
