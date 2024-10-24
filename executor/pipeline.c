@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:38:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:00:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		else if (!pid[sh->ex->pl.index])
 		{
 			free(pid);
-			child_exit_code = execute_subprocess(&sh->ex->pl);
+			child_exit_code = execute_subprocess(&sh->ex->pl, sh);
 			output_error(sh->ex->pl.exit_code, sh->ex->pl.err_msg);
 			destroy_all_ex(sh);
 			free_shell(sh);

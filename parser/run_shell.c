@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:31:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:53:37 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	free_shell(t_sh *sh)
 	readline("\001\e]0;Terminal\a\002");
 	rl_clear_history();
 	lst_clear(&sh->env);
+	lst_clear(&sh->hidden);
+	lst_clear(&sh->local);
 	free(sh->pid);
 	free(sh->user);
 	free(sh->host);

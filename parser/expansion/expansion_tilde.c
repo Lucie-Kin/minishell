@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_tilde.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:34:27 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:56:24 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ char	*expand_tilde(t_sh *sh, const char *s)
 	if (!ft_strncmp(s + i, "~", 1) && (!s[i + 1] || s[i + 1] == '/'))
 	{
 		len = 1;
-		var = getenv("HOME");
+		var = get_env(sh->env, "HOME");
 		if (!var)
 			var = sh->home;
 	}
 	else if (!ft_strncmp(s + i, "~+", 2) && (!s[i + 2] || s[i + 2] == '/'))
-		var = getenv("PWD");
+		var = get_env(sh->env, "PWD");
 	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 2] || s[i + 2] == '/'))
-		var = getenv("OLDPWD");
+		var = get_env(sh->env, "OLDPWD");
 	return (get_full_tilde_string(s, i, len, var));
 }
 

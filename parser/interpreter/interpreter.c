@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:41:30 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:57:23 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	interpreter(t_sh *sh)
 	if (!sh->ex)
 		return ;
 	sh->ex->pl.len = get_pl_len(sh->rl.tokens);
-	sh->ex->pl.path = get_pl_path();
+	sh->ex->pl.path = get_pl_path(sh);
 	sh->ex->pl.fd_pipe_len = sh->ex->pl.len - 1;
 	sh->ex->pl.cmdl = get_pl_cmdl(sh->rl.tokens, sh->ex->pl.len);
 	sh->ex->pl.inf = get_pl_inf(&sh->ex->pl, duplicate_strings(sh->rl.hd));

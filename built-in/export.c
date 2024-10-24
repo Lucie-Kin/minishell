@@ -6,13 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:10:06 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:58:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_or_update_var(t_env **env2, char **key_value)
+void	add_or_update_var(t_env **env, char **key_value)
 {
 	t_env	*var;
 	char	*key;
@@ -25,7 +25,7 @@ void	add_or_update_var(t_env **env2, char **key_value)
 		free(key);
 		key = bn_strldup(key_value[0], size - 1);
 	}
-	var = find_key(env2, key, TRUE);
+	var = find_key(env, key, TRUE);
 	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
 		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
 	else if (var && key_value[1])
@@ -34,7 +34,7 @@ void	add_or_update_var(t_env **env2, char **key_value)
 		var->value = ft_strdup(get_literal_token(key_value[1]));
 	}
 	else if (key_value[1])
-		add_node(env2, key_value[0], get_literal_token(key_value[1]));
+		add_node(env, key_value[0], get_literal_token(key_value[1]));
 	else
 		perror(ERR_EXPORT);
 	if (var->value)
@@ -88,7 +88,7 @@ t_env	*update_var(t_env **hidden, t_env *var, t_env **start)
 	return (tmp);
 }
 
-void	update_env(t_env **env2, t_env **hidden)
+void	update_env(t_env **env, t_env **hidden)
 {
 	t_env	*start;
 	t_env	*var;
@@ -98,7 +98,7 @@ void	update_env(t_env **env2, t_env **hidden)
 	start = *hidden;
 	while (*hidden)
 	{
-		var = find_key(env2, (*hidden)->key, TRUE);
+		var = find_key(env, (*hidden)->key, TRUE);
 		if (ft_strcmp((*hidden)->key, "_") != 0 && var)
 			*hidden = update_var(hidden, var, &start);
 		else
@@ -107,7 +107,7 @@ void	update_env(t_env **env2, t_env **hidden)
 	*hidden = start;
 }
 
-void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg)
+void	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 {
 	t_env	*alpha_order;
 	char	**key_value;
@@ -116,9 +116,9 @@ void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg)
 	n = 0;
 	(void)hidden;
 	(void)local;
-	update_env(env2, hidden);
-	update_env(env2, local);
-	alpha_order = alpha_order_list(env2);
+	update_env(env, hidden);
+	update_env(env, local);
+	alpha_order = alpha_order_list(env);
 	if (bn_linelen(arg) == 1)
 		print_list(&alpha_order, TRUE);
 	else
@@ -129,7 +129,7 @@ void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local, char **arg)
 			if (bn_linelen(key_value) > 2)
 				perror(ERR_EXPORT);
 			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)
-				add_or_update_var(env2, key_value);
+				add_or_update_var(env, key_value);
 			else
 				perror(ERR_EXPORT);
 			bn_freetab(key_value);

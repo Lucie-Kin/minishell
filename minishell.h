@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:44:39 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:59:14 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,29 +189,29 @@ t_env	*lstadd_back(t_env **lst, t_env *new);
 t_env	*lst_new(char *key, char *value);
 void	lst_clear(t_env **lst);
 int		list_size(t_env **lst);
-char	*get_env(t_env **env2, char *key);
+char	*get_env(t_env *env, char *key);
 
 /* Built-ins ---------------------------------------------------------------- */
 
 int		isbuiltin(char **cmd, t_env *local);
 int		execute_builtin(t_env **env, t_env **hidden, t_env **local, char **arg);
 
-void	bigerrno_cd(t_env **env2, t_env **local, char **arg);
+void	bigerrno_cd(t_env **env, t_env **local, char **arg);
 void	bigerrno_echo(char **arg);
-void	bigerrno_env(t_env **env2, t_env **local, char **arg);
+void	bigerrno_env(t_env **env, t_env **local, char **arg);
 void	bigerrno_exit(char **arg, int *code_error, char **msg);
-void	bigerrno_export(t_env **env2, t_env **hidden, t_env **local,
+void	bigerrno_export(t_env **env, t_env **hidden, t_env **local,
 			char **arg);
 void	bigerrno_pwd(void);
-void	bigerrno_unset(t_env **env2, char **arg);
+void	bigerrno_unset(t_env **env, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-t_env	*add_node(t_env **env2, char *key, char *value);
-t_env	*find_key(t_env **env2, char *key, int print_err);
+t_env	*add_node(t_env **env, char *key, char *value);
+t_env	*find_key(t_env **env, char *key, int print_err);
 void	swap_node_content(t_env **s1, t_env **s2);
 void	swap_param(void **to_be_swap, void **swap_with);
-void	update_pwd(t_env **env2);
+void	update_pwd(t_env **env);
 void	change_directory(char *path);
 int		valid_keyvalue(char *key, char *value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
@@ -226,7 +226,7 @@ void	swap_param(void **to_be_swap, void **swap_with);
 void	swap_node(t_env **s1, t_env **s2);
 int		valid_keyvalue(char *key, char *value);
 void	print_list(t_env **list, int export);
-t_env	*alpha_order_list(t_env **env2);
+t_env	*alpha_order_list(t_env **env);
 int		init_expand(char ***expand);
 int		remove_tab_elements(char ***tab, int to_remove);
 char	**clean_expand(char **expand);

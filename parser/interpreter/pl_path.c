@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   pl_path.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 18:21:48 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 01:13:09 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:57:02 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static char	**get_split_path(void);
+static char	**get_split_path(t_sh *sh);
 static char	**append_slash_to_path_strings(char **path);
 
-char	**get_pl_path(void)
+char	**get_pl_path(t_sh *sh)
 {
-	return (append_slash_to_path_strings(get_split_path()));
+	return (append_slash_to_path_strings(get_split_path(sh)));
 }
 
-static char	**get_split_path(void)
+static char	**get_split_path(t_sh *sh)
 {
 	char	*var;
 	char	**path;
 
-	var = getenv("PATH");
+	var = get_env(sh->env, "PATH");
 	if (!var || !var[0])
 		return (0);
 	path = ft_split(var, ':');

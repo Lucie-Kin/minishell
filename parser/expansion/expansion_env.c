@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_env.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:53:45 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:04:02 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static char	*get_var_value(t_sh *sh, const char *var_name, char *quote)
 	}
 	else
 	{
-		var_value = getenv(var_name);
+		var_value = get_env(sh->env, (char *)var_name);
 		if (var_value)
 		{
 			var_value = ft_strdup(var_value);

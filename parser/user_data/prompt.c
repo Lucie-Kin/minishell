@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 19:32:27 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:56:32 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	*get_prompt_path(t_sh *sh)
 	char	*str_result;
 
 	alloc = 0;
-	str_path = getenv("PWD");
+	str_path = get_env(sh->env, "PWD");
 	if (!str_path)
 	{
 		alloc = 1;

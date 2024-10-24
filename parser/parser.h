@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 18:58:01 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:58:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**get_wildcards(const char *s);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);
-char	**get_pl_path(void);
+char	**get_pl_path(t_sh *sh);
 char	***get_pl_cmdl(char	**tokens, size_t len);
 void	*destroy_pl_cmdl(char ***cmdl);
 char	***get_pl_inf(t_pl *pl, char **hd_dup);

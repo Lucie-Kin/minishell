@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:19:27 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:58:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ void	print_list(t_env **list, int export)
 	}
 }
 
-t_env	*alpha_order_list(t_env **env2)
+t_env	*alpha_order_list(t_env **env)
 {
 	t_env	*start;
 	t_env	*ordered;
 	int		swapped;
 
-	start = *env2;
+	start = *env;
 	if (!start)
 		return (NULL);
 	swapped = 1;

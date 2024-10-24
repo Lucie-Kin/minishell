@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:32:32 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:13:05 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ int	main(int argc, char **argv, char **envp)
 		return (output_error(1,
 				compose_err_msg(SHELL_NAME, 0, "Too many arguments")));
 	/*
-		- Duplicate the environment and use your own `getenv` function.
-		- On exit, free the hidden var list, not just the environment.
-
 		- You can increment the SHLVL variable when executing a new bigerrno 
 		(and not when forking for a subshell), as every shell increments it. 
 		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
