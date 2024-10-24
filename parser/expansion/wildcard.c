@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 18:26:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 12:28:34 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:14:11 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	**get_cwd_content(const char *s)
 		ent = readdir(dir);
 	}
 	closedir(dir);
-	sort_strings(arr);
+	sort_strings_alpha(arr, ft_strcasecmp);
 	return (arr);
 }
 

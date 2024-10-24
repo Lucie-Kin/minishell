@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 23:39:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:58:01 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		check_for_syntax_errors(const char *s);
 char	*find_unclosed_quote(const char *s);
 int		is_char_start_of_quote(const char *s, size_t i, char *quote);
 int		is_char_end_of_quote(const char *s, size_t i, char *quote);
+size_t	count_char_before(const char *s, size_t i, char c);
 char	*get_prefix_for_backslashes(t_sh *sh, size_t i, int *is_input_needed);
 int		handle_heredoc_content(t_sh *sh, size_t *index);
 int		check_right_operand_and_parentheses(t_sh *sh, char **prefix);

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 15:43:57 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 10:52:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:15:16 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	**duplicate_strings(char **arr)
 	return (dup);
 }
 
-void	sort_strings(char **arr)
+void	sort_strings_alpha(char **arr, int (*cmp)(const char *, const char *))
 {
 	size_t	i;
 	char	*tmp;
@@ -117,7 +117,7 @@ void	sort_strings(char **arr)
 	swap_performed = 0;
 	while (arr[i])
 	{
-		if (arr[i + 1] && ft_strcasecmp(arr[i], arr[i + 1]) > 0)
+		if (arr[i + 1] && cmp(arr[i], arr[i + 1]) > 0)
 		{
 			tmp = arr[i];
 			arr[i] = arr[i + 1];

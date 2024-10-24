@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:50:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:46:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:05:49 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ char	*get_clean_token(const char *s)
 	is_ansi_c_quote = 0;
 	while (parsed[i])
 	{
-		if (is_char_start_of_quote(parsed, i, quote))
+		if (!quote && (parsed[i] == '"' || parsed[i] == '\''))
 			quote = parsed + i;
-		else if (is_char_end_of_quote(parsed, i, quote))
+		else if (quote && *quote == parsed[i])
 		{
 			parsed = handle_end_of_quote(parsed, &i, &quote, &is_ansi_c_quote);
 			quote = 0;

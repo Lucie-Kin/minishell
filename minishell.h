@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 23:54:02 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:15:31 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ char	*insert_str_before_char(const char *s, size_t i, const char *to_insert);
 char	*remove_str(const char *s, size_t i, size_t len_to_remove);
 char	*concatenate_strings(char **arr, const char *separator);
 char	**duplicate_strings(char **arr);
-void	sort_strings(char **arr);
+void	sort_strings_alpha(char **arr, int (*cmp)(const char *, const char *));
 
 size_t	get_array_length(void **array);
 size_t	find_array_index(void **array, int (*condition)(void *element));
