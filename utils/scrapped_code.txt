@@ -31,7 +31,7 @@ void	exec_in_child(t_list **env, char *cmd, int pipefd[2])
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	args = ft_split(cmd, ' ');
-	path = ft_split(find_key(env, "PATH")->value, ':');
+	path = ft_split(find_key(*env, "PATH")->value, ':');
 	while (path[i])
 	{
 		join = ft_strjoin(path[i], cmd);

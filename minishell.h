@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:59:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:43:22 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,10 @@ t_env	*lstadd_back(t_env **lst, t_env *new);
 t_env	*lst_new(char *key, char *value);
 void	lst_clear(t_env **lst);
 int		list_size(t_env **lst);
+t_env	*list_dup(t_env *src);
+t_env	*add_node(t_env **lst, char *key, char *value);
 char	*get_env(t_env *env, char *key);
+void	list_in_p_order(t_env **env);
 
 /* Built-ins ---------------------------------------------------------------- */
 
@@ -207,13 +210,12 @@ void	bigerrno_unset(t_env **env, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-t_env	*add_node(t_env **env, char *key, char *value);
-t_env	*find_key(t_env **env, char *key, int print_err);
+t_env	*find_key(t_env *env, char *key, int print_err);
 void	swap_node_content(t_env **s1, t_env **s2);
-void	swap_param(void **to_be_swap, void **swap_with);
+void	swap_str(char **to_be_swap, char **swap_with);
 void	update_pwd(t_env **env);
 void	change_directory(char *path);
-int		valid_keyvalue(char *key, char *value);
+int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
 char	*get_echo_escaped_token(const char *s, int *is_c_found);
@@ -222,9 +224,6 @@ t_env	*find_biggest_p(t_env **p_order);
 t_env	*next_smallest(t_env **p_order, t_env *smallest);
 void	lst_clear(t_env **lst);
 void	clear_node(t_env *node);
-void	swap_param(void **to_be_swap, void **swap_with);
-void	swap_node(t_env **s1, t_env **s2);
-int		valid_keyvalue(char *key, char *value);
 void	print_list(t_env **list, int export);
 t_env	*alpha_order_list(t_env **env);
 int		init_expand(char ***expand);

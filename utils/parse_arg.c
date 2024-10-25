@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:45:25 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:15:22 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	update_local(char **cmd, t_env **local)//
 		key_value = parse_key_value(cmd[i]);
 		if (bn_linelen(key_value) != 2)
 			break ;
-		else if (valid_keyvalue(key_value[0], key_value[1]) == FALSE)
+		else if (ft_strchr(cmd[i], '=') || valid_keyvalue(cmd[i]) == FALSE)
 			break ;
 		new = lst_new(key_value[0], key_value[1]);
 		lstadd_back(local, new);
@@ -44,7 +44,8 @@ int	isbuiltin(char **cmd, t_env *local)
 	int		state;
 	int		i;
 
-	update_local(cmd, &local);
+	(void)local;
+	// update_local(cmd, &local);
 	cmd_str = ft_strdup("cd:echo:env:exit:export:pwd:unset");
 	cmd_tab = ft_split(cmd_str, ':');
 	free(cmd_str);

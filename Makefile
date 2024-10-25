@@ -18,7 +18,7 @@ LIBFT_BIN = $(LIBFT_DIR)/libft.a
 
 all: $(LIBFT_BIN) $(NAME)
 
-debug_env: CFLAGS += $(DBUG_FLAGS)
+debug_env: CFLAGS += $(DBUG_FLAG)
 
 debug_env: re
 

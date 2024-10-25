@@ -6,39 +6,45 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:58:25 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:09:52 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_or_update_var(t_env **env, char **key_value)
+void	add_or_update_var(t_env **env, char *key_value)
 {
 	t_env	*var;
 	char	*key;
-	int		size;
+	int		separator;
 
-	size = ft_strlen(key_value[0]);
-	key = ft_strdup(key_value[0]);
-	if (key_value[1] && key_value[0][size] == '+')
-	{
-		free(key);
-		key = bn_strldup(key_value[0], size - 1);
-	}
-	var = find_key(env, key, TRUE);
-	if (var && key_value[1] && key_value[0][size] == '+' && var->value)
-		var->value = ft_strjoin(var->value, get_literal_token(key_value[1]));
-	else if (var && key_value[1])
-	{
-		free(var->value);
-		var->value = ft_strdup(get_literal_token(key_value[1]));
-	}
-	else if (key_value[1])
-		add_node(env, key_value[0], get_literal_token(key_value[1]));
+	separator = bn_firstocc(key_value, '=');
+	if (separator > 0 && key_value[separator - 1] == '+')
+		key = bn_strldup(key_value, separator - 1);
+	else if (separator > 0)
+		key = bn_strldup(key_value, separator);
 	else
-		perror(ERR_EXPORT);
-	if (var->value)
+		key = ft_strdup(key_value);
+	var = find_key(*env, key, TRUE);
+	if (var && separator > 0 && key_value[separator - 1] == '+')
+	{
+		var->value = ft_strjoin(var->value,
+				get_literal_token(key_value + separator + 1));
 		var->withvalue = TRUE;
+	}
+	else if (var && separator > 0)
+	{
+		if (var->value == NULL)
+			free(var->value);
+		var->value = ft_strdup(get_literal_token(key_value + separator + 1));
+		var->withvalue = TRUE;
+	}
+	else if (var)
+		;
+	else if (separator > 0)
+		add_node(env, key, get_literal_token(key_value + separator + 1));
+	else
+		add_node(env, key, NULL);
 }
 
 char	**parse_key_value(char *to_separate)
@@ -52,11 +58,18 @@ char	**parse_key_value(char *to_separate)
 	separator = ft_strchr(to_separate, '=');
 	if (separator)
 		*separator = ';';
+	else
+	{
+		key_value = ft_calloc(sizeof(char *), 2);
+		key_value[0] = ft_strdup(to_separate);
+		return (key_value);
+	}
 	end = ft_strlen(to_separate);
 	if (separator == &to_separate[end])
 	{
 		key_value = ft_calloc(sizeof(char *), 2);
 		key_value[0] = ft_strdup(to_separate);
+		key_value[1] = ft_strdup("");
 	}
 	else
 		key_value = ft_split(to_separate, ';');
@@ -98,7 +111,7 @@ void	update_env(t_env **env, t_env **hidden)
 	start = *hidden;
 	while (*hidden)
 	{
-		var = find_key(env, (*hidden)->key, TRUE);
+		var = find_key(*env, (*hidden)->key, TRUE);
 		if (ft_strcmp((*hidden)->key, "_") != 0 && var)
 			*hidden = update_var(hidden, var, &start);
 		else
@@ -110,29 +123,24 @@ void	update_env(t_env **env, t_env **hidden)
 void	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 {
 	t_env	*alpha_order;
-	char	**key_value;
 	int		n;
 
-	n = 0;
+	n = 1;
 	(void)hidden;
 	(void)local;
-	update_env(env, hidden);
-	update_env(env, local);
+	// update_env(env, hidden);
+	// update_env(env, local);
 	alpha_order = alpha_order_list(env);
 	if (bn_linelen(arg) == 1)
 		print_list(&alpha_order, TRUE);
 	else
 	{
-		while (arg[1 + n])
+		while (arg[n])
 		{
-			key_value = parse_key_value(arg[1 + n]);
-			if (bn_linelen(key_value) > 2)
-				perror(ERR_EXPORT);
-			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)
-				add_or_update_var(env, key_value);
+			if (valid_keyvalue(arg[n]) == TRUE)
+				add_or_update_var(env, arg[n]);
 			else
-				perror(ERR_EXPORT);
-			bn_freetab(key_value);
+				printf("%s 2\n", ERR_EXPORT);
 			n++;
 		}
 	}
