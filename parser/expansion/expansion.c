@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:19:55 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:55:26 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static char	**get_expanded_token(t_sh *sh, const char *s)
 	tmp = expand_environment_variables(sh, s);
 	if (!tmp)
 		return (0);
-	arr = expand_wildcard(tmp);
+	arr = expand_asterisk_wildcard(tmp);
 	if (arr)
 	{
 		free(tmp);

@@ -36,7 +36,9 @@ void	add_or_update_var(t_env **env, char **key_value)
 	else if (key_value[1])
 		add_node(env, key_value[0], get_literal_token(key_value[1]));
 	else
-		perror(ERR_EXPORT);
+	{
+		//perror(ERR_EXPORT);
+	}
 	if (var->value)
 		var->withvalue = TRUE;
 }
@@ -94,7 +96,7 @@ void	update_env(t_env **env, t_env **hidden)
 	t_env	*var;
 
 	if (!hidden)
-		return (perror("Nothing to update from hidden"));
+		return ;//return (perror("Nothing to update from hidden"));
 	start = *hidden;
 	while (*hidden)
 	{
@@ -127,11 +129,15 @@ void	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 		{
 			key_value = parse_key_value(arg[1 + n]);
 			if (bn_linelen(key_value) > 2)
-				perror(ERR_EXPORT);
+			{
+				//perror(ERR_EXPORT);
+			}
 			else if (valid_keyvalue(key_value[0], key_value[1]) == TRUE)
 				add_or_update_var(env, key_value);
 			else
-				perror(ERR_EXPORT);
+			{
+				//perror(ERR_EXPORT);
+			}
 			bn_freetab(key_value);
 			n++;
 		}

@@ -36,6 +36,8 @@ void	bigerrno_exit(char **arg, int *code_error, char **msg)
 			*code_error = ft_atoi(arg[1]) % 256;
 	}
 	if (*msg)
-		perror(*msg);
+	{
+		//perror(*msg);
+	}
 	exit (*code_error);
 }

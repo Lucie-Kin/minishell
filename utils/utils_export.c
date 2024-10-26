@@ -61,7 +61,9 @@ void	print_list(t_env **list, int export)
 
 	tmp = *list;
 	if (!tmp)
-		perror("Failure to read env");
+	{
+		//perror("Failure to read env");
+	}
 	while (tmp)
 	{
 		if (export == TRUE)

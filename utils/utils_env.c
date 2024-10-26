@@ -52,9 +52,9 @@ t_env	*next_smallest(t_env **p_order, t_env *smallest)
 	tmp = *p_order;
 	next_small = NULL;
 	if (!p_order)
-		return (perror("No struct list found"), NULL);
+		return (NULL);//return (perror("No struct list found"), NULL);
 	if (!smallest)
-		return (perror("Node not found"), NULL);
+		return (NULL);//return (perror("Node not found"), NULL);
 	while (tmp)
 	{
 		if (tmp > smallest && (!next_small || tmp < next_small))

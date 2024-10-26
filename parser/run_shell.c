@@ -6,13 +6,14 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:53:37 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 16:17:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
 static void	process_current_line(t_sh *sh);
+static void	process_cmd(t_sh *sh);
 static void	unlink_heredocs(t_sh *sh);
 
 void	run_shell(t_sh *sh)
@@ -35,6 +36,7 @@ void	free_shell(t_sh *sh)
 {
 	close(STDIN_FILENO);
 	readline("\001\e]0;Terminal\a\002");
+	printf("\033]11;rgb:2e2e/3434/3636\007");
 	rl_clear_history();
 	lst_clear(&sh->env);
 	lst_clear(&sh->hidden);
@@ -75,22 +77,6 @@ void	free_rl_arr_element(void *ptr)
 	return ;
 }
 
-static void	process_cmd(t_sh *sh)
-{
-	while (sh->ex)
-	{
-		if (sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]))
-			update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-		else if (sh->ex->pl.len == 1
-			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local))
-			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
-					sh->ex->pl.cmdl[0]);
-		else
-			sh->exit_code = execute_pipeline(sh);
-		pop_head_ex(sh);
-	}
-}
-
 static void	process_current_line(t_sh *sh)
 {
 	char	*cmdl;
@@ -115,6 +101,33 @@ static void	process_current_line(t_sh *sh)
 	sh->rl.arr = 0;
 	free_entire_array((void **)sh->rl.hd, free);
 	sh->rl.hd = 0;
+	return ;
+}
+
+static void	process_cmd(t_sh *sh)
+{
+	while (sh->ex)
+	{
+		if (sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]))
+			update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+		else if (sh->ex->pl.len == 1
+			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local))
+		{
+			/*
+				Something in there messes up with:
+				- the background color reset, 
+				- the window title reset,
+				- the "exit" print at the end.
+			*/
+			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
+					sh->ex->pl.cmdl[0]);
+		}
+		else
+			sh->exit_code = execute_pipeline(sh);
+		if (sh->ex->pl.cmdl[0][0] && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
+			sh->keep_running = 0;
+		pop_head_ex(sh);
+	}
 	return ;
 }
 

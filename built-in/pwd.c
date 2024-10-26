@@ -19,7 +19,7 @@ void	bigerrno_pwd(void)
 	str = getcwd(NULL, 0);
 	if (!str)
 	{
-		perror("Failure getcwd");
+		//perror("Failure getcwd");
 		return ;
 	}
 	printf("%s\n", str);

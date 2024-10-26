@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:58:28 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 17:13:08 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
 void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
-char	**expand_wildcard(const char *s);
-char	**get_wildcards(const char *s);
+char	**expand_asterisk_wildcard(const char *s);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);

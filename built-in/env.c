@@ -31,7 +31,7 @@ void	print_in_p_order(t_env **to_print, t_env **not_to_print)
 	smallest = find_smallest_p(&p_order);
 	biggest = find_biggest_p(&p_order);
 	if (!smallest || !biggest || !p_order)
-		return (perror("Nothing to be printed"));
+		return ;//return (perror("Nothing to be printed"));
 	if (smallest->withvalue == TRUE && !find_key(not_to_print,
 			smallest->key, TRUE))
 		env_print(smallest);

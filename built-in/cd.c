@@ -34,10 +34,10 @@ void	update_pwd(t_env **env)
 	oldpwd = *env;
 	pwd = find_key(env, "PWD", TRUE);
 	if (!pwd)
-		return (perror("Key not found\n"));
+		return ;//return (perror("Key not found\n"));
 	oldpwd = find_key(env, "OLDPWD", TRUE);
 	if (!oldpwd)
-		return (perror("Key not found\n"));
+		return ;//return (perror("Key not found\n"));
 	free(oldpwd->value);
 	oldpwd->value = ft_strdup(pwd->value);
 	free(pwd->value);
@@ -51,8 +51,8 @@ t_env	*find_key(t_env **env, char *key, int print_err)
 	list = *env;
 	if (!key || !list)
 	{
-		if (print_err)
-			perror("No env or key found\n");
+		//if (print_err)
+		//	perror("No env or key found\n");
 		return (NULL);
 	}
 	while (list)
@@ -61,15 +61,17 @@ t_env	*find_key(t_env **env, char *key, int print_err)
 			return (list);
 		list = list->next;
 	}
-	if (print_err)
-		perror("Key not found\n");
+	//if (print_err)
+	//	perror("Key not found\n");
 	return (NULL);
 }
 
 void	change_directory(char *path)
 {
 	if (chdir(path) != 0)
-		perror("2 Failed to change directory");
+	{
+		//perror("2 Failed to change directory");
+	}
 }
 
 void	bigerrno_cd(t_env **env, t_env **local, char **arg)
@@ -78,9 +80,11 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 
 	arg_len = bn_linelen(arg);
 	if (!env)
-		return (perror("env is NULL\n"));
+		return ;//return (perror("env is NULL\n"));
 	if ((arg_len) > 2)
-		perror("Too many arguments");
+	{
+		//perror("Too many arguments");
+	}
 	else if (!arg[1] && find_key(local, "HOME", FALSE))
 		change_directory(find_key(local, "HOME", FALSE)->value);
 	else if (!arg[1])
@@ -89,7 +93,9 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg)
 	{
 		if (!(chdir(find_key(env, "OLDPWD", TRUE)->value) == 0 || chdir(add_node
 					(env, "OLDPWD", getcwd(NULL, 0))->value) == 0))
-			perror("3 Failed to change directory");
+		{
+			//perror("3 Failed to change directory");
+		}
 	}
 	else
 		change_directory(arg[1]);

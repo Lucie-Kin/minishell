@@ -6,12 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 20:13:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 21:05:34 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//Get current background color with `echo -e "\033]11;?\007"`
 int	main(int argc, char **argv, char **envp)
 {
 	t_sh	sh;
@@ -30,6 +31,7 @@ int	main(int argc, char **argv, char **envp)
 		and you can add `--trace-children=yes` to find out in which child 
 		process you need to close them.
 	*/
+	printf("\033]11;rgb:3030/0a0a/2424\007");
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
 	sh.env = convert_to_list(envp);

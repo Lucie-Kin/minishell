@@ -36,8 +36,8 @@
 # include "libbn/libbn.h"
 
 # define FALSE 0
-# define TRUE 1
-# define SEP 28
+# define TRUE  1
+# define SEP   28
 # define LOGOP_COLON 0
 # define LOGOP_OR    1
 # define LOGOP_AND   2
@@ -45,7 +45,6 @@
 # define SHELL_NAME "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
-// errno -l : lister les macros d'erreur dans bash
 
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
@@ -102,6 +101,7 @@ typedef struct s_rl
 	char		**hd;
 }	t_rl;
 
+/* `env` stands for "environment" */
 typedef struct s_env
 {
 	char			*key;
@@ -200,8 +200,7 @@ void	bigerrno_cd(t_env **env, t_env **local, char **arg);
 void	bigerrno_echo(char **arg);
 void	bigerrno_env(t_env **env, t_env **local, char **arg);
 void	bigerrno_exit(char **arg, int *code_error, char **msg);
-void	bigerrno_export(t_env **env, t_env **hidden, t_env **local,
-			char **arg);
+void	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
 void	bigerrno_pwd(void);
 void	bigerrno_unset(t_env **env, char **arg);
 
@@ -231,7 +230,6 @@ int		init_expand(char ***expand);
 int		remove_tab_elements(char ***tab, int to_remove);
 char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
-void	print_wildcard(char **print);
 char	**parse_key_value(char *to_separate);
 
 #endif
