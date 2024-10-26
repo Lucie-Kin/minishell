@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:43:22 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:04:00 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@
 # define SHELL_NAME "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
+# define ERR_NB_ARGS "too many arguments"
+# define ERR_NONUM "numeric argument required"
 // errno -l : lister les macros d'erreur dans bash
 
 /* `pl` stands for "pipeline" */
@@ -179,6 +181,8 @@ void	free_entire_array(void **array, void (*free_element)(void *));
 
 int		only_var(char **arg);
 void	update_hidden(t_env **hidden, char **token);
+
+void	update_shlvl(t_env **env, int inpipe);
 
 /* Utils list --------------------------------------------------------------- */
 

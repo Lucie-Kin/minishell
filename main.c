@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 20:13:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:05:57 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
 	sh.env = convert_to_list(envp);
+	update_shlvl(&sh.env, FALSE);
 	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));
 	sh.user = get_username(&sh);
 	sh.host = get_hostname(&sh);

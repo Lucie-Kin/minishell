@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/21 19:04:32 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 17:23:35 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ char	*compose_err_msg(const char *cmd, const char *arg, const char *msg)
 	free(str1);
 	str1 = ft_strjoin(str2, "\n");
 	free(str2);
-	return (str1);
+	str2 = ft_strjoin("bigerrno: ", str1);
+	free(str1);
+	return (str2);
 }
 
 int	output_error(int code, char *msg)

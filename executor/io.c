@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/19 17:46:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 16:35:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@ int	set_last_infile_fd(t_pl *pl, int catch_err)
 		if (!check_file(pl, pl->inf[pl->index][i], R_OK, catch_err))
 			return (0);
 		else if (!pl->inf[pl->index][i + 1])
+		{
 			pl->fd_src[0] = open(pl->inf[pl->index][i], O_RDONLY);
+			if (pl->fd_src[0] < 0)
+				return (0);
+		}
 		++i;
 	}
 	return (1);
@@ -48,7 +52,16 @@ int	set_last_outfile_fd(t_pl *pl, int catch_err)
 			catch_err))
 			return (0);
 		pl->fd_src[1] = open(pl->outf[pl->index][i].filename,
-				pl->outf[pl->index][i].flags, 0777);
+				pl->outf[pl->index][i].flags, 0644);
+		if (pl->fd_src[1] < 0)
+		{
+			pl->exit_code = errno;
+			pl->err_msg = compose_err_msg(SHELL_NAME,
+					pl->outf[pl->index][i].filename, strerror(pl->exit_code));
+			printf("Error opening file %s: %s\n",
+				pl->outf[pl->index][i].filename, strerror(pl->exit_code));
+			return (0);
+		}
 		if (pl->outf[pl->index][i + 1].filename)
 			close(pl->fd_src[1]);
 		++i;
@@ -61,6 +74,8 @@ int	redirect_cmd_io(t_pl *pl)
 	int	fd_dup[2];
 	int	err_codes[2];
 
+	fd_dup[0] = -1;
+	fd_dup[1] = -1;
 	err_codes[0] = redirect_src(pl, fd_dup, 0);
 	err_codes[1] = redirect_src(pl, fd_dup, 1);
 	if (!err_codes[0] && !err_codes[1])
@@ -74,12 +89,15 @@ int	redirect_cmd_io(t_pl *pl)
 	return (0);
 }
 
+// Modification pour essayer de réparer "> out" dans le terminal
 static int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 {
 	if (mode == W_OK && access(file, F_OK) < 0)
 	{
-		errno = 0;
-		return (1);
+		pl->exit_code = ENOENT;
+		pl->err_msg = compose_err_msg(SHELL_NAME, file, strerror(pl->exit_code));
+		// errno = 0;
+		return (0);
 	}
 	else if (access(file, mode) < 0)
 	{

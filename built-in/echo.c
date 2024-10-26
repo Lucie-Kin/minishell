@@ -6,28 +6,35 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 14:48:30 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 15:01:13 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	echo_option(char **arg, int *skip_newline, int *with_backlash,
+int	echo_option(char **arg, int *skip_newline, int *with_backlash,
 		int *count)
 {
+	int	i;
+
 	*skip_newline = FALSE;
 	*with_backlash = FALSE;
 	*count = 1;
-	while (arg[*count] && arg[*count][0] == '-'
-		&& (bn_countiter(&arg[*count][1], 'n') > 0
-		|| bn_countiter(&arg[*count][1], 'e') > 0))
+	while (arg[*count] && arg[*count][0] == '-')
 	{
-		if (arg[*skip_newline][1] == 'n')
-			*skip_newline = 2;
-		else if (arg[*skip_newline][1] == 'e')
-			(*with_backlash)++;
+		i = 1;
+		while (arg[*count][i] && (arg[*count][i] == 'n'
+			|| arg[*count][i] == 'e'))
+			i++;
+		if (arg[*count][i] != '\0')
+			break ;
+		if (ft_strchr(arg[*count], 'n'))
+			*skip_newline = TRUE;
+		if (ft_strchr(arg[*count], 'e'))
+			*with_backlash = TRUE;
 		(*count)++;
 	}
+	return (*count);
 }
 
 void	bigerrno_echo(char **arg)
@@ -38,8 +45,7 @@ void	bigerrno_echo(char **arg)
 	int		count;
 	char	*parsed;
 
-	echo_option(arg, &skip_nl, &with_backlash, &count);
-	to_be_echoed = count;
+	to_be_echoed = echo_option(arg, &skip_nl, &with_backlash, &count);
 	while (arg[to_be_echoed])
 	{
 		if (to_be_echoed != count)

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:26:09 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:38:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:08:47 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	execute_subprocess(t_pl *pl, t_sh *sh)
 	close_file_descriptors(pl, 0);
 	if (cmd_fullpath)
 	{
+		if (ft_strcmp(cmd_fullpath, "./minishell") == 0)
+			update_shlvl(&sh->env, FALSE);
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
 		pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
