@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:22:28 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:55 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 23:03:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ int	extract_first_command_line(t_sh *sh)
 	{
 		add_prefix_to_first_buffer_line(sh, prefix);
 		extract_first_buffer_line(sh, &index, 0);
-		if (!sh->rl.arr[index]
-			|| !check_for_syntax_errors(sh->rl.arr[index]->value))
-		{
-			sh->exit_code = 2;
-			return (0);
-		}
 		is_needed = check_need_for_input(sh, &index, &prefix, &is_legal);
 		if (is_legal && is_needed && !sh->rl.buf[0])
 			add_input_to_buffer(sh, "> ");
@@ -72,14 +66,19 @@ static int	check_need_for_input(t_sh *sh, size_t *index, char **prefix,
 {
 	int	is_needed;
 
-	is_needed = 0;
-	if (find_unclosed_quote(sh->rl.arr[*index]->value))
+	if (!sh->rl.arr[*index])
+		return (0);
+	else if (find_unclosed_quote(sh->rl.arr[*index]->value))
 	{
-		is_needed = 1;
 		*prefix = "\n";
+		return (1);
 	}
-	if (!is_needed)
-		*prefix = get_prefix_for_backslashes(sh, *index, &is_needed);
+	/*
+		Check for errors here.
+		If error there is, set `is_legal` to false and `sh->exit_code` to 2.
+	*/
+	is_needed = 0;
+	*prefix = get_prefix_for_backslashes(sh, *index, &is_needed);
 	if (!is_needed)
 	{
 		*is_legal = handle_heredoc_content(sh, index);

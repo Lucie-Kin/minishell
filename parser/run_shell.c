@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/26 16:17:55 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/27 16:56:28 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	run_shell(t_sh *sh)
 	while (sh->keep_running)
 	{
 		update_prompt(sh);
+		set_background_color_to_gnome_purple();
 		add_input_to_buffer(sh, sh->rl.prompt);
 		while (sh->rl.buf && sh->rl.buf[0])
 			process_current_line(sh);
@@ -34,9 +35,6 @@ void	run_shell(t_sh *sh)
 
 void	free_shell(t_sh *sh)
 {
-	close(STDIN_FILENO);
-	readline("\001\e]0;Terminal\a\002");
-	printf("\033]11;rgb:2e2e/3434/3636\007");
 	rl_clear_history();
 	lst_clear(&sh->env);
 	lst_clear(&sh->hidden);
@@ -104,6 +102,24 @@ static void	process_current_line(t_sh *sh)
 	return ;
 }
 
+static int	test_builtin(t_pl *pl)
+{
+	if (redirect_io(pl))
+	{
+		printf("test builtin\n");
+		/*
+			If need be, the builtin sets `pl->exit_code` and `pl->err_msg` 
+			(allocated string, not literal) for the first encountered error.
+
+			Example from after execve:
+				pl->exit_code = errno;
+				pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
+					strerror(pl->exit_code));
+		*/
+	}
+	return (restore_io(pl));
+}
+
 static void	process_cmd(t_sh *sh)
 {
 	while (sh->ex)
@@ -113,19 +129,18 @@ static void	process_cmd(t_sh *sh)
 		else if (sh->ex->pl.len == 1
 			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local))
 		{
-			/*
-				Something in there messes up with:
-				- the background color reset, 
-				- the window title reset,
-				- the "exit" print at the end.
-			*/
+			// Something in there messes up with:
+			// - the background color reset, 
+			// - the window title reset,
+			// - the "exit" print at the end.
 			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
 					sh->ex->pl.cmdl[0]);
 		}
+		/* Exit code here is temporary - Put it in builtin */
+		else if (sh->ex->pl.len == 1 && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
+			sh->keep_running = 0;
 		else
 			sh->exit_code = execute_pipeline(sh);
-		if (sh->ex->pl.cmdl[0][0] && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
-			sh->keep_running = 0;
 		pop_head_ex(sh);
 	}
 	return ;

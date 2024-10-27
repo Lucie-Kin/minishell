@@ -6,13 +6,12 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/26 21:05:34 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/27 13:59:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Get current background color with `echo -e "\033]11;?\007"`
 int	main(int argc, char **argv, char **envp)
 {
 	t_sh	sh;
@@ -30,8 +29,12 @@ int	main(int argc, char **argv, char **envp)
 		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
 		and you can add `--trace-children=yes` to find out in which child 
 		process you need to close them.
+
+		- Get current background color with `echo -e "\033]11;?\007"`. It'd be 
+		used when exiting the main function, to restore the original color. If 
+		it's too tricky, just hardcode the grey color we have at school.
 	*/
-	printf("\033]11;rgb:3030/0a0a/2424\007");
+	set_background_color_to_gnome_purple();
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
 	sh.env = convert_to_list(envp);
@@ -42,6 +45,11 @@ int	main(int argc, char **argv, char **envp)
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.level == 0)
+	{
+		close(STDIN_FILENO);
+		readline("\001\e]0;Terminal\a\002");
 		ft_putstr_fd("exit\n", 1);
+		set_background_color("11;rgb:2e2e/3434/3636");
+	}
 	return (sh.exit_code);
 }

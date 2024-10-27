@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/05 22:04:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/26 22:26:45 by libousse         ###   ########.fr       */
+/*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
+/*   Updated: 2024/10/27 22:34:30 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,69 @@
 
 int	check_for_syntax_errors(const char *s)
 {
-	// TODO
 	(void)s;
+	/*
+	size_t	i;
+
+	// LEGAL: `echo a | (cd .. && ls)`
+	// LEGAL: `(cd .. && ls) > out`
+	// ILLEGAL: `< (cd .. && ls)` or `< main.c (cd .. && ls)`
+	// LEGAL: `(cat) < main.c` or `(ls) < main.c`
+
+	i = 0;
+	while (tokens && tokens[i])
+	{
+		if (is_metacharacter(tokens[i][0]))
+		{
+			if (!i && (tokens[i][0] == ';' || tokens[i][0] == '|'
+					|| tokens[i][0] == '&'))
+				return (0);
+			if (i && is_metacharacter(tokens[i - 1][0]))
+			{
+		*/
+				/*
+					( -> can be preceded by ';', '|' or '&'
+					) -> can be preceded by ';'
+					; -> can be preceded by ')' 
+					| -> can be preceded by ')'
+					& -> can be preceded by ')'
+					< -> can be preceded by '(', ')', ';', '|' or '&'
+					> -> can be preceded by '(', ')', ';', '|' or '&'
+				*/
+		/*
+				if (tokens[i][0] == '(' && tokens[i - 1][0] != ';'
+						&& tokens[i - 1][0] != '|' && tokens[i - 1][0] != '&')
+					return (0);
+				else if (tokens[i][0] == ')' && tokens[i - 1][0] != ';')
+					return (0);
+				else if ((tokens[i][0] == ';' || tokens[i][0] == '|'
+						|| tokens[i][0] == '&') && tokens[i - 1][0] != ')')
+					return (0);
+				else if ((tokens[i][0] == '<' || tokens[i][0] == '>')
+						&& (tokens[i - 1][0] == '<' || tokens[i - 1][0] == '>'))
+					return (0);
+			}
+			if (tokens[i][0] == ';' && ft_strlen(tokens[i]) > 1)
+				return (0);
+			if (tokens[i][0] != '(' && tokens[i][0] != ')'
+					&& ft_strlen(tokens[i]) > 2)
+				return (0);
+			if (tokens[i][0] == '<' || tokens[i][0] == '>')
+			{
+				if (!tokens[i + 1])
+					return (0);
+				else if (!ft_strcmp(tokens[i], "<<")
+					&& !is_metacharacter(tokens[i + 1][0])
+					&& !create_heredoc(sh, index, tokens[i + 1]))
+						return (0);
+			}
+		}
+		++i;
+	}
+	*/
+	return (1);
+}
+
 	/*
 		- It's easier to check for errors with tokens. Get all the heredoc 
 		content you can before encountering the first error. Note that this 
@@ -31,15 +92,6 @@ int	check_for_syntax_errors(const char *s)
 		> hello
 		> EOF
 	*/
-	return (1);
-}
-
-/*
-	A comment starts at the first '#' if it's preceded by a whitespace (not 
-	`ls\ #' but `ls #`).
-	The comment is written to history.
-*/
-
 /*
 	( ) ; | & < >
 
@@ -88,4 +140,20 @@ int	check_for_syntax_errors(const char *s)
 		bash: syntax error near unexpected token `)'
 		$ (a(
 		bash: syntax error near unexpected token `newline'
+	
+		(((ls) && echo a) + )
+
+		+1
+		+1
+		+1
+		-1
+		-1
+		= 3 - 2 = 1
+
+		((a)(
+
+		2 - 1 + 1
+
+		- Must not be negative.
+		- Needs to be 0 before adding (= opening a parenthese).
 */

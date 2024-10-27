@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/24 19:59:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/27 16:48:05 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_pl
 	t_outf	**outf;
 	int		fd_pipe_len;
 	int		**fd_pipe;
+	int		fd_std[2];
 	int		fd_src[2];
 	int		fd_circ[2];
 }	t_pl;
@@ -131,6 +132,8 @@ typedef struct s_sh
 
 /* Parser ------------------------------------------------------------------- */
 
+void	set_background_color(const char *s);
+void	set_background_color_to_gnome_purple(void);
 int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_username(t_sh *sh);
 char	*get_hostname(t_sh *sh);
@@ -143,7 +146,6 @@ char	*get_clean_token(const char *s);
 /* Executor ----------------------------------------------------------------- */
 
 int		execute_pipeline(t_sh *sh);
-int		execute_subprocess(t_pl *pl, t_sh *sh);
 int		pop_head_ex(t_sh *sh);
 void	destroy_all_ex(t_sh *sh);
 
@@ -152,7 +154,8 @@ void	close_pipes(int **pipes, int len);
 void	close_unused_pipes(int index, int **pipes, int pipe_len);
 int		set_last_infile_fd(t_pl *pl, int catch_err);
 int		set_last_outfile_fd(t_pl *pl, int catch_err);
-int		redirect_cmd_io(t_pl *pl);
+int		redirect_io(t_pl *pl);
+int		restore_io(t_pl *pl);
 
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 

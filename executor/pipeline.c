@@ -6,23 +6,21 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 20:00:42 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/27 16:48:56 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	temporary_exit_feature(t_sh *sh);
 static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
+static int	execute_subprocess(t_sh *sh, t_pl *pl);
 static void	wait_for_subprocesses(t_sh *sh, int *pid);
 
 int	execute_pipeline(t_sh *sh)
 {
 	int	*pid;
 
-	if (temporary_exit_feature(sh))
-		return (0);
 	sh->ex->pl.fd_pipe = open_pipes(&sh->ex->pl);
 	if (!sh->ex->pl.fd_pipe)
 		return (free_pipeline_resources(&sh->ex->pl));
@@ -37,19 +35,6 @@ int	execute_pipeline(t_sh *sh)
 	wait_for_subprocesses(sh, pid);
 	free(pid);
 	return (sh->ex->pl.exit_code);
-}
-
-static int	temporary_exit_feature(t_sh *sh)
-{
-	// This is temporary code
-	if (sh->ex->pl.cmdl[0] && sh->ex->pl.cmdl[0][0]
-			&& !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
-	{
-		sh->keep_running = FALSE;
-		free_pipeline_resources(&sh->ex->pl);
-		return (1);
-	}
-	return (0);
 }
 
 static int	free_pipeline_resources(t_pl *pl)
@@ -79,8 +64,7 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		else if (!pid[sh->ex->pl.index])
 		{
 			free(pid);
-			child_exit_code = execute_subprocess(&sh->ex->pl, sh);
-			output_error(sh->ex->pl.exit_code, sh->ex->pl.err_msg);
+			child_exit_code = execute_subprocess(sh, &sh->ex->pl);
 			destroy_all_ex(sh);
 			free_shell(sh);
 			exit(child_exit_code);
@@ -88,6 +72,30 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		++sh->ex->pl.index;
 	}
 	return ;
+}
+
+static int	execute_subprocess(t_sh *sh, t_pl *pl)
+{
+	char	*cmd_fullpath;
+
+	cmd_fullpath = 0;
+	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
+	if (!redirect_io(pl))
+		return (restore_io(pl));
+	if (execute_builtin(&sh->env, &sh->hidden, &sh->local,
+			sh->ex->pl.cmdl[pl->index]))
+		return (restore_io(pl));
+	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
+		return (restore_io(pl));
+	if (cmd_fullpath)
+	{
+		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
+		pl->exit_code = errno;
+		pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
+				strerror(pl->exit_code));
+		free(cmd_fullpath);
+	}
+	return (restore_io(pl));
 }
 
 /*
