@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 15:01:42 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:12:00 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		}
 		else if (!pid[sh->ex->pl.index])
 		{
-			// Keep the next line?
 			update_shlvl(&sh->env, TRUE);
 			free(pid);
 			child_exit_code = execute_subprocess(sh, &sh->ex->pl);
@@ -93,12 +92,8 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		return (restore_io(pl));
 	if (cmd_fullpath)
 	{
-		// ---------------------------------------------------------------------
-		// -> check path after last '/' 
-		// -> Pay attention to `env | grep "SHLVL"`.
-		if (ft_strcmp(cmd_fullpath, "./minishell") == 0)
+		if (is_shell(sh->shells, cmd_fullpath))
 			update_shlvl(&sh->env, FALSE);
-		// ---------------------------------------------------------------------
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
 		pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,

@@ -6,13 +6,37 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 15:13:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:38:44 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static char	*circular_pipeline(t_sh *sh, const char *cmdl);
+char	*circular_pipeline(t_sh *sh, const char *cmdl)
+{
+	char	*data;
+
+	if (!sh || !cmdl)
+		return (0);
+	sh->rl.tokens = tokenize(cmdl, 1, ft_isspace);
+	interpreter(sh);
+	free_entire_array((void **)sh->rl.tokens, free);
+	if (!sh->ex)
+		return (0);
+	data = 0;
+	sh->ex->pl.circular = 1;
+	if (pipe(sh->ex->pl.fd_circ) >= 0)
+	{
+		execute_pipeline(sh);
+		data = get_next_line(sh->ex->pl.fd_circ[0]);
+		if (data && ft_strchr(data, '\n'))
+			*ft_strchr(data, '\n') = 0;
+		close(sh->ex->pl.fd_circ[0]);
+	}
+	while (sh->ex)
+		pop_head_ex(sh);
+	return (data);
+}
 
 int	get_pid(t_sh *sh, const char *first_arg)
 {
@@ -37,16 +61,6 @@ int	get_pid(t_sh *sh, const char *first_arg)
 	return (pid);
 }
 
-char	*get_username(t_sh *sh)
-{
-	return (circular_pipeline(sh, "/bin/whoami"));
-}
-
-char	*get_hostname(t_sh *sh)
-{
-	return (circular_pipeline(sh, "/bin/uname -n | /bin/cut -d. -f1"));
-}
-
 char	*get_home_path(t_sh *sh, const char *username)
 {
 	char	*tmp1;
@@ -60,28 +74,10 @@ char	*get_home_path(t_sh *sh, const char *username)
 	return (tmp1);
 }
 
-static char	*circular_pipeline(t_sh *sh, const char *cmdl)
+char	*get_shells(t_sh *sh)
 {
-	char	*data;
-
-	if (!sh || !cmdl)
-		return (0);
-	sh->rl.tokens = tokenize(cmdl, 1, ft_isspace);
-	interpreter(sh);
-	free_entire_array((void **)sh->rl.tokens, free);
-	if (!sh->ex)
-		return (0);
-	data = 0;
-	sh->ex->pl.circular = 1;
-	if (pipe(sh->ex->pl.fd_circ) >= 0)
-	{
-		execute_pipeline(sh);
-		data = get_next_line(sh->ex->pl.fd_circ[0]);
-		if (data && ft_strchr(data, '\n'))
-			*ft_strchr(data, '\n') = 0;
-		close(sh->ex->pl.fd_circ[0]);
-	}
-	while (sh->ex)
-		pop_head_ex(sh);
-	return (data);
+	return (circular_pipeline(sh, "/bin/cat /etc/shells | /bin/grep -v # "
+		"| /bin/sed 's|.*/||' | /bin/sort "
+		"| /bin/sed '$!N; /^\\(.*\\)\\n\\1$/!P; D' | /bin/tr '\\n' ':' "
+		"| /bin/sed 's/$/minishell/'"));
 }

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/26 19:04:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:15:19 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ typedef struct s_sh
 	char	*user;
 	char	*host;
 	char	*home;
+	char	*shells;
 	int		level;
 	int		keep_running;
 	int		exit_code;
@@ -137,10 +138,11 @@ typedef struct s_sh
 
 void	set_background_color(const char *s);
 void	set_background_color_to_gnome_purple(void);
+char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
-char	*get_username(t_sh *sh);
-char	*get_hostname(t_sh *sh);
 char	*get_home_path(t_sh *sh, const char *username);
+char	*get_shells(t_sh *sh);
+int		is_shell(const char *shells, const char *cmd);
 
 void	run_shell(t_sh *sh);
 void	free_shell(t_sh *sh);

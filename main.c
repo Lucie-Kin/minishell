@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 16:15:11 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:14:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ int	main(int argc, char **argv, char **envp)
 	sh.env = convert_to_list(envp);
 	update_shlvl(&sh.env, FALSE);
 	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));
-	sh.user = get_username(&sh);
-	sh.host = get_hostname(&sh);
+	sh.user = circular_pipeline(&sh, "/bin/whoami");
+	sh.host = circular_pipeline(&sh, "/bin/uname -n | /bin/cut -d. -f1");
 	sh.home = get_home_path(&sh, sh.user);
+	sh.shells = get_shells(&sh);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.level == 0)
