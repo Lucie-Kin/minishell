@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/26 17:13:08 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:41:56 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		extract_first_command_line(t_sh *sh);
 char	**get_delimiters(const char *s);
 void	extract_first_buffer_line(t_sh *sh, size_t *index, int is_heredoc);
 void	concatenate_with_previous_line(t_sh *sh, size_t *index);
-int		check_for_syntax_errors(const char *s);
+int		check_for_syntax_errors(t_sh* sh, size_t index);
 char	*find_unclosed_quote(const char *s);
 int		is_char_start_of_quote(const char *s, size_t i, char *quote);
 int		is_char_end_of_quote(const char *s, size_t i, char *quote);
@@ -34,6 +34,7 @@ void	append_heredoc_lines_with_a_newline_char(t_sh *sh);
 void	add_input_to_history(t_sh *sh);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
+int		is_metacharacter(char c);
 void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);

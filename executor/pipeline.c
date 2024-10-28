@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/27 16:48:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:02:56 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
 	if (!redirect_io(pl))
 		return (restore_io(pl));
+	// check `is_builtin` before executing for exit code reasons
 	if (execute_builtin(&sh->env, &sh->hidden, &sh->local,
 			sh->ex->pl.cmdl[pl->index]))
 		return (restore_io(pl));

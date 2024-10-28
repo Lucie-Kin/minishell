@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/27 16:56:28 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:55:20 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,24 +102,6 @@ static void	process_current_line(t_sh *sh)
 	return ;
 }
 
-static int	test_builtin(t_pl *pl)
-{
-	if (redirect_io(pl))
-	{
-		printf("test builtin\n");
-		/*
-			If need be, the builtin sets `pl->exit_code` and `pl->err_msg` 
-			(allocated string, not literal) for the first encountered error.
-
-			Example from after execve:
-				pl->exit_code = errno;
-				pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
-					strerror(pl->exit_code));
-		*/
-	}
-	return (restore_io(pl));
-}
-
 static void	process_cmd(t_sh *sh)
 {
 	while (sh->ex)
@@ -132,13 +114,20 @@ static void	process_cmd(t_sh *sh)
 			// Something in there messes up with:
 			// - the background color reset, 
 			// - the window title reset,
-			// - the "exit" print at the end.
+			// - the "exit" print at the end,
+			// - it should return 0 on success, not 1.
+			if (redirect_io(&sh->ex->pl))
+			{
+				/*
 			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
 					sh->ex->pl.cmdl[0]);
+				*/
+			}
+			sh->exit_code = restore_io(&sh->ex->pl);
+			/* Exit code here is temporary - Put it in builtin */
+			if (sh->ex->pl.len == 1 && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
+				sh->keep_running = 0;
 		}
-		/* Exit code here is temporary - Put it in builtin */
-		else if (sh->ex->pl.len == 1 && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
-			sh->keep_running = 0;
 		else
 			sh->exit_code = execute_pipeline(sh);
 		pop_head_ex(sh);

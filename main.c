@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/27 13:59:45 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:02:01 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	main(int argc, char **argv, char **envp)
 		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
 		variable is different and is there to tell whether "exit" should be 
 		printed. It's the one you increment when forking for a subshell.
+		-> Pay attention to `env | grep "SHLVL"`.
 
 		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
 		and you can add `--trace-children=yes` to find out in which child 

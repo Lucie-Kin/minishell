@@ -6,13 +6,12 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:13:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:59:11 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:15:40 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static int	is_metacharacter(char c);
 static char	*surround_metacharacters_with_spaces(char *s);
 static char	*insert_spaces(char *s, size_t i);
 static void	place_split_points(char *s, char split_val, int (*cmp)(int));
@@ -38,16 +37,17 @@ char	**tokenize(const char *s, int meta_space, int (*cmp)(int))
 	return (tokens);
 }
 
-static int	is_metacharacter(char c)
-{
-	return (c == '(' || c == ')' || c == '&' || c == '|' || c == '<'
-		|| c == '>' || c == ';');
-}
-
 static char	*surround_metacharacters_with_spaces(char *s)
 {
 	size_t	i;
 	char	*quote;
+
+	/*
+	If several identical metacharacters in a row:
+	- '&', '|', ';' and '>' are placed in pairs,
+	- '<' is placed in groups of three,
+	- '(' and ')' are singled-out.
+	*/
 
 	i = 0;
 	quote = 0;
