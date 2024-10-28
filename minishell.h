@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/27 16:48:05 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:04:00 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@
 # define SHELL_NAME "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
+# define ERR_NB_ARGS "too many arguments"
+# define ERR_NONUM "numeric argument required"
+// errno -l : lister les macros d'erreur dans bash
 
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
@@ -161,7 +164,8 @@ int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 
 /* Utils -------------------------------------------------------------------- */
 
-char	*compose_err_msg(const char *cmd, const char *arg, const char *msg);
+char	*compose_err_msg(const char *shell, const char *cmd, const char *arg,
+			const char *msg);
 int		output_error(int code, char *msg);
 
 char	*insert_str_before_char(const char *s, size_t i, const char *to_insert);
@@ -183,6 +187,8 @@ void	free_entire_array(void **array, void (*free_element)(void *));
 int		only_var(char **arg);
 void	update_hidden(t_env **hidden, char **token);
 
+void	update_shlvl(t_env **env, int inpipe);
+
 /* Utils list --------------------------------------------------------------- */
 
 t_env	*convert_to_list(char **env);
@@ -192,30 +198,32 @@ t_env	*lstadd_back(t_env **lst, t_env *new);
 t_env	*lst_new(char *key, char *value);
 void	lst_clear(t_env **lst);
 int		list_size(t_env **lst);
+t_env	*list_dup(t_env *src);
+t_env	*add_node(t_env **lst, char *key, char *value);
 char	*get_env(t_env *env, char *key);
+void	list_in_p_order(t_env **env);
 
 /* Built-ins ---------------------------------------------------------------- */
 
 int		isbuiltin(char **cmd, t_env *local);
-int		execute_builtin(t_env **env, t_env **hidden, t_env **local, char **arg);
+int		execute_builtin(t_sh *sh);
 
-void	bigerrno_cd(t_env **env, t_env **local, char **arg);
-void	bigerrno_echo(char **arg);
-void	bigerrno_env(t_env **env, t_env **local, char **arg);
-void	bigerrno_exit(char **arg, int *code_error, char **msg);
-void	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
-void	bigerrno_pwd(void);
-void	bigerrno_unset(t_env **env, char **arg);
+int		bigerrno_cd(t_env **env, t_env **local, char **arg);
+int		bigerrno_echo(char **arg);
+int		bigerrno_env(t_env **env, t_env **local, char **arg);
+int		bigerrno_exit(t_sh *sh, char **arg);
+int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
+int		bigerrno_pwd(void);
+int		bigerrno_unset(t_env **env, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-t_env	*add_node(t_env **env, char *key, char *value);
-t_env	*find_key(t_env **env, char *key, int print_err);
+t_env	*find_key(t_env *env, char *key, int print_err);
 void	swap_node_content(t_env **s1, t_env **s2);
-void	swap_param(void **to_be_swap, void **swap_with);
+void	swap_str(char **to_be_swap, char **swap_with);
 void	update_pwd(t_env **env);
 void	change_directory(char *path);
-int		valid_keyvalue(char *key, char *value);
+int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
 char	*get_echo_escaped_token(const char *s, int *is_c_found);
@@ -224,9 +232,6 @@ t_env	*find_biggest_p(t_env **p_order);
 t_env	*next_smallest(t_env **p_order, t_env *smallest);
 void	lst_clear(t_env **lst);
 void	clear_node(t_env *node);
-void	swap_param(void **to_be_swap, void **swap_with);
-void	swap_node(t_env **s1, t_env **s2);
-int		valid_keyvalue(char *key, char *value);
 void	print_list(t_env **list, int export);
 t_env	*alpha_order_list(t_env **env);
 int		init_expand(char ***expand);

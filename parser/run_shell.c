@@ -104,29 +104,23 @@ static void	process_current_line(t_sh *sh)
 
 static void	process_cmd(t_sh *sh)
 {
+	int	is_only_var;
+	int	is_builtin;
+
 	while (sh->ex)
 	{
-		if (sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]))
-			update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-		else if (sh->ex->pl.len == 1
-			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local))
+		is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
+		is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0], sh->local);
+		if (is_only_var || is_builtin)
 		{
-			// Something in there messes up with:
-			// - the background color reset, 
-			// - the window title reset,
-			// - the "exit" print at the end,
-			// - it should return 0 on success, not 1.
 			if (redirect_io(&sh->ex->pl))
 			{
-				/*
-			sh->exit_code = execute_builtin(&sh->env, &sh->hidden, &sh->local,
-					sh->ex->pl.cmdl[0]);
-				*/
+				if (is_only_var)
+					update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+				else
+					sh->exit_code = execute_builtin(sh);
 			}
 			sh->exit_code = restore_io(&sh->ex->pl);
-			/* Exit code here is temporary - Put it in builtin */
-			if (sh->ex->pl.len == 1 && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
-				sh->keep_running = 0;
 		}
 		else
 			sh->exit_code = execute_pipeline(sh);

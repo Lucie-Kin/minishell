@@ -67,7 +67,7 @@ static int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 		if (catch_err)
 		{
 			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg(SHELL_NAME, file,
+			pl->err_msg = compose_err_msg(SHELL_NAME, 0, file,
 					strerror(pl->exit_code));
 			if (pl->exit_code == EACCES)
 				pl->exit_code = EPERM;

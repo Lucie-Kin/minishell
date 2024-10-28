@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/23 19:15:37 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:24:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,18 @@
 
 int	only_var(char **arg)
 {
-	char	**key_value;
 	int		i;
-	int		status;
 
 	i = 0;
-	status = TRUE;
 	while (arg[i])
 	{
-		key_value = parse_key_value(arg[i]);
-		if (bn_linelen(key_value) != 2)
-			status = FALSE;
-		else if (valid_keyvalue(key_value[0], key_value[1]) == FALSE)
-			status = FALSE;
-		bn_freetab(key_value);
+		if (ft_strchr(arg[i], '=') == NULL)
+			return (FALSE);
+		else if (valid_keyvalue(arg[i]) == FALSE)
+			return (FALSE);
 		i++;
 	}
-	return (status);
+	return (TRUE);
 }
 
 void	update_hidden(t_env **hidden, char **token)

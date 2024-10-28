@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:37:26 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:28:20 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int	resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 	else if (pl->path && !ft_strchr(cmd_name, '/'))
 	{
 		pl->exit_code = 127;
-		pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");
+		pl->err_msg = compose_err_msg(0, cmd_name, 0, "command not found");
 		return (0);
 	}
 	else if (is_directory(cmd_name))
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(EISDIR));
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(EISDIR));
 		return (0);
 	}
 	*cmd_fullpath = ft_strdup(cmd_name);
@@ -64,7 +64,7 @@ static int	search_cmd_on_path(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 		++i;
 	}
 	pl->exit_code = 127;
-	pl->err_msg = compose_err_msg(cmd_name, 0, "command not found");
+	pl->err_msg = compose_err_msg(0, cmd_name, 0, "command not found");
 	return (0);
 }
 
@@ -73,17 +73,17 @@ static void	handle_not_found(t_pl *pl, char *cmd_name)
 	if (access(cmd_name, F_OK) >= 0)
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(EACCES));
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(EACCES));
 	}
 	else if (is_not_directory(cmd_name))
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(ENOTDIR));
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(ENOTDIR));
 	}
 	else
 	{
 		pl->exit_code = 127;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, strerror(ENOENT));
+		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(ENOENT));
 	}
 	return ;
 }

@@ -2,6 +2,7 @@
 *.swp
 ~*
 .heredoc*
+.vscode
 
 # Compilation files
 *.o

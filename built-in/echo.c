@@ -6,76 +6,38 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 13:20:33 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/26 15:01:13 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
-void	bigerrno_echo(char **arg)
-{
-	size_t	i;
-	int		opt_n;
-	int		opt_e;
-
-	i = 1;
-	opt_n = 0;
-	opt_e = 0;
-	while (arg[i] && arg[i][0] == '-')
-	{
-		if (ft_strchr(&arg[i][1], 'n'))
-			opt_n = 1;
-		if (ft_strchr(&arg[i][1], 'e'))
-			opt_e = 1;
-		++i;
-	}
-	while (arg[i])
-	{
-		if (!opt_e)
-			ft_putstr_fd(arg[i], 1);
-		else
-		{
-			char	*escaped;
-			int		is_c_found;
-			escaped = get_echo_escaped_token(arg[i], &is_c_found);
-			if (escaped)
-			{
-				ft_putstr_fd(escaped, 1);
-				free(escaped);
-				if (is_c_found)
-					opt_n = 1;
-			}
-		}
-		if (arg[i + 1])
-			ft_putstr_fd(" ", 1);
-		++i;
-	}
-	if (!opt_n)
-		ft_putstr_fd("\n", 1);
-	return ;
-}
-*/
-
-void	echo_option(char **arg, int *skip_newline, int *with_backlash,
+int	echo_option(char **arg, int *skip_newline, int *with_backlash,
 		int *count)
 {
+	int	i;
+
 	*skip_newline = FALSE;
 	*with_backlash = FALSE;
 	*count = 1;
-	while (arg[*count] && arg[*count][0] == '-'
-		&& (bn_countiter(&arg[*count][1], 'n') > 0
-		|| bn_countiter(&arg[*count][1], 'e') > 0))
+	while (arg[*count] && arg[*count][0] == '-')
 	{
-		if (arg[*skip_newline][1] == 'n')
-			*skip_newline = 2;
-		else if (arg[*skip_newline][1] == 'e')
-			(*with_backlash)++;
+		i = 1;
+		while (arg[*count][i] && (arg[*count][i] == 'n'
+			|| arg[*count][i] == 'e'))
+			i++;
+		if (arg[*count][i] != '\0')
+			break ;
+		if (ft_strchr(arg[*count], 'n'))
+			*skip_newline = TRUE;
+		if (ft_strchr(arg[*count], 'e'))
+			*with_backlash = TRUE;
 		(*count)++;
 	}
+	return (*count);
 }
 
-void	bigerrno_echo(char **arg)
+int	bigerrno_echo(char **arg)
 {
 	int		to_be_echoed;
 	int		skip_nl;
@@ -83,8 +45,7 @@ void	bigerrno_echo(char **arg)
 	int		count;
 	char	*parsed;
 
-	echo_option(arg, &skip_nl, &with_backlash, &count);
-	to_be_echoed = count;
+	to_be_echoed = echo_option(arg, &skip_nl, &with_backlash, &count);
 	while (arg[to_be_echoed])
 	{
 		if (to_be_echoed != count)
@@ -103,4 +64,5 @@ void	bigerrno_echo(char **arg)
 	}
 	if (skip_nl == FALSE)
 		write(1, "\n", 1);
+	return (0);
 }

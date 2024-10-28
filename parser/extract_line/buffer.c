@@ -45,7 +45,7 @@ void	add_input_to_buffer(t_sh *sh, const char *prompt)
 		get_array_length((void **)sh->rl.buf));
 	if (!sh->rl.buf)
 		sh->exit_code = output_error(ENOMEM, compose_err_msg(SHELL_NAME,
-					"readline", strerror(ENOMEM)));
+					"readline", 0, strerror(ENOMEM)));
 	return ;
 }
 

@@ -1,43 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   update_shlvl.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:08:33 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/10/26 19:03:50 by lchauffo          #+#    #+#             */
+/*   Updated: 2024/10/26 20:11:11 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	node_clear(t_env *node)
+void	update_shlvl(t_env **env, int inpipe)
 {
-	t_env	*tmp_p;
-	t_env	*tmp_n;
+	t_env	*var;
+	int		shlvl;
 
-	tmp_p = node->prev;
-	tmp_n = node->next;
-	tmp_p->next = tmp_n;
-	tmp_n->prev = tmp_p;
-	free(node->key);
-	free(node->value);
-	free(node);
-}
-
-int	bigerrno_unset(t_env **env, char **arg)
-{
-	int		n;
-	t_env	*node;
-
-	n = 1;
-	while (arg[n])
+	var = find_key(*env, "SHLVL", FALSE);
+	if (!var)
 	{
-		node = find_key(*env, arg[n], TRUE);
-		if (node)
-			node_clear(node);
-		n++;
+		shlvl = 1;
+		add_node(env, "SHLVL", "1");
 	}
-	return (0);
+	else
+	{
+		shlvl = ft_atoi(var->value);
+		free(var->value);
+		if (inpipe == TRUE)
+			shlvl--;
+		else
+			shlvl++;
+		var->value = ft_itoa(shlvl);
+	}
 }

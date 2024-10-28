@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	bigerrno_pwd(void)
+int	bigerrno_pwd(void)
 {
 	char	*str;
 
@@ -20,8 +20,9 @@ void	bigerrno_pwd(void)
 	if (!str)
 	{
 		//perror("Failure getcwd");
-		return ;
+		return (0);
 	}
 	printf("%s\n", str);
 	free(str);
+	return (0);
 }

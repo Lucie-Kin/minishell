@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 14:02:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:01:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		if (pid[sh->ex->pl.index] < 0)
 		{
 			sh->ex->pl.exit_code = errno;
-			sh->ex->pl.err_msg = compose_err_msg("fork", 0,
+			sh->ex->pl.err_msg = compose_err_msg(0, "fork", 0,
 					strerror(sh->ex->pl.exit_code));
 			break ;
 		}
 		else if (!pid[sh->ex->pl.index])
 		{
+			// Keep the next line?
+			update_shlvl(&sh->env, TRUE);
 			free(pid);
 			child_exit_code = execute_subprocess(sh, &sh->ex->pl);
 			destroy_all_ex(sh);
@@ -82,17 +84,24 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
 	if (!redirect_io(pl))
 		return (restore_io(pl));
-	// check `is_builtin` before executing for exit code reasons
-	if (execute_builtin(&sh->env, &sh->hidden, &sh->local,
-			sh->ex->pl.cmdl[pl->index]))
+	if (isbuiltin(pl->cmdl[pl->index], sh->local))
+	{
+		sh->exit_code = execute_builtin(sh);
 		return (restore_io(pl));
+	}
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (restore_io(pl));
 	if (cmd_fullpath)
 	{
+		// ---------------------------------------------------------------------
+		// -> check path after last '/' 
+		// -> Pay attention to `env | grep "SHLVL"`.
+		if (ft_strcmp(cmd_fullpath, "./minishell") == 0)
+			update_shlvl(&sh->env, FALSE);
+		// ---------------------------------------------------------------------
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
-		pl->err_msg = compose_err_msg(pl->cmdl[pl->index][0], 0,
+		pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
 				strerror(pl->exit_code));
 		free(cmd_fullpath);
 	}

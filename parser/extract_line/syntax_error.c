@@ -91,14 +91,14 @@ static char	*get_syntax_err_msg(const char *tok)
 	char	*tmp2;
 
 	if (!tok)
-		tmp1 = compose_err_msg(SHELL_NAME, 0,
+		tmp1 = compose_err_msg(SHELL_NAME, 0, 0,
 			"syntax error near unexpected token `newline'");
 	else
 	{
 		tmp1 = ft_strjoin("syntax error near unexpected token `", tok);
 		tmp2 = ft_strjoin(tmp1, "'");
 		free(tmp1);
-		tmp1 = compose_err_msg(SHELL_NAME, 0, tmp2);
+		tmp1 = compose_err_msg(SHELL_NAME, 0, 0, tmp2);
 		free(tmp2);
 	}
 	return (tmp1);
@@ -116,7 +116,7 @@ static int	check_meta_token(char **tok, size_t i, char **err_msg)
 	/*
 	if (!ft_strcmp(tok[i], "<<") && tok[i + 1] && !ft_strcmp(tok[i + 1], "<<"))
 	{
-		*err_msg = compose_err_msg(SHELL_NAME, 0,
+		*err_msg = compose_err_msg(SHELL_NAME, 0, 0,
 				"syntax error near unexpected token `<<'");
 		return (0);
 	}
