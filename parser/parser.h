@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 12:41:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:08:51 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ int		extract_first_command_line(t_sh *sh);
 char	**get_delimiters(const char *s);
 void	extract_first_buffer_line(t_sh *sh, size_t *index, int is_heredoc);
 void	concatenate_with_previous_line(t_sh *sh, size_t *index);
-int		check_for_syntax_errors(t_sh* sh, size_t index);
+int		check_for_syntax_errors(t_sh *sh, size_t index);
 char	*find_unclosed_quote(const char *s);
 int		is_char_start_of_quote(const char *s, size_t i, char *quote);
 int		is_char_end_of_quote(const char *s, size_t i, char *quote);
 size_t	count_char_before(const char *s, size_t i, char c);
 char	*get_prefix_for_backslashes(t_sh *sh, size_t i, int *is_input_needed);
-int		handle_heredoc_content(t_sh *sh, size_t *index);
+int		create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
+			const char *delimiter);
+void	unlink_heredocs(t_sh *sh);
 int		check_right_operand_and_parentheses(t_sh *sh, char **prefix);
 void	append_heredoc_lines_with_a_newline_char(t_sh *sh);
 void	add_input_to_history(t_sh *sh);

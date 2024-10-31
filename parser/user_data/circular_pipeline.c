@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 18:38:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:03:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*get_home_path(t_sh *sh, const char *username)
 char	*get_shells(t_sh *sh)
 {
 	return (circular_pipeline(sh, "/bin/cat /etc/shells | /bin/grep -v # "
-		"| /bin/sed 's|.*/||' | /bin/sort "
-		"| /bin/sed '$!N; /^\\(.*\\)\\n\\1$/!P; D' | /bin/tr '\\n' ':' "
-		"| /bin/sed 's/$/minishell/'"));
+			"| /bin/sed 's|.*/||' | /bin/sort "
+			"| /bin/sed '$!N; /^\\(.*\\)\\n\\1$/!P; D' | /bin/tr '\\n' ':' "
+			"| /bin/sed 's/$/minishell/'"));
 }

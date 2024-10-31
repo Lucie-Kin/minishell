@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 18:15:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:26:20 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define LOGOP_OR    1
 # define LOGOP_AND   2
 
-# define SHELL_NAME "bigerrno"
+# define SHELL "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
 # define ERR_NB_ARGS "too many arguments"
@@ -80,9 +80,7 @@ typedef struct s_ex	t_ex;
 struct s_ex
 {
 	int		logic_operator;
-	size_t	open_subshells;
 	t_pl	pl;
-	size_t	close_subshells;
 	t_ex	*next;
 };
 
@@ -202,7 +200,7 @@ void	lst_clear(t_env **lst);
 int		list_size(t_env **lst);
 t_env	*list_dup(t_env *src);
 t_env	*add_node(t_env **lst, char *key, char *value);
-char	*get_env(t_env *env, char *key);
+char	*get_var_value(t_sh *sh, char *key);
 void	list_in_p_order(t_env **env);
 
 /* Built-ins ---------------------------------------------------------------- */

@@ -6,17 +6,21 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:10:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:01:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_env(t_env *env, char *key)
+char	*get_var_value(t_sh *sh, char *key)
 {
 	t_env	*var;
 
-	var = find_key(env, key, TRUE);
+	var = NULL;
+	if (sh->hidden)
+		var = find_key(sh->hidden, key, FALSE);
+	if (!var && sh->env)
+		var = find_key(sh->env, key, FALSE);
 	if (var)
 		return (var->value);
 	return (NULL);

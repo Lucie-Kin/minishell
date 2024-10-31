@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 13:29:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:21:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,10 @@
 
 static char	*get_syntax_err_msg(const char *tok);
 static int	check_meta_token(char **tok, size_t i, char **err_msg);
+static int	err_on_curr(char **tok, size_t i);
+static int	err_on_next(char **tok, size_t i);
 
-// LEGAL: `echo a | (cd .. && ls)`
-// LEGAL: `(cd .. && ls) > out`
-// ILLEGAL: `< (cd .. && ls)` or `< main.c (cd .. && ls)`
-// LEGAL: `(cat) < main.c` or `(ls) < main.c`
-
-/*
-	BASH
-
-	$ cat << EOF << << \
-	bash: syntax error near unexpected token `<<'
-	> hello
-	> EOF
-	$ cat << EOF << << hello
-	EOF
-	[newline]
-
-	MINISHELL
-
-	$ cat << EOF << << \
-	bigerrno: syntax error near unexpected token `<<'
-	> hello
-	> EOF
-	$ cat << EOF << << \
-	hello
-	EOF
-	[newline]
-*/
-/*
-	BASH
-
-	$ (
-	> )
-	bash: syntax error near unexpected token `)'
-	$ ( )
-
-	MINISHELL
-	$ (
-	> )
-	$ (; )
-*/
-
-int	check_for_syntax_errors(t_sh* sh, size_t index)
+int	check_for_syntax_errors(t_sh *sh, size_t index)
 {
 	size_t	i;
 	int		is_legal;
@@ -91,14 +52,14 @@ static char	*get_syntax_err_msg(const char *tok)
 	char	*tmp2;
 
 	if (!tok)
-		tmp1 = compose_err_msg(SHELL_NAME, 0, 0,
-			"syntax error near unexpected token `newline'");
+		tmp1 = compose_err_msg(SHELL, 0, 0,
+				"syntax error near unexpected token `newline'");
 	else
 	{
 		tmp1 = ft_strjoin("syntax error near unexpected token `", tok);
 		tmp2 = ft_strjoin(tmp1, "'");
 		free(tmp1);
-		tmp1 = compose_err_msg(SHELL_NAME, 0, 0, tmp2);
+		tmp1 = compose_err_msg(SHELL, 0, 0, tmp2);
 		free(tmp2);
 	}
 	return (tmp1);
@@ -106,128 +67,49 @@ static char	*get_syntax_err_msg(const char *tok)
 
 static int	check_meta_token(char **tok, size_t i, char **err_msg)
 {
-	// If no left operand
-	if (!i && (tok[i][0] == ';' || tok[i][0] == '|' || tok[i][0] == '&'))
+	if (err_on_curr(tok, i))
 	{
 		*err_msg = get_syntax_err_msg(tok[i]);
 		return (0);
 	}
-
-	/*
-	if (!ft_strcmp(tok[i], "<<") && tok[i + 1] && !ft_strcmp(tok[i + 1], "<<"))
+	else if (err_on_next(tok, i))
 	{
-		*err_msg = compose_err_msg(SHELL_NAME, 0, 0,
-				"syntax error near unexpected token `<<'");
+		*err_msg = get_syntax_err_msg(tok[i + 1]);
 		return (0);
 	}
-	*/
 	return (1);
 }
 
+// If no left operand (command can start with '(', '<', '>')
+// If '(' doesn't start the command and is preceded with non-meta
+// If bad token length
+static int	err_on_curr(char **tok, size_t i)
+{
+	if (!i && tok[i][0] != '(' && tok[i][0] != '<' && tok[i][0] != '>')
+		return (1);
+	else if (i && tok[i][0] == '(' && !is_metacharacter(tok[i - 1][0]))
+		return (1);
+	else if ((tok[i][0] == '&' && !tok[i][1])
+		|| (tok[i][0] == ';' && tok[i][1]))
+		return (1);
+	return (0);
+}
 
-	/*
-			if (!i && (tokens[i][0] == ';' || tokens[i][0] == '|'
-					|| tokens[i][0] == '&'))
-				return (0);
-			if (i && is_metacharacter(tokens[i - 1][0]))
-			{
-				//	( -> can be preceded by ';', '|' or '&'
-				//	) -> can be preceded by ';'
-				//	; -> can be preceded by ')' 
-				//	| -> can be preceded by ')'
-				//	& -> can be preceded by ')'
-				//	< -> can be preceded by '(', ')', ';', '|' or '&'
-				//	> -> can be preceded by '(', ')', ';', '|' or '&'
-				if (tokens[i][0] == '(' && tokens[i - 1][0] != ';'
-						&& tokens[i - 1][0] != '|' && tokens[i - 1][0] != '&')
-					return (0);
-				else if (tokens[i][0] == ')' && tokens[i - 1][0] != ';')
-					return (0);
-				else if ((tokens[i][0] == ';' || tokens[i][0] == '|'
-						|| tokens[i][0] == '&') && tokens[i - 1][0] != ')')
-					return (0);
-				else if ((tokens[i][0] == '<' || tokens[i][0] == '>')
-						&& (tokens[i - 1][0] == '<' || tokens[i - 1][0] == '>'))
-					return (0);
-			}
-			if (tokens[i][0] == ';' && ft_strlen(tokens[i]) > 1)
-				return (0);
-			if (tokens[i][0] != '(' && tokens[i][0] != ')'
-					&& ft_strlen(tokens[i]) > 2)
-				return (0);
-			if (tokens[i][0] == '<' || tokens[i][0] == '>')
-			{
-				if (!tokens[i + 1])
-					return (0);
-				else if (!ft_strcmp(tokens[i], "<<")
-					&& !is_metacharacter(tokens[i + 1][0])
-					&& !create_heredoc(sh, index, tokens[i + 1]))
-						return (0);
-			}
-	*/
-
-/*
-	( ) ; | & < >
-
-	- No left operand:
-
-		$ ;
-		bash: syntax error near unexpected token `;'
-		$ |
-		bash: syntax error near unexpected token `|'
-		$ ||
-		bash: syntax error near unexpected token `||'
-		$ &&
-		bash: syntax error near unexpected token `&&'
-		$ < <
-		bash: syntax error near unexpected token `<'
-		$ < < a
-		bash: syntax error near unexpected token `<'
-		$ < |
-		bash: syntax error near unexpected token `|'
-
-	- Bad amount of characters in the special token:
-
-		$ ls;;
-		bash: syntax error near unexpected token `;;'
-		$ a ||| b
-		bash: syntax error near unexpected token `|'
-		$ a &&& b
-		bash: syntax error near unexpected token `&'
-		$ a & b
-		-> Not an error in Bash, but it's background jobs so draw a syntax 
-		error anyway
-
-	- Empty parentheses:
-
-		$ ()
-		bash: syntax error near unexpected token `)'
-		$ ( )
-		bash: syntax error near unexpected token `)'
-
-		-> Note: Check at school what's written in history with `(` and then a 
-		prompt of `)`.
-	
-	- Unclosed parentheses:
-
-		$ )
-		bash: syntax error near unexpected token `)'
-		$ (a(
-		bash: syntax error near unexpected token `newline'
-	
-		(((ls) && echo a) + )
-
-		+1
-		+1
-		+1
-		-1
-		-1
-		= 3 - 2 = 1
-
-		((a)(
-
-		2 - 1 + 1
-
-		- Must not be negative.
-		- Needs to be 0 before adding (= opening a parenthese).
-*/
+// If next token is unexpected
+static int	err_on_next(char **tok, size_t i)
+{
+	if (tok[i][0] == ')' && tok[i + 1] && (tok[i + 1][0] == '('
+		|| tok[i + 1][0] == ')' || !is_metacharacter(tok[i + 1][0])))
+		return (1);
+	else if (tok[i][0] == ';' && tok[i + 1] && (tok[i + 1][0] == ';'
+		|| tok[i + 1][0] == '|' || tok[i + 1][0] == '&'))
+		return (1);
+	else if ((tok[i][0] == '(' || tok[i][0] == '|' || tok[i][0] == '&')
+		&& tok[i + 1] && (tok[i + 1][0] == ')' || tok[i + 1][0] == ';'
+		|| tok[i + 1][0] == '|' || tok[i + 1][0] == '&'))
+		return (1);
+	else if ((tok[i][0] == '<' || tok[i][0] == '>')
+		&& (!tok[i + 1] || is_metacharacter(tok[i + 1][0])))
+		return (1);
+	return (0);
+}

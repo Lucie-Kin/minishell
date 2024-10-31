@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:05:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:08:14 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**get_delimiters(const char *s)
 	{
 		if (!ft_strcmp(tokens[i], "<<"))
 		{
-			if (!tokens[i + 1] || !ft_strcmp(tokens[i + 1], "<<"))
+			if (!tokens[i + 1] || is_metacharacter(tokens[i + 1][0]))
 			{
 				remove_array_elements((void **)tokens, i,
 					get_array_length((void **)tokens) - 1, free);

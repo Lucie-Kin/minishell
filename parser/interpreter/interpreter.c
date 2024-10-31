@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:57:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:33:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 void	interpreter(t_sh *sh)
 {
+// LEGAL: `echo a | (cd .. && ls)`
+// LEGAL: `(cd .. && ls) > out`
+// LEGAL: `(cat) < main.c` or `(ls) < main.c`
+
 	/*
 	typedef struct s_ex
 	{
 		int		logic_operator;
-		size_t	open_subshells;
 		t_pl	pl;
-		size_t	close_subshells;
 		t_ex	*next;
 	}	t_ex;
 
@@ -35,16 +37,24 @@ void	interpreter(t_sh *sh)
 
 	The first node of the list has a logop of ';' (0).
 	The first exit code is 0, meaning success.
-	*/
 
-	/*
-		Isolate first pipeline.
+	---
 
-		If parentheses, know that it can be in different tokens. Count them fuckers.
+	`echo a && (exit && cd .. && ls > out)`
+	a
+	[out not created]
 
-		Then, everything is a pipeline until a logop or a closing parenthese is found.
+	`echo a && (exit && cd .. && ls) > out`
+	a
+	[out created in . but empty]
 
-		Get them closing parentheses, boy! Get 'em, come on!
+	`echo a && (cd .. && ls) > out`
+	a
+	[out created in . and contains the right content]
+
+	`echo a && (cd .. && ls > out)`
+	a
+	[out created in .. and contains the right content]
 	*/
 	
 	if (!sh->rl.tokens || !sh->rl.tokens[0])

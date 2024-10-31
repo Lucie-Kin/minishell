@@ -30,14 +30,14 @@ char	*expand_tilde(t_sh *sh, const char *s)
 	if (!ft_strncmp(s + i, "~", 1) && (!s[i + 1] || s[i + 1] == '/'))
 	{
 		len = 1;
-		var = get_env(sh->env, "HOME");
+		var = get_var_value(sh, "HOME");
 		if (!var)
 			var = sh->home;
 	}
 	else if (!ft_strncmp(s + i, "~+", 2) && (!s[i + 2] || s[i + 2] == '/'))
-		var = get_env(sh->env, "PWD");
+		var = get_var_value(sh, "PWD");
 	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 2] || s[i + 2] == '/'))
-		var = get_env(sh->env, "OLDPWD");
+		var = get_var_value(sh, "OLDPWD");
 	return (get_full_tilde_string(s, i, len, var));
 }
 

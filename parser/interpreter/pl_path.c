@@ -25,7 +25,7 @@ static char	**get_split_path(t_sh *sh)
 	char	*var;
 	char	**path;
 
-	var = get_env(sh->env, "PATH");
+	var = get_var_value(sh, "PATH");
 	if (!var || !var[0])
 		return (0);
 	path = ft_split(var, ':');

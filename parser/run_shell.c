@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 13:55:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:08:14 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	process_current_line(t_sh *sh);
 static void	process_cmd(t_sh *sh);
-static void	unlink_heredocs(t_sh *sh);
 
 void	run_shell(t_sh *sh)
 {
@@ -110,7 +109,8 @@ static void	process_cmd(t_sh *sh)
 	while (sh->ex)
 	{
 		is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
-		is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0], sh->local);
+		is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0],
+				sh->local);
 		if (is_only_var || is_builtin)
 		{
 			if (redirect_io(&sh->ex->pl))
@@ -125,21 +125,6 @@ static void	process_cmd(t_sh *sh)
 		else
 			sh->exit_code = execute_pipeline(sh);
 		pop_head_ex(sh);
-	}
-	return ;
-}
-
-static void	unlink_heredocs(t_sh *sh)
-{
-	size_t	i;
-
-	if (!sh->rl.hd)
-		return ;
-	i = 0;
-	while (sh->rl.hd[i])
-	{
-		unlink(sh->rl.hd[i]);
-		++i;
 	}
 	return ;
 }

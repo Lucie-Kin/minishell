@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:51 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:37 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:39:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	are_all_parentheses_closed(char **cmdl_tokens, char **prefix,
 		j = ft_strlen(cmdl_tokens[i - 1]) - 1;
 		while (j && ft_isspace(cmdl_tokens[i - 1][j]))
 			--j;
-		if (cmdl_tokens[i - 1][j] == ';')
+		if (cmdl_tokens[i - 1][j] == '(' || cmdl_tokens[i - 1][j] == ';')
 			*prefix = " ";
 	}
 	return (0);

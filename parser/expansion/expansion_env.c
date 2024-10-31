@@ -6,15 +6,15 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 20:04:02 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:10:23 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
 static char	*handle_potential_var(t_sh *sh, char *s, size_t *i, char **quote);
-static char	*get_var_name(const char *s, size_t i);
-static char	*get_var_value(t_sh *sh, const char *var_name, char *quote);
+static char	*get_name(const char *s, size_t i);
+static char	*get_value(t_sh *sh, const char *var_name, char *quote);
 static char	*process_var_value_whitespaces(char *var_value);
 
 char	*expand_environment_variables(t_sh *sh, const char *s)
@@ -50,10 +50,10 @@ static char	*handle_potential_var(t_sh *sh, char *s, size_t *i, char **quote)
 	char	*tmp;
 	size_t	len;
 
-	var_name = get_var_name(s, *i);
+	var_name = get_name(s, *i);
 	if (!var_name)
 		return (s);
-	var_value = get_var_value(sh, var_name, *quote);
+	var_value = get_value(sh, var_name, *quote);
 	len = ft_strlen(var_name);
 	ft_memmove(s + *i, s + *i + len + 1, ft_strlen(s + *i + len + 1) + 1);
 	if (var_value)
@@ -70,7 +70,7 @@ static char	*handle_potential_var(t_sh *sh, char *s, size_t *i, char **quote)
 	return (s);
 }
 
-static char	*get_var_name(const char *s, size_t i)
+static char	*get_name(const char *s, size_t i)
 {
 	size_t	j;
 	char	*var_name;
@@ -91,7 +91,7 @@ static char	*get_var_name(const char *s, size_t i)
 	return (var_name);
 }
 
-static char	*get_var_value(t_sh *sh, const char *var_name, char *quote)
+static char	*get_value(t_sh *sh, const char *var_name, char *quote)
 {
 	char	*var_value;
 
@@ -107,7 +107,7 @@ static char	*get_var_value(t_sh *sh, const char *var_name, char *quote)
 	}
 	else
 	{
-		var_value = get_env(sh->env, (char *)var_name);
+		var_value = get_var_value(sh, (char *)var_name);
 		if (var_value)
 		{
 			var_value = ft_strdup(var_value);

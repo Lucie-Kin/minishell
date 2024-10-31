@@ -84,8 +84,6 @@ int	bigerrno_cd(t_env **env, t_env **local, char **arg)
 	/*
 		- If $PWD is unset, and `cd` is used, update it in the hidden list only.
 		It remains in the hidden list until `export` is used (I think).
-		- If $PWD exists at all, even if hidden, `get_env` should return its 
-		value.
 	*/
 
 	arg_len = bn_linelen(arg);

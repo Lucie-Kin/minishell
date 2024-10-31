@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 18:14:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:22:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc > 1)
 		return (output_error(1,
-				compose_err_msg(SHELL_NAME, 0, 0, "Too many arguments")));
+				compose_err_msg(SHELL, 0, 0, "Too many arguments")));
 	/*
 		- You can increment the SHLVL variable when executing a new bigerrno 
 		(and not when forking for a subshell), as every shell increments it. 

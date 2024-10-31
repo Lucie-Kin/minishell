@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 15:34:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:29:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,24 @@ void	update_local(char **cmd, t_env **local)//
 
 int	isbuiltin(char **cmd, t_env *local)
 {
-	char	*cmd_str;
 	char	**cmd_tab;
 	int		state;
 	int		i;
 
+	if (!cmd[0])
+		return (FALSE);
 	(void)local;
 	// update_local(cmd, &local);
-	cmd_str = ft_strdup("cd:echo:env:exit:export:pwd:unset");
-	cmd_tab = ft_split(cmd_str, ':');
-	free(cmd_str);
+	cmd_tab = ft_split("cd:echo:env:exit:export:pwd:unset", ':');
 	state = FALSE;
 	i = 0;
 	while (cmd_tab[i])
 	{
 		if (ft_strcmp(cmd[0], cmd_tab[i]) == 0)
+		{
 			state = TRUE;
+			break ;
+		}
 		i++;
 	}
 	bn_freetab(cmd_tab);

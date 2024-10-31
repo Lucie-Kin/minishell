@@ -6,15 +6,15 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:13:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 13:15:40 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:04:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static char	*surround_metacharacters_with_spaces(char *s);
-static char	*insert_spaces(char *s, size_t i);
-static void	place_split_points(char *s, char split_val, int (*cmp)(int));
+static char		*surround_metacharacters_with_spaces(char *s);
+static char		*insert_spaces(char *s, size_t i);
+static void		place_split_points(char *s, char split_val, int (*cmp)(int));
 
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int))
 {
@@ -42,13 +42,6 @@ static char	*surround_metacharacters_with_spaces(char *s)
 	size_t	i;
 	char	*quote;
 
-	/*
-	If several identical metacharacters in a row:
-	- '&', '|', ';' and '>' are placed in pairs,
-	- '<' is placed in groups of three,
-	- '(' and ')' are singled-out.
-	*/
-
 	i = 0;
 	quote = 0;
 	while (s[i])
@@ -72,7 +65,8 @@ static char	*insert_spaces(char *s, size_t i)
 	char	*tmp;
 
 	tmp = 0;
-	if (i && !ft_isspace(s[i - 1]) && s[i - 1] != s[i] && s[i - 1] != '\\')
+	if (i && !ft_isspace(s[i - 1]) && ((s[i - 1] != s[i] && s[i - 1] != '\\')
+			|| s[i] == '(' || s[i] == ')' || count_char_before(s, i, s[i]) > 1))
 		tmp = insert_str_before_char(s, i, " ");
 	if (tmp)
 	{

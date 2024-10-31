@@ -6,61 +6,17 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:57:18 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:21:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
-				const char *delimiter);
 static char	*compose_heredoc_name(size_t index);
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter);
 static int	write_line_to_file(int fd, const char *s);
 
-int	handle_heredoc_content(t_sh *sh, size_t *index)
-{
-	size_t	i;
-	size_t	i_hd;
-	size_t	cmdl_index;
-
-	cmdl_index = *index;
-	if (!sh->rl.arr[cmdl_index]->delimiters)
-		return (1);
-	i = 0;
-	i_hd = get_array_length((void **)sh->rl.hd);
-	while (sh->rl.arr[cmdl_index]->delimiters[i])
-	{
-		if (!create_heredoc(sh, i_hd, index,
-				sh->rl.arr[cmdl_index]->delimiters[i]))
-		{
-			if (sh->rl.hd[i_hd])
-			{
-				unlink(sh->rl.hd[i_hd]);
-				remove_array_elements((void **)sh->rl.hd, i_hd, i_hd, free);
-			}
-			return (0);
-		}
-		++i;
-		++i_hd;
-	}
-	return (1);
-}
-
-static char	*compose_heredoc_name(size_t index)
-{
-	char	*tmp1;
-	char	*tmp2;
-
-	tmp1 = ft_itoa(index);
-	tmp2 = ft_strjoin(".heredoc", tmp1);
-	free(tmp1);
-	tmp1 = ft_strjoin(tmp2, ".tmp");
-	free(tmp2);
-	return (tmp1);
-}
-
-static int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
+int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	const char *delimiter)
 {
 	int		fd;
@@ -86,6 +42,34 @@ static int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	}
 	close(fd);
 	return (1);
+}
+
+void	unlink_heredocs(t_sh *sh)
+{
+	size_t	i;
+
+	if (!sh->rl.hd)
+		return ;
+	i = 0;
+	while (sh->rl.hd[i])
+	{
+		unlink(sh->rl.hd[i]);
+		++i;
+	}
+	return ;
+}
+
+static char	*compose_heredoc_name(size_t index)
+{
+	char	*tmp1;
+	char	*tmp2;
+
+	tmp1 = ft_itoa(index);
+	tmp2 = ft_strjoin(".heredoc", tmp1);
+	free(tmp1);
+	tmp1 = ft_strjoin(tmp2, ".tmp");
+	free(tmp2);
+	return (tmp1);
 }
 
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter)
@@ -153,7 +137,7 @@ static char	*heredoc_line_prompt(char *delimiter)
 	if (!line)
 	{
 		ft_putstr_fd("\n", 1);
-		ft_putstr_fd(SHELL_NAME, 1);
+		ft_putstr_fd(SHELL, 1);
 		ft_putstr_fd(": warning: here-document delimited by end-of-file ", 1);
 		ft_putstr_fd("(wanted `", 1);
 		ft_putstr_fd(delimiter, 1);
