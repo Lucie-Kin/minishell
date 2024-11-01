@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:08:14 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:44:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ static void	process_current_line(t_sh *sh)
 	int		is_legal;
 
 	is_legal = extract_first_command_line(sh);
-	append_heredoc_lines_with_a_newline_char(sh);
 	add_input_to_history(sh);
 	if (is_legal)
 	{

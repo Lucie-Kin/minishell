@@ -6,12 +6,13 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 17:45:00 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:57:30 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 17:57:52 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
+static void		remove_unused_newline_chars(t_rl_arr **rl_arr);
 static size_t	find_index_of_first_heredoc_line(t_sh *sh);
 static char		*concatenate_all_input_lines(t_sh *sh);
 
@@ -23,6 +24,7 @@ void	add_input_to_history(t_sh *sh)
 
 	if (!sh->rl.arr)
 		return ;
+	remove_unused_newline_chars(sh->rl.arr);
 	original_first_heredoc_line = 0;
 	i = find_index_of_first_heredoc_line(sh);
 	if (sh->rl.arr[i] && i && !ft_strchr(sh->rl.arr[i - 1]->value, '\n')
@@ -38,6 +40,33 @@ void	add_input_to_history(t_sh *sh)
 	{
 		free(sh->rl.arr[i]->value);
 		sh->rl.arr[i]->value = original_first_heredoc_line;
+	}
+	return ;
+}
+
+static void	remove_unused_newline_chars(t_rl_arr **rl_arr)
+{
+	size_t	i;
+	char	*p_nl;
+
+	i = 0;
+	while (rl_arr[i])
+	{
+		if (!rl_arr[i]->is_heredoc)
+		{
+			p_nl = ft_strchr(rl_arr[i]->value, '\n');
+			while (p_nl)
+			{
+				if (is_char_within_quotes(rl_arr[i]->value, p_nl))
+					p_nl = ft_strchr(p_nl + 1, '\n');
+				else
+				{
+					ft_memmove(p_nl, p_nl + 1, ft_strlen(p_nl + 1) + 1);
+					p_nl = ft_strchr(p_nl, '\n');
+				}
+			}
+		}
+		++i;
 	}
 	return ;
 }

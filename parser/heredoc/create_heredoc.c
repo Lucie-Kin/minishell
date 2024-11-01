@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   create_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:21:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:47:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static char	*compose_heredoc_name(size_t index);
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter);
+static int	compare_delimiter_and_line(const char *del, const char *line);
 static int	write_line_to_file(int fd, const char *s);
 
 int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
@@ -42,21 +43,6 @@ int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	}
 	close(fd);
 	return (1);
-}
-
-void	unlink_heredocs(t_sh *sh)
-{
-	size_t	i;
-
-	if (!sh->rl.hd)
-		return ;
-	i = 0;
-	while (sh->rl.hd[i])
-	{
-		unlink(sh->rl.hd[i]);
-		++i;
-	}
-	return ;
 }
 
 static char	*compose_heredoc_name(size_t index)
@@ -92,10 +78,32 @@ static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter)
 		}
 		get_prefix_for_backslashes(sh, *index, 0);
 		line = sh->rl.arr[*index]->value;
-		if (!ft_strcmp(line, delimiter))
+		if (compare_delimiter_and_line(delimiter, line))
 			return (1);
 	}
 	return (1);
+}
+
+static int	compare_delimiter_and_line(const char *del, const char *line)
+{
+	size_t	len_del;
+	size_t	len_line;
+	size_t	len_max;
+
+	if (!del || !line)
+		return (1);
+	len_del = ft_strlen(del);
+	if (!len_del)
+		return (1);
+	len_line = ft_strlen(line);
+	if (!len_line)
+		return (0);
+	if (line[len_line - 1] == '\n')
+		--len_line;
+	len_max = len_del;
+	if (len_line > len_del)
+		len_max = len_line;
+	return (!ft_strncmp(del, line, len_max));
 }
 
 static int	write_line_to_file(int fd, const char *s)
@@ -120,7 +128,7 @@ static int	write_line_to_file(int fd, const char *s)
 	}
 	if (!tmp1)
 		tmp1 = (char *)s;
-	if (!(write(fd, tmp1, ft_strlen(tmp1)) >= 0 && write(fd, "\n", 1) == 1))
+	if (write(fd, tmp1, ft_strlen(tmp1)) < 0)
 		success = 0;
 	if (tmp1 != s)
 		free(tmp1);

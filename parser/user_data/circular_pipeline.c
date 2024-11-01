@@ -45,17 +45,17 @@ int	get_pid(t_sh *sh, const char *first_arg)
 	char	*tmp2;
 
 	if (!sh || !first_arg)
-		return (12345);
+		return (0);
 	tmp1 = ft_strjoin("/bin/ps aux | /bin/grep ", first_arg);
 	tmp2 = ft_strjoin(tmp1, " | /bin/grep -v grep | /bin/awk '{print $2}'"
 			" | /bin/tail -n 1");
 	free(tmp1);
 	if (!tmp2)
-		return (12345);
+		return (0);
 	tmp1 = circular_pipeline(sh, tmp2);
 	free(tmp2);
 	if (!tmp1)
-		return (12345);
+		return (0);
 	pid = ft_atoi(tmp1);
 	free(tmp1);
 	return (pid);

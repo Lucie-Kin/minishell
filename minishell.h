@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/31 18:26:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 14:30:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@
 
 # define FALSE 0
 # define TRUE  1
-# define SEP   28
+# define SEP     28
+# define SEP_STR "\034"
 # define LOGOP_COLON 0
 # define LOGOP_OR    1
 # define LOGOP_AND   2

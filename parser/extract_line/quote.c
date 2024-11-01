@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:07:20 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 18:56:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 16:58:21 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,26 @@ size_t	count_char_before(const char *s, size_t i, char c)
 	while (i && s[--i] == c)
 		++amount;
 	return (amount);
+}
+
+int	is_char_within_quotes(const char *s, const char *p_char)
+{
+	size_t	i;
+	char	*quote;
+
+	if (!s || !p_char || p_char > s)
+		return (0);
+	i = 0;
+	quote = 0;
+	while (s[i])
+	{
+		if (s + i == p_char)
+			break ;
+		else if (is_char_start_of_quote(s, i, quote))
+			quote = (char *)s + i;
+		else if (is_char_end_of_quote(s, i, quote))
+			quote = 0;
+		++i;
+	}
+	return (quote != 0);
 }

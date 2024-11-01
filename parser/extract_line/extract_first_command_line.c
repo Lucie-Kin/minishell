@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:22:28 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:09:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 13:11:15 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,7 @@ static int	check_need_for_input(t_sh *sh, size_t *index, char **prefix,
 	else if (!*is_legal)
 		handle_heredoc_content(sh, *index);
 	else if (find_unclosed_quote(sh->rl.arr[*index]->value))
-	{
-		*prefix = "\n";
 		is_needed = 1;
-	}
 	if (!is_needed)
 		*prefix = get_prefix_for_backslashes(sh, *index, &is_needed);
 	if (*is_legal && !is_needed)
