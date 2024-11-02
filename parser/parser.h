@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 17:13:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/02 16:05:11 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
 char	**expand_asterisk_wildcard(const char *s);
+char	**get_filtered_dir_content(const char *path, const char *pattern,
+			int only_dirs);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
 size_t	get_pl_len(char **tokens);

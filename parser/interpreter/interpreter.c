@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:33:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 21:07:51 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	interpreter(t_sh *sh)
 {
-// LEGAL: `echo a | (cd .. && ls)`
-// LEGAL: `(cd .. && ls) > out`
-// LEGAL: `(cat) < main.c` or `(ls) < main.c`
+	// LEGAL: `echo a | (cd .. && ls)`
+	// LEGAL: `(cd .. && ls) > out`
+	// LEGAL: `(cat) < main.c` or `(ls) < main.c`
 
 	/*
 	typedef struct s_ex

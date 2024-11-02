@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:15:46 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/09/28 18:52:03 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/02 18:01:48 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*bn_strldup(char *src, size_t size)
 		return (NULL);
 	if (!src)
 		return (NULL);
-	dest = malloc(sizeof(char) * size + 1);
+	dest = malloc(sizeof(char) * (size + 1));
 	if (!dest)
 		return (NULL);
 	while (src[i] && i < size)
