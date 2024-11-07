@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:43:32 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:44:24 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ void	print_in_p_order(t_env **to_print, t_env **not_to_print)
 	if (!smallest || !biggest || !p_order)
 		return (perror("Nothing to be printed"));
 	if (smallest->withvalue == TRUE && !find_key(*not_to_print,
-			smallest->key, FALSE))
+			smallest->key))
 		env_print(smallest);
 	while (smallest != biggest)
 	{
 		next_small = next_smallest(&p_order, smallest);
 		if (next_small && next_small->withvalue == TRUE
-			&& !find_key(*not_to_print, next_small->key, FALSE))
+			&& !find_key(*not_to_print, next_small->key))
 			env_print(next_small);
 		smallest = next_small;
 	}
@@ -51,8 +51,9 @@ void	error_management(char *cmd, char *wrong_arg, char *msg_error)
 	printf("%s: \'%s\': %s", cmd, wrong_arg, msg_error);
 }
 
-int	bigerrno_env(t_env **env, t_env **local, char **arg)
+int	bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg)
 {
+	update_env(env, hidden);
 	(void)local;
 	if (!arg[1])
 	{
@@ -61,12 +62,9 @@ int	bigerrno_env(t_env **env, t_env **local, char **arg)
 	}
 	else if (arg[1])
 	{
-		if (access(arg[1], F_OK) == TRUE)
-			return (error_management(arg[0], arg[1],
-					"Permission denied"), 0);
-		else
-			return (error_management(arg[0], arg[1],
-					"No such file or directory"), 0);
+		output_error(EPERM, compose_err_msg(SHELL, "env", arg[1],
+				strerror(E2BIG)));
+		return (EPERM);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:43:54 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:10:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	clear_node(t_env *node)
 	if (node->prev == NULL)
 	{
 		if (node->next == NULL)
-			lst_clear(&node);
+			;
 		else
 			node->next->prev = NULL;
 	}

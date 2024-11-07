@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 16:11:14 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:42:38 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	update_pwd(t_env **env)
 
 	pwd = *env;
 	oldpwd = *env;
-	pwd = find_key(*env, "PWD", TRUE);
+	pwd = find_key(*env, "PWD");
 	if (!pwd)
 		return (perror("Key not found1\n"));
-	oldpwd = find_key(*env, "OLDPWD", TRUE);
+	oldpwd = find_key(*env, "OLDPWD");
 	if (!oldpwd)
 		return (perror("Key not found2\n"));
 	free(oldpwd->value);
@@ -47,66 +47,74 @@ void	update_pwd(t_env **env)
 	pwd->value = getcwd(NULL, 0);
 }
 
-t_env	*find_key(t_env *env, char *key, int print_err)
+t_env	*find_key(t_env *env, char *key)
 {
 	t_env	*list;
 
 	list = env;
 	if (!key || !list)
-	{
-		//if (print_err)
-		//	perror("No env or key found\n");
 		return (NULL);
-	}
 	while (list)
 	{
 		if (bn_isstrstr(list->key, key) == TRUE)
 			return (list);
 		list = list->next;
 	}
-	//if (print_err)
-	//	perror("Key not found3\n");
 	return (NULL);
 }
 
-void	change_directory(char *path)
+int	change_directory(char *path)
 {
+	if (ft_strcmp(path, "HOME") == 0)
+	{
+		output_error(EPERM,
+			compose_err_msg(SHELL, "cd", NULL, "HOME not set"));
+		return (EPERM);
+	}
 	if (chdir(path) != 0)
 	{
-		//perror("2 Failed to change directory");
+		if (access(path, F_OK) == 0)
+			output_error(EPERM,
+				compose_err_msg(SHELL, "cd", path, strerror(EACCES)));
+		else
+			output_error(EPERM,
+				compose_err_msg(SHELL, "cd", path, strerror(ENOENT)));
+		return (EPERM);
 	}
+	return (0);
 }
 
-int	bigerrno_cd(t_env **env, t_env **local, char **arg)
+/*
+	- If $PWD is unset, and `cd` is used, update it in the hidden list only.
+	It remains in the hidden list until `export` is used (I think).
+	- If $PWD exists at all, even if hidden, `get_env` should return its 
+	value.
+*/
+int	bigerrno_cd(t_env **env, t_env **hidden, t_env **local, char **arg)
 {
-	int	arg_len;
+	int	cod_err;
 
-	/*
-		- If $PWD is unset, and `cd` is used, update it in the hidden list only.
-		It remains in the hidden list until `export` is used (I think).
-		- If $PWD exists at all, even if hidden, `get_env` should return its 
-		value.
-	*/
-
-	arg_len = bn_linelen(arg);
+	cod_err = 0;
 	if (!env)
-		return (0);//return (perror("env is NULL\n"));
-	if ((arg_len) > 2)
+		return (0);
+	update_env(env, hidden);
+	if (bn_linelen(arg) > 2)
 		perror("Too many arguments");
-	else if (!arg[1] && find_key(*local, "HOME", FALSE))
-		change_directory(find_key(*local, "HOME", FALSE)->value);
+	else if (!arg[1] && find_key(*local, "HOME"))
+		cod_err = change_directory(find_key(*local, "HOME")->value);
+	else if (!arg[1] && find_key(*env, "HOME"))
+		cod_err = change_directory(find_key(*env, "HOME")->value);
 	else if (!arg[1])
-		change_directory(find_key(*env, "HOME", TRUE)->value);
+		change_directory("HOME");
 	else if (ft_strcmp(arg[1], "-") == 0)
 	{
-		if (!(chdir(find_key(*env, "OLDPWD", TRUE)->value) == 0 || chdir(add_node
-					(env, "OLDPWD", getcwd(NULL, 0))->value) == 0))
-		{
-			//perror("3 Failed to change directory");
-		}
+		printf("%s\n", find_key(*env, "OLDPWD")->value);
+		if (!(chdir(find_key(*env, "OLDPWD")->value) == 0 || chdir
+				(add_node(env, "OLDPWD", getcwd(NULL, 0))->value) == 0))
+			perror("lol");
 	}
 	else
-		change_directory(arg[1]);
+		cod_err = change_directory(arg[1]);
 	update_pwd(env);
-	return (0);
+	return (cod_err);
 }

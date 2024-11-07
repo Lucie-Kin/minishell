@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:57:18 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ static char	*heredoc_line_prompt(char *delimiter)
 	if (!line)
 	{
 		ft_putstr_fd("\n", 1);
-		ft_putstr_fd(SHELL_NAME, 1);
+		ft_putstr_fd(SHELL, 1);
 		ft_putstr_fd(": warning: here-document delimited by end-of-file ", 1);
 		ft_putstr_fd("(wanted `", 1);
 		ft_putstr_fd(delimiter, 1);

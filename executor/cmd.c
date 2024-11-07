@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 16:28:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 	else if (is_directory(cmd_name))
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(EISDIR));
+		pl->err_msg = compose_err_msg(SHELL, cmd_name, 0, strerror(EISDIR));
 		return (0);
 	}
 	*cmd_fullpath = ft_strdup(cmd_name);
@@ -73,17 +73,17 @@ static void	handle_not_found(t_pl *pl, char *cmd_name)
 	if (access(cmd_name, F_OK) >= 0)
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(EACCES));
+		pl->err_msg = compose_err_msg(SHELL, cmd_name, 0, strerror(EACCES));
 	}
 	else if (is_not_directory(cmd_name))
 	{
 		pl->exit_code = 126;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(ENOTDIR));
+		pl->err_msg = compose_err_msg(SHELL, cmd_name, 0, strerror(ENOTDIR));
 	}
 	else
 	{
 		pl->exit_code = 127;
-		pl->err_msg = compose_err_msg(SHELL_NAME, cmd_name, 0, strerror(ENOENT));
+		pl->err_msg = compose_err_msg(SHELL, cmd_name, 0, strerror(ENOENT));
 	}
 	return ;
 }

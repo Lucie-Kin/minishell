@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 18:12:00 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:37:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		return (restore_io(pl));
 	if (isbuiltin(pl->cmdl[pl->index], sh->local))
 	{
-		sh->exit_code = execute_builtin(sh);
+		pl->exit_code = execute_builtin(sh);
 		return (restore_io(pl));
 	}
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))

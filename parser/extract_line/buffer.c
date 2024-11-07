@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:15 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	add_input_to_buffer(t_sh *sh, const char *prompt)
 	insert_array_elements((void ***)&sh->rl.buf, (void **)lines,
 		get_array_length((void **)sh->rl.buf));
 	if (!sh->rl.buf)
-		sh->exit_code = output_error(ENOMEM, compose_err_msg(SHELL_NAME,
+		sh->exit_code = output_error(ENOMEM, compose_err_msg(SHELL,
 					"readline", 0, strerror(ENOMEM)));
 	return ;
 }

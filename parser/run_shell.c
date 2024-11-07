@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 13:55:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:31:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,20 +110,24 @@ static void	process_cmd(t_sh *sh)
 	while (sh->ex)
 	{
 		is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
-		is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0], sh->local);
+		is_builtin = sh->ex->pl.len == 1
+			&& isbuiltin(sh->ex->pl.cmdl[0], sh->local);
 		if (is_only_var || is_builtin)
 		{
 			if (redirect_io(&sh->ex->pl))
 			{
 				if (is_only_var)
+				{
 					update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+				}
 				else
-					sh->exit_code = execute_builtin(sh);
+					sh->ex->pl.exit_code = execute_builtin(sh);
 			}
-			sh->exit_code = restore_io(&sh->ex->pl);
+			sh->ex->pl.exit_code = restore_io(&sh->ex->pl);
 		}
 		else
-			sh->exit_code = execute_pipeline(sh);
+			sh->ex->pl.exit_code = execute_pipeline(sh);
+		sh->exit_code = sh->ex->pl.exit_code;
 		pop_head_ex(sh);
 	}
 	return ;

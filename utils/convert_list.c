@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:28:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:54:43 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:18:46 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,30 @@ void	list_in_p_order(t_env **env)
 	lst_clear(&tmp_dup);
 }
 
+// PROMPT_COMMAND=
+void	get_small_env(t_env	**lst)
+{
+	t_env	*new;
+
+	new = lst_new("PWD", getcwd(NULL, 0));
+	if (!new)
+		lst_clear(lst);
+	lstadd_back(lst, new);
+	new = lst_new("PROMPT_COMMAND", "RETRN_VAL=$?;logger -p local6.debug"
+			" \"$(history 1 | sed \"s/^[ ]*[0-9]\\+[ ]*//\" ) [$RETRN_VAL]\"");
+	if (!new)
+		lst_clear(lst);
+	lstadd_back(lst, new);
+	new = lst_new("SHLVL", "1");
+	if (!new)
+		lst_clear(lst);
+	lstadd_back(lst, new);
+	new = lst_new("_", "./minishell");
+	if (!new)
+		lst_clear(lst);
+	lstadd_back(lst, new);
+}
+
 t_env	*convert_to_list(char **env)
 {
 	t_env	*lst;
@@ -45,16 +69,20 @@ t_env	*convert_to_list(char **env)
 
 	i = 0;
 	lst = NULL;
-	while (env[i])
+	if (!env[0])
+		get_small_env(&lst);
+	else
 	{
-		size = bn_strnlen(env[i], '=');
-		key = bn_strldup(env[i], size);
-		new = lst_new(key, ft_strdup(getenv(key)));
-		if (!new)
-			lst_clear(&lst);
-		lstadd_back(&lst, new);
-		i++;
+		while (env[i])
+		{
+			size = bn_strnlen(env[i], '=');
+			key = bn_strldup(env[i], size);
+			new = lst_new(key, ft_strdup(getenv(key)));
+			if (!new)
+				lst_clear(&lst);
+			lstadd_back(&lst, new);
+			i++;
+		}
 	}
-	// list_in_p_order(&lst);
 	return (lst);
 }

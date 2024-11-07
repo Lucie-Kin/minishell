@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 19:09:52 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:47:05 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	add_or_update_var(t_env **env, char *key_value)
 		key = bn_strldup(key_value, separator);
 	else
 		key = ft_strdup(key_value);
-	var = find_key(*env, key, TRUE);
+	var = find_key(*env, key);
 	if (var && separator > 0 && key_value[separator - 1] == '+')
 	{
 		var->value = ft_strjoin(var->value,
@@ -80,44 +80,44 @@ char	**parse_key_value(char *to_separate)
 //gérer if in readline '=', then add new entry
 //when bash, increment SHLVL++ !!!
 
-t_env	*update_var(t_env **hidden, t_env *var, t_env **start)
+void	update_var(t_env **hidden, t_env *var)
 {
-	t_env	*tmp;
 	int		size;
+	char	*tmp_value;
 
-	size = ft_strlen((*hidden)->key);
+	size = (int)ft_strlen((*hidden)->key) - 1;
 	if ((*hidden)->key[size] == '+')
-		var->value = ft_strjoin(var->value, (*hidden)->value);
+	{
+		tmp_value = ft_strdup(var->value);
+		free(var->value);
+		var->value = ft_strjoin(tmp_value, (*hidden)->value);
+		free(tmp_value);
+	}
 	else
 	{
-		free(var->value);
+		if (var->withvalue == TRUE)
+			free(var->value);
 		var->value = ft_strdup((*hidden)->value);
 	}
 	var->withvalue = TRUE;
-	if (*hidden == *start)
-		*start = (*hidden)->next;
-	tmp = (*hidden)->next;
 	clear_node(*hidden);
-	return (tmp);
+	*hidden = NULL;
 }
 
 void	update_env(t_env **env, t_env **hidden)
 {
-	t_env	*start;
 	t_env	*var;
 
 	if (!hidden)
-		return ;//return (perror("Nothing to update from hidden"));
-	start = *hidden;
+		return ;
 	while (*hidden)
 	{
-		var = find_key(*env, (*hidden)->key, TRUE);
+		var = find_key(*env, (*hidden)->key);
 		if (ft_strcmp((*hidden)->key, "_") != 0 && var)
-			*hidden = update_var(hidden, var, &start);
+			update_var(hidden, var);
 		else
 			*hidden = (*hidden)->next;
 	}
-	*hidden = start;
 }
 
 int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
@@ -126,9 +126,8 @@ int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 	int		n;
 
 	n = 1;
-	(void)hidden;
 	(void)local;
-	// update_env(env, hidden);
+	update_env(env, hidden);
 	// update_env(env, local);
 	alpha_order = alpha_order_list(env);
 	if (bn_linelen(arg) == 1)

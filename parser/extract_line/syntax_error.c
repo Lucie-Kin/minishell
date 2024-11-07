@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 13:29:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,14 @@ static char	*get_syntax_err_msg(const char *tok)
 	char	*tmp2;
 
 	if (!tok)
-		tmp1 = compose_err_msg(SHELL_NAME, 0, 0,
+		tmp1 = compose_err_msg(SHELL, 0, 0,
 			"syntax error near unexpected token `newline'");
 	else
 	{
 		tmp1 = ft_strjoin("syntax error near unexpected token `", tok);
 		tmp2 = ft_strjoin(tmp1, "'");
 		free(tmp1);
-		tmp1 = compose_err_msg(SHELL_NAME, 0, 0, tmp2);
+		tmp1 = compose_err_msg(SHELL, 0, 0, tmp2);
 		free(tmp2);
 	}
 	return (tmp1);
@@ -116,7 +116,7 @@ static int	check_meta_token(char **tok, size_t i, char **err_msg)
 	/*
 	if (!ft_strcmp(tok[i], "<<") && tok[i + 1] && !ft_strcmp(tok[i + 1], "<<"))
 	{
-		*err_msg = compose_err_msg(SHELL_NAME, 0, 0,
+		*err_msg = compose_err_msg(SHELL, 0, 0,
 				"syntax error near unexpected token `<<'");
 		return (0);
 	}

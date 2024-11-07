@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 18:15:19 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:45:36 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,25 @@
 #  define DBUG 0
 # endif
 
-# include <errno.h>
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <stdarg.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <fcntl.h>
-# include <signal.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
-# include <sys/ioctl.h>
 # include <curses.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include "libft/libft.h"
+# include <dirent.h>
+# include <errno.h>
+# include <fcntl.h>
 # include "libbn/libbn.h"
+# include "libft/libft.h"
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdarg.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <termios.h>
+# include <unistd.h>
 
 # define FALSE 0
 # define TRUE  1
@@ -42,12 +44,15 @@
 # define LOGOP_OR    1
 # define LOGOP_AND   2
 
-# define SHELL_NAME "bigerrno"
+# define SHELL "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
 # define ERR_NB_ARGS "too many arguments"
 # define ERR_NONUM "numeric argument required"
 // errno -l : lister les macros d'erreur dans bash
+
+# define PROMPT_COLOR_OPEN "\e[35m"
+# define PROMPT_COLOR_CLOSE "\e[0m"
 
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
@@ -210,9 +215,9 @@ void	list_in_p_order(t_env **env);
 int		isbuiltin(char **cmd, t_env *local);
 int		execute_builtin(t_sh *sh);
 
-int		bigerrno_cd(t_env **env, t_env **local, char **arg);
+int		bigerrno_cd(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_echo(char **arg);
-int		bigerrno_env(t_env **env, t_env **local, char **arg);
+int		bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_exit(t_sh *sh, char **arg);
 int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_pwd(void);
@@ -220,11 +225,11 @@ int		bigerrno_unset(t_env **env, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-t_env	*find_key(t_env *env, char *key, int print_err);
+t_env	*find_key(t_env *env, char *key);
 void	swap_node_content(t_env **s1, t_env **s2);
 void	swap_str(char **to_be_swap, char **swap_with);
 void	update_pwd(t_env **env);
-void	change_directory(char *path);
+int		change_directory(char *path);
 int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
@@ -241,5 +246,6 @@ int		remove_tab_elements(char ***tab, int to_remove);
 char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
 char	**parse_key_value(char *to_separate);
+void	update_env(t_env **env, t_env **hidden);
 
 #endif

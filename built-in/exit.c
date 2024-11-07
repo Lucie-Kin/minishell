@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 15:41:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:16:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,23 @@
 int	bigerrno_exit(t_sh *sh, char **arg)
 {
 	int		numb;
-	char	*msg;
 
-	sh->exit_code = 0;
-	msg = 0;
+	if (sh->level == 0)
+		printf("exit\n");
 	if (bn_linelen(arg) > 2)
 	{
-		msg = ft_strdup(compose_err_msg(SHELL_NAME, arg[0], 0, ERR_NB_ARGS));
-		sh->exit_code = 1;
+		return (output_error(1, compose_err_msg
+				(SHELL, arg[0], NULL, ERR_NB_ARGS)));
 	}
-	else if (arg[1])
+	sh->keep_running = FALSE;
+	if (arg[1])
 	{
 		numb = ft_atoi(arg[1]);
 		if ((numb != 0 || ft_strcmp(arg[1], "0") == 0) == FALSE)
-		{
-			msg = ft_strdup
-				(compose_err_msg(SHELL_NAME, arg[0], arg[1], ERR_NONUM));
-			sh->exit_code = 2;
-		}
+			return (output_error(2, compose_err_msg
+					(SHELL, arg[0], arg[1], ERR_NONUM)));
 		else
-			sh->exit_code = ft_atoi(arg[1]) % 256;
+			return (ft_atoi(arg[1]) % 256);
 	}
-	if (msg)
-		printf("%s", msg);
-	free(msg);
-	sh->keep_running = FALSE;
-	return (sh->exit_code);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/27 16:40:49 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 		if (catch_err)
 		{
 			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg(SHELL_NAME, 0, file,
+			pl->err_msg = compose_err_msg(SHELL, 0, file,
 					strerror(pl->exit_code));
 			if (pl->exit_code == EACCES)
 				pl->exit_code = EPERM;

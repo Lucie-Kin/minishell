@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/28 15:34:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:43:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	isbuiltin(char **cmd, t_env *local)
 	int		i;
 
 	(void)local;
+	if (!cmd[0])
+		return (FALSE);
 	// update_local(cmd, &local);
 	cmd_str = ft_strdup("cd:echo:env:exit:export:pwd:unset");
 	cmd_tab = ft_split(cmd_str, ':');
@@ -61,26 +63,26 @@ int	isbuiltin(char **cmd, t_env *local)
 	return (state);
 }
 
-// Upgrade error management
-// 
 int	execute_builtin(t_sh *sh)
 {
 	char	**cmdl;
+	int		code_err;
 
+	code_err = 0;
 	cmdl = sh->ex->pl.cmdl[sh->ex->pl.index];
 	if (ft_strcmp(cmdl[0], "cd") == 0)
-		return (bigerrno_cd(&sh->env, &sh->local, cmdl));
+		code_err = bigerrno_cd(&sh->env, &sh->hidden, &sh->local, cmdl);
 	else if (ft_strcmp(cmdl[0], "echo") == 0)
-		return (bigerrno_echo(cmdl));
+		code_err = bigerrno_echo(cmdl);
 	else if (ft_strcmp(cmdl[0], "env") == 0)
-		return (bigerrno_env(&sh->env, &sh->local, cmdl));
+		code_err = bigerrno_env(&sh->env, &sh->hidden, &sh->local, cmdl);
 	else if (ft_strcmp(cmdl[0], "exit") == 0)
-		return (bigerrno_exit(sh, cmdl));
+		code_err = bigerrno_exit(sh, cmdl);
 	else if (ft_strcmp(cmdl[0], "export") == 0)
-		return (bigerrno_export(&sh->env, &sh->hidden, &sh->local, cmdl));
+		code_err = bigerrno_export(&sh->env, &sh->hidden, &sh->local, cmdl);
 	else if (ft_strcmp(cmdl[0], "pwd") == 0)
-		return (bigerrno_pwd());
+		code_err = bigerrno_pwd();
 	else if (ft_strcmp(cmdl[0], "unset") == 0)
-		return (bigerrno_unset(&sh->env, cmdl));
-	return (0);
+		code_err = bigerrno_unset(&sh->env, cmdl);
+	return (code_err);
 }

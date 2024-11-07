@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 19:03:50 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/26 20:11:11 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/07 18:18:10 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	update_shlvl(t_env **env, int inpipe)
 	t_env	*var;
 	int		shlvl;
 
-	var = find_key(*env, "SHLVL", FALSE);
+	var = find_key(*env, "SHLVL");
 	if (!var)
 	{
 		shlvl = 1;
