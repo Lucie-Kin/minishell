@@ -6,16 +6,16 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 15:47:55 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:41:33 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-static char	*compose_heredoc_name(size_t index);
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter);
 static int	compare_delimiter_and_line(const char *del, const char *line);
-static int	write_line_to_file(int fd, const char *s);
+static int	write_line_to_file(t_sh *sh, int fd, const char *s);
+static char	*get_expanded_heredoc_line(t_sh *sh, const char *s, char *tmp1);
 
 int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	const char *delimiter)
@@ -35,52 +35,41 @@ int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	fd = open(sh->rl.hd[hd_index], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (fd < 0)
 		return (0);
-	while (++curr_line <= last_line
+	while (++curr_line < last_line
 		&& ft_strcmp(sh->rl.arr[curr_line]->value, delimiter))
 	{
-		if (!write_line_to_file(fd, sh->rl.arr[curr_line]->value))
+		if (!write_line_to_file(sh, fd, sh->rl.arr[curr_line]->value))
 			return (0);
 	}
 	close(fd);
 	return (1);
 }
 
-static char	*compose_heredoc_name(size_t index)
-{
-	char	*tmp1;
-	char	*tmp2;
-
-	tmp1 = ft_itoa(index);
-	tmp2 = ft_strjoin(".heredoc", tmp1);
-	free(tmp1);
-	tmp1 = ft_strjoin(tmp2, ".tmp");
-	free(tmp2);
-	return (tmp1);
-}
-
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter)
 {
 	char	*line;
 
-	// Signal handling probably in `add_input_to_buffer` and the loop condition
-	while (1)
+	while (!g_signum)
 	{
 		if (!sh->rl.buf[0])
 			add_input_to_buffer(sh, "> ");
-		if (!sh->rl.buf[0])
-			return (0);
-		++*index;
-		extract_first_buffer_line(sh, index, 1);
-		if (!sh->rl.arr[*index])
+		if (!g_signum && sh->rl.buf[0])
 		{
-			--*index;
-			return (0);
+			++*index;
+			extract_first_buffer_line(sh, index, 1);
+			if (!sh->rl.arr[*index])
+			{
+				--*index;
+				return (0);
+			}
+			get_prefix_for_backslashes(sh, *index, 0);
+			line = sh->rl.arr[*index]->value;
+			if (compare_delimiter_and_line(delimiter, line))
+				return (1);
 		}
-		get_prefix_for_backslashes(sh, *index, 0);
-		line = sh->rl.arr[*index]->value;
-		if (compare_delimiter_and_line(delimiter, line))
-			return (1);
 	}
+	if (g_signum == EOF)
+		heredoc_ctrl_d(index, delimiter);
 	return (1);
 }
 
@@ -106,7 +95,7 @@ static int	compare_delimiter_and_line(const char *del, const char *line)
 	return (!ft_strncmp(del, line, len_max));
 }
 
-static int	write_line_to_file(int fd, const char *s)
+static int	write_line_to_file(t_sh *sh, int fd, const char *s)
 {
 	size_t	i;
 	int		success;
@@ -128,29 +117,21 @@ static int	write_line_to_file(int fd, const char *s)
 	}
 	if (!tmp1)
 		tmp1 = (char *)s;
+	tmp1 = get_expanded_heredoc_line(sh, s, tmp1);
 	if (write(fd, tmp1, ft_strlen(tmp1)) < 0)
 		success = 0;
-	if (tmp1 != s)
-		free(tmp1);
+	free(tmp1);
 	return (success);
 }
 
-/*
-static char	*heredoc_line_prompt(char *delimiter)
+static char	*get_expanded_heredoc_line(t_sh *sh, const char *s, char *tmp1)
 {
-	char	*line;
+	char	*dup;
 
-	write(1, "> ", 2);
-	line = get_next_line(0);
-	if (!line)
-	{
-		ft_putstr_fd("\n", 1);
-		ft_putstr_fd(SHELL, 1);
-		ft_putstr_fd(": warning: here-document delimited by end-of-file ", 1);
-		ft_putstr_fd("(wanted `", 1);
-		ft_putstr_fd(delimiter, 1);
-		ft_putstr_fd("')\n", 1);
-	}
-	return (line);
+	if (!tmp1)
+		return (0);
+	dup = expand_environment_variables(sh, tmp1);
+	if (s != tmp1)
+		free(tmp1);
+	return (dup);
 }
-*/

@@ -6,23 +6,41 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 17:58:30 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:55:05 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
+static void	cut_input_into_lines(t_sh *sh, char *input);
 static char	*place_split_points_for_input(char *input);
 
 void	add_input_to_buffer(t_sh *sh, const char *prompt)
 {
 	char	*input;
+
+	if (!ft_strcmp(prompt, "> "))
+		set_signal_handling(SIGINT, signal_handler_extra);
+	input = readline(prompt);
+	set_signal_handling(SIGINT, signal_handler);
+	if (!input)
+	{
+		update_sig_var(EOF);
+		return ;
+	}
+	else if (g_signum == SIGINT)
+	{
+		free_entire_array((void **)sh->rl.buf, free);
+		sh->rl.buf = 0;
+	}
+	cut_input_into_lines(sh, input);
+	return ;
+}
+
+static void	cut_input_into_lines(t_sh *sh, char *input)
+{
 	char	**lines;
 
-	input = readline(prompt);
-	// `readline` only returns null when Ctrl-D in an empty line
-	if (!input)
-		return ;
 	input = place_split_points_for_input(input);
 	if (!input)
 		return ;

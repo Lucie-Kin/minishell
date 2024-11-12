@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:22:28 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 13:11:15 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:23:07 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	extract_first_command_line(t_sh *sh)
 	prefix = 0;
 	is_legal = 1;
 	is_needed = 1;
-	while (is_legal && is_needed)
+	while (!g_signum && is_legal && is_needed)
 	{
 		add_prefix_to_first_buffer_line(sh, prefix);
 		extract_first_buffer_line(sh, &index, 0);
@@ -39,6 +39,10 @@ int	extract_first_command_line(t_sh *sh)
 			add_input_to_buffer(sh, "> ");
 		++index;
 	}
+	if (g_signum == SIGINT || g_signum == -SIGINT)
+		is_legal = 0;
+	if (g_signum == -SIGINT)
+		g_signum = EOF;
 	return (is_legal);
 }
 
@@ -47,7 +51,7 @@ static void	add_prefix_to_first_buffer_line(t_sh *sh, char *prefix)
 	char	*tmp;
 	char	**delimiters;
 
-	if (!sh->rl.buf[0])
+	if (!sh->rl.buf[0] || !ft_strcmp(sh->rl.buf[0], "\n"))
 		return ;
 	if (prefix && !ft_strcmp(prefix, " "))
 	{
@@ -105,7 +109,7 @@ static int	handle_heredoc_content(t_sh *sh, size_t index)
 	while (sh->rl.arr[cmdl_index]->delimiters[i])
 	{
 		if (!create_heredoc(sh, i_hd, &index,
-				sh->rl.arr[cmdl_index]->delimiters[i]))
+				sh->rl.arr[cmdl_index]->delimiters[i]) || g_signum == SIGINT)
 		{
 			if (sh->rl.hd[i_hd])
 			{

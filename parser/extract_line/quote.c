@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:07:20 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 16:58:21 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:28:10 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	is_char_within_quotes(const char *s, const char *p_char)
 	size_t	i;
 	char	*quote;
 
-	if (!s || !p_char || p_char > s)
+	if (!s || !p_char || p_char < s)
 		return (0);
 	i = 0;
 	quote = 0;

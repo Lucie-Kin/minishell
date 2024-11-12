@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/01 14:30:42 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:50:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@
 # define ERR_NONUM "numeric argument required"
 // errno -l : lister les macros d'erreur dans bash
 
+extern int	g_signum;
+
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
 {
@@ -76,14 +78,12 @@ typedef struct s_pl
 }	t_pl;
 
 /* `ex` stands for `execution` */
-typedef struct s_ex	t_ex;
-
-struct s_ex
+typedef struct s_ex
 {
-	int		logic_operator;
-	t_pl	pl;
-	t_ex	*next;
-};
+	int			logic_operator;
+	t_pl		pl;
+	struct s_ex	*next;
+}	t_ex;
 
 /* `rl` stands for "readline" */
 typedef struct s_rl_arr
@@ -147,6 +147,14 @@ void	run_shell(t_sh *sh);
 void	free_shell(t_sh *sh);
 char	*get_clean_token(const char *s);
 
+/* Signals ------------------------------------------------------------------ */
+
+int		set_signals(int reset);
+int		set_signal_handling(int signum, void (*handler)(int));
+void	update_sig_var(int signum);
+void	signal_handler(int signum);
+void	signal_handler_extra(int signum);
+
 /* Executor ----------------------------------------------------------------- */
 
 int		execute_pipeline(t_sh *sh);
@@ -160,8 +168,8 @@ int		set_last_infile_fd(t_pl *pl, int catch_err);
 int		set_last_outfile_fd(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
-
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+void	wait_for_subprocesses(t_sh *sh, int *pid);
 
 /* Utils -------------------------------------------------------------------- */
 

@@ -21,6 +21,7 @@ char	*circular_pipeline(t_sh *sh, const char *cmdl)
 	sh->rl.tokens = tokenize(cmdl, 1, ft_isspace);
 	interpreter(sh);
 	free_entire_array((void **)sh->rl.tokens, free);
+	sh->rl.tokens = 0;
 	if (!sh->ex)
 		return (0);
 	data = 0;

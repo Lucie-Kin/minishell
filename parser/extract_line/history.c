@@ -6,13 +6,14 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 17:45:00 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 17:57:52 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:34:13 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
 static void		remove_unused_newline_chars(t_rl_arr **rl_arr);
+static void		remove_nl_if_only_one_and_unclosed_quote(char *s);
 static size_t	find_index_of_first_heredoc_line(t_sh *sh);
 static char		*concatenate_all_input_lines(t_sh *sh);
 
@@ -34,7 +35,8 @@ void	add_input_to_history(t_sh *sh)
 		sh->rl.arr[i]->value = ft_strjoin("\n", sh->rl.arr[i]->value);
 	}
 	hist = concatenate_all_input_lines(sh);
-	add_history(hist);
+	if (hist && hist[0])
+		add_history(hist);
 	free(hist);
 	if (original_first_heredoc_line)
 	{
@@ -65,9 +67,32 @@ static void	remove_unused_newline_chars(t_rl_arr **rl_arr)
 					p_nl = ft_strchr(p_nl, '\n');
 				}
 			}
+			remove_nl_if_only_one_and_unclosed_quote(rl_arr[i]->value);
 		}
 		++i;
 	}
+	return ;
+}
+
+static void	remove_nl_if_only_one_and_unclosed_quote(char *s)
+{
+	size_t	amount;
+	char	*p_nl;
+	char	*p_first_nl;
+
+	if (!find_unclosed_quote(s))
+		return ;
+	amount = 0;
+	p_nl = ft_strchr(s, '\n');
+	p_first_nl = p_nl;
+	while (p_nl)
+	{
+		++amount;
+		p_nl = ft_strchr(p_nl + 1, '\n');
+	}
+	if (!p_first_nl || amount != 1)
+		return ;
+	*p_first_nl = 0;
 	return ;
 }
 

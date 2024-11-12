@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/02 16:05:11 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:41:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,12 @@ int		is_char_within_quotes(const char *s, const char *p_char);
 char	*get_prefix_for_backslashes(t_sh *sh, size_t i, int *is_input_needed);
 int		create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 			const char *delimiter);
+char	*compose_heredoc_name(size_t index);
+void	heredoc_ctrl_d(size_t *index, const char *delimiter);
 void	unlink_heredocs(t_sh *sh);
 int		check_right_operand_and_parentheses(t_sh *sh, char **prefix);
 void	add_input_to_history(t_sh *sh);
+void	handle_ctrl_d(t_sh *sh, int *is_legal);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
 int		is_metacharacter(char c);

@@ -6,11 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:22:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:47:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_signum;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -34,6 +36,8 @@ int	main(int argc, char **argv, char **envp)
 		used when exiting the main function, to restore the original color. If 
 		it's too tricky, just hardcode the grey color we have at school.
 	*/
+	if (!set_signals(0))
+		return (1);
 	set_background_color_to_gnome_purple();
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
@@ -50,7 +54,6 @@ int	main(int argc, char **argv, char **envp)
 	{
 		close(STDIN_FILENO);
 		readline("\001\e]0;Terminal\a\002");
-		ft_putstr_fd("exit\n", 1);
 		set_background_color("11;rgb:2e2e/3434/3636");
 	}
 	return (sh.exit_code);

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 15:44:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:09:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,14 @@ void	run_shell(t_sh *sh)
 		update_prompt(sh);
 		set_background_color_to_gnome_purple();
 		add_input_to_buffer(sh, sh->rl.prompt);
-		while (sh->rl.buf && sh->rl.buf[0])
+		if (g_signum == SIGINT)
+			g_signum = 0;
+		while (sh->keep_running && sh->rl.buf && sh->rl.buf[0])
 			process_current_line(sh);
+		if (g_signum == EOF)
+			handle_ctrl_d(sh, NULL);
 		free_entire_array((void **)sh->rl.buf, free);
-		sh->rl.buf = 0;
+		sh->rl.buf = NULL;
 	}
 	return ;
 }
@@ -42,6 +46,7 @@ void	free_shell(t_sh *sh)
 	free(sh->user);
 	free(sh->host);
 	free(sh->home);
+	free(sh->shells);
 	free(sh->rl.user);
 	free(sh->rl.prompt);
 	free_entire_array((void **)sh->rl.buf, free);
@@ -81,6 +86,9 @@ static void	process_current_line(t_sh *sh)
 
 	is_legal = extract_first_command_line(sh);
 	add_input_to_history(sh);
+	if (g_signum == EOF)
+		handle_ctrl_d(sh, &is_legal);
+	g_signum = 0;
 	if (is_legal)
 	{
 		cmdl = concatenate_all_cmdl_lines(sh);

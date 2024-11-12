@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 18:12:00 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:36:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
 static int	execute_subprocess(t_sh *sh, t_pl *pl);
-static void	wait_for_subprocesses(t_sh *sh, int *pid);
 
 int	execute_pipeline(t_sh *sh)
 {
@@ -94,6 +93,7 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 	{
 		if (is_shell(sh->shells, cmd_fullpath))
 			update_shlvl(&sh->env, FALSE);
+		set_signals(1);
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
 		pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
@@ -101,38 +101,4 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		free(cmd_fullpath);
 	}
 	return (restore_io(pl));
-}
-
-/*
-	The subprocess either exited normally (`exit` or returning from `main`) or 
-	due to a signal. Exit codes are in a [0-255] range, with the [0-127] range 
-	meant for normal exits, and the [128-255] range for signaled exits. Only a 
-	normal exit provides an exit code, which is why 128 is added to a signal 
-	number to create the exit code.
-
-	The macros in `wait_for_subprocesses` are part of `waitpid` and are not 
-	extra functions.
-*/
-static void	wait_for_subprocesses(t_sh *sh, int *pid)
-{
-	int	i;
-	int	status;
-	int	signal_number;
-
-	i = 0;
-	while (pid[i])
-	{
-		waitpid(pid[i], &status, 0);
-		++i;
-	}
-	if (sh->ex->pl.exit_code)
-		return ;
-	else if (WIFEXITED(status))
-		sh->ex->pl.exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-	{
-		signal_number = WTERMSIG(status);
-		sh->ex->pl.exit_code = 128 + signal_number;
-	}
-	return ;
 }
