@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 14:55:57 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/12 14:10:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:06:39 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	handle_ctrl_d(t_sh *sh, int *is_legal)
 		return ;
 	}
 	check_cases(sh, is_legal);
-	if (!sh->keep_running && sh->level == 0)
+	if (sh->subshell == 0 && !sh->keep_running)
 		ft_putstr_fd("exit\n", 1);
 	return ;
 }
@@ -47,7 +47,7 @@ static void	check_cases(t_sh *sh, int *is_legal)
 	if (case_missing_right_operand(sh, is_legal))
 		return ;
 	if (backslash)
-		++sh->level;
+		++sh->subshell;
 	else if (is_legal)
 		*is_legal = 0;
 	return ;

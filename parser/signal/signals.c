@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:46:13 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/12 17:24:05 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/13 13:51:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	signal_handler_extra(int signum)
 	{
 		ft_putstr_fd("\n", 1);
 		ft_putstr_fd("\001\e[1;32m\002user@host\001\e[0m\002:"
-				"\001\e[1;34m\002path\001\e[0m\002$ ", 1);
+			"\001\e[1;34m\002path\001\e[0m\002$ ", 1);
 		rl_replace_line("", 0);
 	}
 	return ;

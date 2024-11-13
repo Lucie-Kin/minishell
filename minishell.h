@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/12 15:50:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:05:07 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
-# include <curses.h>
+# include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -123,7 +123,7 @@ typedef struct s_sh
 	char	*host;
 	char	*home;
 	char	*shells;
-	int		level;
+	int		subshell;
 	int		keep_running;
 	int		exit_code;
 	t_env	*env;
@@ -135,7 +135,7 @@ typedef struct s_sh
 
 /* Parser ------------------------------------------------------------------- */
 
-void	set_background_color(const char *s);
+void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
