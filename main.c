@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/13 15:05:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/14 16:39:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_sh	sh;
 
+	handle_no_tty();
 	if (argc > 1)
 		return (output_error(1,
 				compose_err_msg(SHELL, 0, 0, "Too many arguments")));

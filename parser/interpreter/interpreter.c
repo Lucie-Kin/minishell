@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 21:07:51 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/13 20:24:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ void	interpreter(t_sh *sh)
 	`echo a && (cd .. && ls > out)`
 	a
 	[out created in .. and contains the right content]
+
+	`(echo b && echo a) | sort`
+	a
+	b
+
+	`((echo b && echo a) | sort) | tr '\n' ' '`
+	a b
 	*/
 	
 	if (!sh->rl.tokens || !sh->rl.tokens[0])
