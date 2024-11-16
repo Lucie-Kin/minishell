@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/12 15:55:05 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:46:07 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,29 @@ static char	*place_split_points_for_input(char *input);
 
 void	add_input_to_buffer(t_sh *sh, const char *prompt)
 {
-	char	*input;
+	static int	prev_signum;
+	int			stdin_dup;
+	char		*input;
 
-	if (!ft_strcmp(prompt, "> "))
-		set_signal_handling(SIGINT, signal_handler_extra);
-	input = readline(prompt);
-	set_signal_handling(SIGINT, signal_handler);
-	if (!input)
-	{
-		update_sig_var(EOF);
+	prev_signum = g_signum;
+	g_signum = 0;
+	stdin_dup = dup(STDIN_FILENO);
+	if (stdin_dup < 0)
 		return ;
-	}
+	input = readline(prompt);
+	dup2(stdin_dup, STDIN_FILENO);
+	close(stdin_dup);
+	if (!input && !g_signum)
+		g_signum = EOF;
 	else if (g_signum == SIGINT)
 	{
+		if (!prev_signum)
+			ft_putstr_fd("\n", STDOUT_FILENO);
 		free_entire_array((void **)sh->rl.buf, free);
 		sh->rl.buf = 0;
 	}
-	cut_input_into_lines(sh, input);
+	if (input)
+		cut_input_into_lines(sh, input);
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/11 16:41:33 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:55:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,23 @@ static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter)
 {
 	char	*line;
 
-	while (!g_signum)
+	if (!sh->rl.buf || !sh->rl.buf[0])
+		add_input_to_buffer(sh, "> ");
+	while (sh->rl.buf && sh->rl.buf[0])
 	{
-		if (!sh->rl.buf[0])
-			add_input_to_buffer(sh, "> ");
-		if (!g_signum && sh->rl.buf[0])
+		++*index;
+		extract_first_buffer_line(sh, index, 1);
+		if (!sh->rl.arr[*index])
 		{
-			++*index;
-			extract_first_buffer_line(sh, index, 1);
-			if (!sh->rl.arr[*index])
-			{
-				--*index;
-				return (0);
-			}
-			get_prefix_for_backslashes(sh, *index, 0);
-			line = sh->rl.arr[*index]->value;
-			if (compare_delimiter_and_line(delimiter, line))
-				return (1);
+			--*index;
+			return (0);
 		}
+		get_prefix_for_backslashes(sh, *index, 0);
+		line = sh->rl.arr[*index]->value;
+		if (compare_delimiter_and_line(delimiter, line))
+			return (1);
+		if (!sh->rl.buf || !sh->rl.buf[0])
+			add_input_to_buffer(sh, "> ");
 	}
 	if (g_signum == EOF)
 		heredoc_ctrl_d(index, delimiter);

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/14 16:39:06 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:12:10 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	main(int argc, char **argv, char **envp)
 	handle_default_background_color(0);
 	set_background_color_to_gnome_purple();
 	sh.first_arg = argv[0];
-	sh.env = convert_to_list(envp);
-	update_shlvl(&sh.env, FALSE);
 	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));
 	sh.user = circular_pipeline(&sh, "/bin/whoami");
 	sh.host = circular_pipeline(&sh, "/bin/uname -n | /bin/cut -d. -f1");
 	sh.home = get_home_path(&sh, sh.user);
 	sh.shells = get_shells(&sh);
+	sh.env = convert_to_list(envp);
+	update_shlvl(&sh.env, FALSE);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.subshell == 0)
@@ -71,7 +71,12 @@ static void	reset_title_and_background_color(void)
 	minishell/gab/gab1/..$ cd ..
 	minishell$
 
-	./minishell | ./minishell
+	----------------------------------------------------------------------------
+
+	alias egrep='egrep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias grep='grep --color=auto'
+	alias ls='ls --color=auto'
 
 	----------------------------------------------------------------------------
 

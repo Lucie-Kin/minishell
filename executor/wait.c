@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:21:04 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/11 19:44:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:30:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	wait_for_subprocesses(t_sh *sh, int *pid)
 	int	status;
 	int	signal_number;
 
-	set_signal_handling(SIGINT, update_sig_var);
+	set_signal_handling(SIGINT, SIG_IGN);
 	status = get_status_of_last_child(pid);
 	set_signal_handling(SIGINT, signal_handler);
 	if (sh->ex->pl.exit_code || !status)
@@ -61,16 +61,8 @@ static int	get_status_of_last_child(int *pid)
 	while (pid[i])
 	{
 		err = waitpid(pid[i], &status, 0);
-		while (err < 0)
-		{
-			if (errno == EINTR && g_signum == SIGINT)
-			{
-				g_signum = 0;
-				err = waitpid(pid[i], &status, 0);
-			}
-			else
-				break ;
-		}
+		while (err < 0 && errno == EINTR)
+			err = waitpid(pid[i], &status, 0);
 		++i;
 	}
 	return (status);

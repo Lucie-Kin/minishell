@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:22:28 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/12 14:23:07 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:14:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,8 @@ int	extract_first_command_line(t_sh *sh)
 			add_input_to_buffer(sh, "> ");
 		++index;
 	}
-	if (g_signum == SIGINT || g_signum == -SIGINT)
+	if (g_signum == SIGINT)
 		is_legal = 0;
-	if (g_signum == -SIGINT)
-		g_signum = EOF;
 	return (is_legal);
 }
 

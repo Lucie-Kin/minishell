@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/16 11:43:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:42:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,9 +155,7 @@ void	process_unicode_value(int is_echo_e, char **s, size_t *i);
 
 int		set_signals(int reset);
 int		set_signal_handling(int signum, void (*handler)(int));
-void	update_sig_var(int signum);
 void	signal_handler(int signum);
-void	signal_handler_extra(int signum);
 
 /* Executor ----------------------------------------------------------------- */
 
