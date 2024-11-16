@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/11 16:41:50 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 11:39:59 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	handle_ctrl_d(t_sh *sh, int *is_legal);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
 int		is_metacharacter(char c);
+int		is_hex_digit(char c);
 void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
@@ -59,5 +60,6 @@ void	*destroy_pl_outf(t_outf **outf);
 void	clean_pl_tokens(t_pl *pl);
 char	*process_ansi_c_quoting(char *s, size_t *i, char **quote);
 char	*get_escaped_token(const char *s);
+int		get_utf8_codepoint(const char *unicode);
 
 #endif

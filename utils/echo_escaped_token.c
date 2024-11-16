@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:59:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/23 20:40:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/16 11:44:08 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,14 @@ static void	process_octal_value(char *s);
 static void	process_hexadecimal_value(char *s);
 
 /*
-	This function is meant for echo's -e option. Beware of "\c", which is not 
-	an actual ASCII character. It's replaced with '\0' and also acts as the -n 
-	option.
+	This function is meant for echo's -e option.
+
+	Beware of "\c", which is not an actual ASCII character. It's replaced with 
+	'\0' and also acts as the -n option.
+
+	Also note that Unicode hex format is supported, despite the feature not 
+	being specified in the man page of echo. This is because Bash' echo builtin 
+	implements it, and we're mimicking this shell.
 */
 char	*get_echo_escaped_token(const char *s, int *is_c_found)
 {
@@ -36,12 +41,11 @@ char	*get_echo_escaped_token(const char *s, int *is_c_found)
 		if (is_escaped_character(parsed + i))
 		{
 			replace_with_special_character(parsed + i);
+			if (!parsed[i] && is_c_found)
+				*is_c_found = 1;
+			process_unicode_value(1, &parsed, &i);
 			if (!parsed[i])
-			{
-				if (is_c_found)
-					*is_c_found = 1;
 				--i;
-			}
 		}
 		++i;
 	}
@@ -55,7 +59,7 @@ static int	is_escaped_character(const char *s)
 		if (s[1] == '\\' || s[1] == 'a' || s[1] == 'b' || s[1] == 'c'
 			|| s[1] == 'e' || s[1] == 'E' || s[1] == 'f' || s[1] == 'n'
 			|| s[1] == 'r' || s[1] == 't' || s[1] == 'v' || s[1] == '0'
-			|| s[1] == 'x')
+			|| s[1] == 'x' || is_unicode_format(s + 1))
 			return (1);
 	}
 	return (0);

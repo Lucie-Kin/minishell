@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 19:25:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:01 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 11:43:56 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,6 @@ static void	process_hexadecimal_value(char *s);
 
 char	*get_escaped_token(const char *s)
 {
-	/*
-		\uHHHH
-		the Unicode (ISO/IEC 10646) char whose value is the hex value HHHH 
-		(1 to 4 hex digits)
-
-		\UHHHHHHHH
-		the Unicode (ISO/IEC 10646) char whose value is the hex value HHHHHHHH 
-		(1 to 8 hex digits)
-	*/
 	size_t	i;
 	char	*parsed;
 
@@ -55,6 +46,7 @@ char	*get_escaped_token(const char *s)
 		if (is_escaped_character(parsed + i))
 		{
 			replace_with_special_character(parsed + i);
+			process_unicode_value(0, &parsed, &i);
 			if (!parsed[i])
 				--i;
 		}
@@ -70,7 +62,8 @@ static int	is_escaped_character(const char *s)
 		if (s[1] == '\\' || s[1] == 'a' || s[1] == 'b' || s[1] == 'c'
 			|| s[1] == 'e' || s[1] == 'E' || s[1] == 'f' || s[1] == 'n'
 			|| s[1] == 'r' || s[1] == 't' || s[1] == 'v' || ft_isdigit(s[1])
-			|| s[1] == 'x' || s[1] == '"' || s[1] == '\'' || s[1] == '?')
+			|| s[1] == 'x' || s[1] == '"' || s[1] == '\'' || s[1] == '?'
+			|| is_unicode_format(s + 1))
 			return (1);
 	}
 	return (0);

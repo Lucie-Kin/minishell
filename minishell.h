@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/14 16:39:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/16 11:43:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,9 @@ typedef struct s_sh
 
 /* Parser ------------------------------------------------------------------- */
 
+void	run_shell(t_sh *sh);
+void	free_shell(t_sh *sh);
+
 void	handle_no_tty(void);
 void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
@@ -144,10 +147,9 @@ int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_home_path(t_sh *sh, const char *username);
 char	*get_shells(t_sh *sh);
 int		is_shell(const char *shells, const char *cmd);
-
-void	run_shell(t_sh *sh);
-void	free_shell(t_sh *sh);
 char	*get_clean_token(const char *s);
+int		is_unicode_format(const char *s);
+void	process_unicode_value(int is_echo_e, char **s, size_t *i);
 
 /* Signals ------------------------------------------------------------------ */
 
