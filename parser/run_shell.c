@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/07 17:31:28 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:59:58 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,26 @@ void	run_shell(t_sh *sh)
 
 void	free_shell(t_sh *sh)
 {
+	if (!sh)
+		return ;
 	rl_clear_history();
 	lst_clear(&sh->env);
 	lst_clear(&sh->hidden);
-	lst_clear(&sh->local);
+	free(sh->pwd->key);
+	if (sh->pwd->value)
+		free(sh->pwd->value);
+	free(sh->pwd);
 	free(sh->pid);
 	free(sh->user);
 	free(sh->host);
 	free(sh->home);
+	free(sh->shells);
 	free(sh->rl.user);
 	free(sh->rl.prompt);
 	free_entire_array((void **)sh->rl.buf, free);
 	free_entire_array((void **)sh->rl.arr, free_rl_arr_element);
 	free_entire_array((void **)sh->rl.tokens, free);
 	free_entire_array((void **)sh->rl.hd, free);
-	return ;
 }
 
 void	free_rl_arr_element(void *ptr)
@@ -117,9 +122,7 @@ static void	process_cmd(t_sh *sh)
 			if (redirect_io(&sh->ex->pl))
 			{
 				if (is_only_var)
-				{
 					update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-				}
 				else
 					sh->ex->pl.exit_code = execute_builtin(sh);
 			}

@@ -1,37 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   utils_list2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 19:14:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:04:04 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/11/19 16:41:36 by lchauffo          #+#    #+#             */
+/*   Updated: 2024/11/19 16:42:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_pwd(t_sh *sh)
+t_env	*add_node(t_env **lst, char *key, char *value)
 {
-	sh->pwd = ft_calloc(sizeof(t_sh), 1);
-	sh->pwd->value = getcwd(NULL, 0);
-	sh->pwd->key = ft_strdup("PWD");
-	sh->pwd->withvalue = TRUE;
-	sh->pwd->prev = NULL;
-	sh->pwd->next = NULL;
+	t_env	*new;
+
+	new = lst_new(key, value);
+	if (!new || !new->key)
+	{
+		if (new)
+			free(new);
+		return (lst_clear(lst), NULL);
+	}
+	lstadd_back(lst, new);
+	return (new);
 }
 
-int	bigerrno_pwd(t_sh *sh)
+t_env	*find_key(t_env *env, char *key)
 {
-	char	*str;
+	t_env	*list;
 
-	str = getcwd(NULL, 0);
-	if (str)
+	list = env;
+	if (!key || !list)
+		return (NULL);
+	while (list)
 	{
-		free(sh->pwd->value);
-		sh->pwd->value = str;
+		if (bn_isstrstr(list->key, key) == TRUE)
+			return (list);
+		list = list->next;
 	}
-	printf("%s\n", sh->pwd->value);
-	return (0);
+	return (NULL);
 }

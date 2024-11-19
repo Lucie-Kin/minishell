@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:43:54 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/07 17:10:42 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:44:35 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,34 @@
 
 void	lst_clear(t_env **lst)
 {
-	t_env	*tmp;
+	t_env	*current;
+	t_env	*next;
 
-	while (*lst)
+	if (!lst || !*lst)
+		return ;
+	current = *lst;
+	while (current)
 	{
-		tmp = (*lst)->next;
-		free((*lst)->key);
-		free((*lst)->value);
-		free(*lst);
-		*lst = tmp;
+		next = current->next;
+		free(current->key);
+		if (current->value)
+			free(current->value);
+		free(current);
+		current = next;
 	}
+	*lst = NULL;
 }
 
 void	clear_node(t_env *node)
 {
-	if (node->prev == NULL)
-	{
-		if (node->next == NULL)
-			;
-		else
-			node->next->prev = NULL;
-	}
-	else
-	{
-		if (node->next == NULL)
-			node->prev->next = NULL;
-		else
-		{
-			node->prev->next = node->next;
-			node->next->prev = node->prev;
-		}
-	}
+	if (!node)
+		return ;
+	if (node->prev)
+		node->prev->next = node->next;
+	if (node->next)
+		node->next->prev = node->prev;
 	free(node->key);
-	free(node->value);
+	if (node->value)
+		free(node->value);
 	free(node);
 }

@@ -6,33 +6,36 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/07 18:34:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:20:40 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	swap_str(char **to_be_swap, char **swap_with)
+void	swap_p(char **to_be_swap, char **swap_with)
 {
 	char	*tmp;
 
 	tmp = *to_be_swap;
-	*to_be_swap = ft_strdup((const char *)*swap_with);
-	if (*to_be_swap == NULL)
-		return ;
-	*swap_with = ft_strdup((const char *)tmp);
-	free(tmp);
+	*to_be_swap = *swap_with;
+	*swap_with = tmp;
 }
 
-void	swap_node_content(t_env **s1, t_env **s2)
+void	swap_node_content(t_env *s1, t_env *s2)
 {
-	int	tmp;
+	int		tmp_bool;
+	char	*tmp_key;
+	char	*tmp_value;
 
-	tmp = (*s1)->withvalue;
-	(*s1)->withvalue = (*s2)->withvalue;
-	(*s2)->withvalue = tmp;
-	swap_str(&(*s1)->key, &(*s2)->key);
-	swap_str(&(*s1)->value, &(*s2)->value);
+	tmp_bool = s1->withvalue;
+	s1->withvalue = s2->withvalue;
+	s2->withvalue = tmp_bool;
+	tmp_key = s1->key;
+	s1->key = s2->key;
+	s2->key = tmp_key;
+	tmp_value = s1->value;
+	s1->value = s2->value;
+	s2->value = tmp_value;
 }
 
 int	valid_keyvalue(char *key_value)
@@ -50,11 +53,11 @@ int	valid_keyvalue(char *key_value)
 	{
 		while (key_value[i] && (separator == -1 || i < separator - 1))
 		{
-			if (!(ft_isalnum(key_value[i]) == TRUE || key_value[i] == '_'))
+			if (!(ft_isalnum(key_value[i]) == TRUE || key_value[i++] == '_'))
 				return (FALSE);
-			i++;
 		}
-		if (ft_isalnum(key_value[i]) == TRUE || key_value[i] == '_' || key_value[i] == '+')
+		if (ft_isalnum(key_value[i]) == TRUE
+			|| key_value[i] == '_' || key_value[i] == '+')
 		{
 			if (separator == -1 && key_value[i] == '+')
 				return (FALSE);
@@ -70,9 +73,7 @@ void	print_list(t_env **list, int export)
 
 	tmp = *list;
 	if (!tmp)
-	{
-		//perror("Failure to read env");
-	}
+		return ;
 	while (tmp)
 	{
 		if (export == TRUE)
@@ -100,16 +101,10 @@ t_env	*alpha_order_list(t_env **env)
 	int		swapped;
 
 	if (!*env)
-	{
-		fprintf(stderr, "env is empty\n");
 		return (NULL);
-	}
 	start = list_dup(*env);
 	if (!start)
-	{
-		fprintf(stderr, "Duplication failed\n");
 		return (NULL);
-	}
 	swapped = 1;
 	while (swapped)
 	{
@@ -119,7 +114,7 @@ t_env	*alpha_order_list(t_env **env)
 		{
 			if (ft_strcmp(ordered->key, ordered->next->key) > 0)
 			{
-				swap_node_content(&ordered, &ordered->next);
+				swap_node_content(ordered, ordered->next);
 				swapped = 1;
 			}
 			ordered = ordered->next;

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/28 12:41:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:11:08 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		extract_first_command_line(t_sh *sh);
 char	**get_delimiters(const char *s);
 void	extract_first_buffer_line(t_sh *sh, size_t *index, int is_heredoc);
 void	concatenate_with_previous_line(t_sh *sh, size_t *index);
-int		check_for_syntax_errors(t_sh* sh, size_t index);
+int		check_for_syntax_errors(t_sh *sh, size_t index);
 char	*find_unclosed_quote(const char *s);
 int		is_char_start_of_quote(const char *s, size_t i, char *quote);
 int		is_char_end_of_quote(const char *s, size_t i, char *quote);

@@ -6,11 +6,26 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/07 19:18:02 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:48:55 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+/*
+	- You can increment the SHLVL variable when executing a new bigerrno 
+	(and not when forking for a subshell), as every shell increments it. 
+	And if this var didn't exist, add it and set it to 1. The t_sh `level` 
+	variable is different and is there to tell whether "exit" should be 
+	printed. It's the one you increment when forking for a subshell.
+
+	- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
+	and you can add `--trace-children=yes` to find out in which child 
+	process you need to close them.
+
+	- Get current background color with `echo -e "\033]11;?\007"`. It'd be 
+	used when exiting the main function, to restore the original color. If 
+	it's too tricky, just hardcode the grey color we have at school.
+*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -19,21 +34,6 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (output_error(1,
 				compose_err_msg(SHELL, 0, 0, "Too many arguments")));
-	/*
-		- You can increment the SHLVL variable when executing a new bigerrno 
-		(and not when forking for a subshell), as every shell increments it. 
-		And if this var didn't exist, add it and set it to 1. The t_sh `level` 
-		variable is different and is there to tell whether "exit" should be 
-		printed. It's the one you increment when forking for a subshell.
-
-		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
-		and you can add `--trace-children=yes` to find out in which child 
-		process you need to close them.
-
-		- Get current background color with `echo -e "\033]11;?\007"`. It'd be 
-		used when exiting the main function, to restore the original color. If 
-		it's too tricky, just hardcode the grey color we have at school.
-	*/
 	set_background_color_to_gnome_purple();
 	ft_bzero(&sh, sizeof(t_sh));
 	sh.first_arg = argv[0];
@@ -44,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
 	sh.host = circular_pipeline(&sh, "/bin/uname -n | /bin/cut -d. -f1");
 	sh.home = get_home_path(&sh, sh.user);
 	sh.shells = get_shells(&sh);
+	add_pwd(&sh);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.level == 0)

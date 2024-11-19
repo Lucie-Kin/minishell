@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:21:27 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/25 18:56:36 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:36:04 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,19 @@ t_env	*lstadd_back(t_env **lst, t_env *new)
 	return (*lst);
 }
 
-t_env	*lst_new(char *key, char *value)
+t_env	*lst_new(const char *key, const char *value)
 {
 	t_env	*node;
 
-	node = malloc(sizeof(t_env));
-	if (!node)
-	{
-		fprintf(stderr, "Error allocating memory for new node\n");
+	if (!key)
 		return (NULL);
-	}
+	node = ft_calloc(1, sizeof(t_env));
+	if (!node)
+		return (NULL);
 	node->key = ft_strdup(key);
-	if (!value)
-	{
-		node->value = NULL;
-		node->withvalue = FALSE;
-	}
-	else
-	{
+	if (value)
 		node->value = ft_strdup(value);
-		node->withvalue = TRUE;
-	}
+	node->withvalue = (value != NULL);
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);
