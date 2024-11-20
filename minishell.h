@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:42:50 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:14:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_pl
 /* `ex` stands for `execution` */
 typedef struct s_ex
 {
-	int			logic_operator;
+	int			logop;
 	t_pl		pl;
 	struct s_ex	*next;
 }	t_ex;
@@ -138,10 +138,12 @@ typedef struct s_sh
 
 void	run_shell(t_sh *sh);
 void	free_shell(t_sh *sh);
+void	interpret_and_process_cmd(t_sh *sh);
 
 void	handle_no_tty(void);
 void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
+void	reset_title_and_background_color(void);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_home_path(t_sh *sh, const char *username);

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 17:09:01 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:48:25 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:32:59 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_outf	**get_pl_outf(t_pl *pl)
 			return (destroy_pl_outf(outf));
 		j = 0;
 		k = 0;
-		while (pl->cmdl[i][j])
+		while (pl_skip_parentheses(pl->cmdl[i], &j))
 		{
 			if (!set_outf_arr_elem(pl->cmdl[i], outf[i], &j, &k))
 				return (destroy_pl_outf(outf));
@@ -72,7 +72,7 @@ static int	set_outf_arr(char ***cmdl, t_outf **outf, size_t i)
 
 	j = 0;
 	len = 0;
-	while (cmdl[i][j])
+	while (pl_skip_parentheses(cmdl[i], &j))
 	{
 		len += !ft_strcmp(cmdl[i][j], ">") || !ft_strcmp(cmdl[i][j], ">>");
 		++j;

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:39:10 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:47:57 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:31:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	inner_loop(char ***inf, char ***cmdl, size_t i, char **hd_dup)
 
 	j = 0;
 	k = 0;
-	while (cmdl[i][j])
+	while (pl_skip_parentheses(cmdl[i], &j))
 	{
 		if (!ft_strcmp(cmdl[i][j], "<"))
 		{

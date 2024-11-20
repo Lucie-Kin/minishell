@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/13 15:16:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:57:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
 static int	execute_subprocess(t_sh *sh, t_pl *pl);
+static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd);
 
 int	execute_pipeline(t_sh *sh)
 {
@@ -88,12 +89,45 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		sh->exit_code = execute_builtin(sh);
 		return (restore_io(pl));
 	}
+
+	if (!ft_strcmp(pl->cmdl[pl->index][0], "("))
+	{
+		/*
+			- Remove parentheses.
+			- Extract the cmdl and store it in sh->rl.tokens.
+			- Call interpret_and_process_cmd(sh).
+			- Free what you can here.
+			- Return the exit code
+		*/
+		// Remove parentheses
+		remove_array_elements((void **)pl->cmdl[pl->index], 0, 0, free);
+		size_t	last;
+		last = get_array_length((void **)pl->cmdl[pl->index]) - 1;
+		remove_array_elements((void **)pl->cmdl[pl->index], last, last, free);
+
+		// Extract the cmdl and store it in sh->rl.tokens
+		sh->rl.tokens = (char **)extract_array_elements((void **)pl->cmdl[pl->index], 0, last - 1);
+
+		dprintf(2, "isatty(STDIN_FILENO) = %d / isatty(STDOUT_FILENO) = %d\n",
+			isatty(STDIN_FILENO), isatty(STDOUT_FILENO));
+
+		// Free everything except for the tokens (and don't restore any STD)
+
+		// Call interpret_and_process_cmd(sh)
+		interpret_and_process_cmd(sh);
+
+		// Return the exit code and restore the IO
+		//return (restore_io(pl));
+		return (sh->exit_code);
+	}
+
+
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (restore_io(pl));
 	if (cmd_fullpath)
 	{
 		if (is_shell(sh->shells, cmd_fullpath))
-			update_shlvl(&sh->env, FALSE);
+			prepare_for_shell_cmd(sh, cmd_fullpath);
 		set_signals(1);
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
@@ -102,4 +136,18 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		free(cmd_fullpath);
 	}
 	return (restore_io(pl));
+}
+
+static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd)
+{
+	char	*p_slash;
+
+	update_shlvl(&sh->env, FALSE);
+	p_slash = ft_strrchr(cmd, '/');
+	if (!ft_strcmp(cmd, "minishell")
+		|| (p_slash && !ft_strcmp(p_slash + 1, "minishell")))
+		handle_default_background_color(1);
+	else
+		reset_title_and_background_color();
+	return ;
 }

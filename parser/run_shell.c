@@ -6,14 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 17:29:45 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:58:39 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
 static void	process_current_line(t_sh *sh);
-static void	process_cmd(t_sh *sh);
 
 void	run_shell(t_sh *sh)
 {
@@ -93,43 +92,12 @@ static void	process_current_line(t_sh *sh)
 		sh->rl.tokens = tokenize(cmdl, 1, ft_isspace);
 		free(cmdl);
 		expansion(sh);
-		interpreter(sh);
-		free_entire_array((void **)sh->rl.tokens, free);
-		sh->rl.tokens = 0;
-		process_cmd(sh);
+		interpret_and_process_cmd(sh);
 	}
 	unlink_heredocs(sh);
 	free_entire_array((void **)sh->rl.arr, free_rl_arr_element);
 	sh->rl.arr = 0;
 	free_entire_array((void **)sh->rl.hd, free);
 	sh->rl.hd = 0;
-	return ;
-}
-
-static void	process_cmd(t_sh *sh)
-{
-	int	is_only_var;
-	int	is_builtin;
-
-	while (sh->ex)
-	{
-		is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
-		is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0],
-				sh->local);
-		if (is_only_var || is_builtin)
-		{
-			if (redirect_io(&sh->ex->pl))
-			{
-				if (is_only_var)
-					update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-				else
-					sh->exit_code = execute_builtin(sh);
-			}
-			sh->exit_code = restore_io(&sh->ex->pl);
-		}
-		else
-			sh->exit_code = execute_pipeline(sh);
-		pop_head_ex(sh);
-	}
 	return ;
 }

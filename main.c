@@ -6,15 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/16 18:12:10 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:14:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_signum;
-
-static void	reset_title_and_background_color(void);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -42,14 +40,6 @@ int	main(int argc, char **argv, char **envp)
 	if (sh.subshell == 0)
 		reset_title_and_background_color();
 	return (sh.exit_code);
-}
-
-static void	reset_title_and_background_color(void)
-{
-	close(STDIN_FILENO);
-	readline("\001\e]0;Terminal\a\002");
-	handle_default_background_color(1);
-	return ;
 }
 
 /*

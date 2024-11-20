@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/13 20:24:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:36:29 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,7 @@
 
 void	interpreter(t_sh *sh)
 {
-	// LEGAL: `echo a | (cd .. && ls)`
-	// LEGAL: `(cd .. && ls) > out`
-	// LEGAL: `(cat) < main.c` or `(ls) < main.c`
-
 	/*
-	typedef struct s_ex
-	{
-		int		logic_operator;
-		t_pl	pl;
-		t_ex	*next;
-	}	t_ex;
-
-
-	(a || b) && c || d
-
-	A logop is what conditions access to a pipeline. Keep the previous exit 
-	code into memory, and pop the current node once it's been executed.
-
-	Then, for the next (now current) node, still execute the parentheses, but 
-	maybe not the pipeline itself.
-
-	The first node of the list has a logop of ';' (0).
-	The first exit code is 0, meaning success.
-
-	---
-
 	`echo a && (exit && cd .. && ls > out)`
 	a
 	[out not created]
@@ -62,6 +37,16 @@ void	interpreter(t_sh *sh)
 
 	`((echo b && echo a) | sort) | tr '\n' ' '`
 	a b
+
+	---
+
+	$ (exit 2)
+	$ echo $?
+	2
+
+	$ ls | (aaaaaa)
+	$ echo $?
+	127
 	*/
 	
 	if (!sh->rl.tokens || !sh->rl.tokens[0])

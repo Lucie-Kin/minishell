@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/13 13:55:08 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:44:52 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	handle_default_background_color(int set)
 		color[i] = 0;
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	}
-	if (set)
+	if (color[0] && set)
 		ft_putstr_fd(color, 1);
 	return ;
 }
@@ -43,5 +43,21 @@ void	handle_default_background_color(int set)
 void	set_background_color_to_gnome_purple(void)
 {
 	ft_putstr_fd("\033]11;rgb:3030/0a0a/2424\007", 1);
+	return ;
+}
+
+void	reset_title_and_background_color(void)
+{
+	int	stdin_dup;
+
+	if (isatty(STDIN_FILENO))
+	{
+		stdin_dup = dup(STDIN_FILENO);
+		close(STDIN_FILENO);
+		readline("\001\e]0;Terminal\a\002");
+		dup2(stdin_dup, STDIN_FILENO);
+		close(stdin_dup);
+	}
+	handle_default_background_color(1);
 	return ;
 }

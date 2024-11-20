@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 11:39:59 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:21:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char	**get_filtered_dir_content(const char *path, const char *pattern,
 			int only_dirs);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
+char	*pl_skip_parentheses(char **tokens, size_t *i);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(t_sh *sh);
 char	***get_pl_cmdl(char	**tokens, size_t len);
