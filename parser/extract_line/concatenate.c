@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:51:01 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 14:52:01 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/01 17:52:00 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	concatenate_with_previous_line(t_sh *sh, size_t *index)
 
 static size_t	count_backslashes(const char *s)
 {
-	return (count_char_before(s, ft_strlen(s), '\\'));
+	return (count_char_before(s, ft_strlen(s) - 1, '\\'));
 }
 
 static int	is_token_heredoc_chevrons(void *token)
@@ -83,8 +83,8 @@ static int	should_concatenate(t_sh *sh, size_t prev, size_t curr)
 	else if (!(sh->rl.arr[prev]->backslashes % 2))
 		return (0);
 	else if (sh->rl.arr[prev]->backslashes == 1)
-		sh->rl.arr[prev]->value[ft_strlen(sh->rl.arr[prev]->value) - 1] = '\0';
+		sh->rl.arr[prev]->value[ft_strlen(sh->rl.arr[prev]->value) - 2] = '\0';
 	else if (sh->rl.arr[prev]->is_heredoc && sh->rl.arr[curr]->is_heredoc)
-		sh->rl.arr[prev]->value[ft_strlen(sh->rl.arr[prev]->value) - 1] = '\0';
+		sh->rl.arr[prev]->value[ft_strlen(sh->rl.arr[prev]->value) - 2] = '\0';
 	return (1);
 }

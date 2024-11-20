@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:20:11 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:45:39 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	search_cmd_on_path(t_pl *pl, char *cmd_name, char **cmd_fullpath)
 	char	*joined;
 
 	i = 0;
-	while (pl->path && pl->path[i])
+	while (cmd_name[0] && pl->path && pl->path[i])
 	{
 		joined = ft_strjoin(pl->path[i], cmd_name);
 		if (!joined)

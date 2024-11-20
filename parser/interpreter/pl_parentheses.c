@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pl_len.c                                           :+:      :+:    :+:   */
+/*   pl_parentheses.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 17:10:40 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 12:24:38 by libousse         ###   ########.fr       */
+/*   Created: 2024/11/20 12:15:09 by libousse          #+#    #+#             */
+/*   Updated: 2024/11/20 12:21:40 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-size_t	get_pl_len(char **tokens)
+char	*pl_skip_parentheses(char **tokens, size_t *i)
 {
-	size_t	i;
-	size_t	len;
+	size_t	parentheses;
 
-	i = 0;
-	len = 1;
-	while (pl_skip_parentheses(tokens, &i))
+	parentheses = 0;
+	while (tokens[*i])
 	{
-		if (!ft_strcmp(tokens[i], "|"))
-			++len;
-		++i;
+		if (!ft_strcmp(tokens[*i], "("))
+			++parentheses;
+		else if (!ft_strcmp(tokens[*i], ")"))
+			--parentheses;
+		else if (!parentheses)
+			break ;
+		++*i;
 	}
-	return (len);
+	return (tokens[*i]);
 }

@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pl_len.c                                           :+:      :+:    :+:   */
+/*   heredoc_name.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 17:10:40 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 12:24:38 by libousse         ###   ########.fr       */
+/*   Created: 2024/11/11 16:40:23 by libousse          #+#    #+#             */
+/*   Updated: 2024/11/11 16:40:47 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-size_t	get_pl_len(char **tokens)
+char	*compose_heredoc_name(size_t index)
 {
-	size_t	i;
-	size_t	len;
+	char	*tmp1;
+	char	*tmp2;
 
-	i = 0;
-	len = 1;
-	while (pl_skip_parentheses(tokens, &i))
-	{
-		if (!ft_strcmp(tokens[i], "|"))
-			++len;
-		++i;
-	}
-	return (len);
+	tmp1 = ft_itoa(index);
+	tmp2 = ft_strjoin(".heredoc", tmp1);
+	free(tmp1);
+	tmp1 = ft_strjoin(tmp2, ".tmp");
+	free(tmp2);
+	return (tmp1);
 }

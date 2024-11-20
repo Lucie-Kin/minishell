@@ -6,67 +6,80 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/04 15:00:50 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:47:23 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
+static void	cut_input_into_lines(t_sh *sh, char *input);
+static char	*place_split_points_for_input(char *input);
+
 void	add_input_to_buffer(t_sh *sh, const char *prompt)
 {
-		/*
-			- In add_input_to_buffer, don't just split at '\n'. When a '\n' is 
-			right after another, you add an empty line to the buffer instead of 
-			making it disappear.
-			- Outside of heredoc content, just ignore these empty lines. They 
-			must not appear in history.
-			- In heredoc content, you'll add '\n' at the end of them like any 
-			other line.
-			- During heredoc prompting, you can differentiate between a nullptr 
-			in readline being caused by Enter and by Ctrl-D thanks to a signal. 
-			By default, if the buffer was empty, and nullptr happens, of course 
-			don't add a new empty line. But, same thing if we're prompting for 
-			input outside of heredoc content. Only add an empty line in the 
-			context of heredocs, and in a multiline input (indeed, we cannot 
-			take the risk to prune empty lines and have heredoc empty lines be 
-			removed by mistake).
-			- EDIT: I may have noticed that, when prompting for an unclosed 
-			quote, empty lines are kept.
-		*/
-	char	*input;
+	static int	prev_signum;
+	int			stdin_dup;
+	char		*input;
+
+	prev_signum = g_signum;
+	g_signum = 0;
+	stdin_dup = dup(STDIN_FILENO);
+	if (stdin_dup < 0)
+		return ;
+	input = readline(prompt);
+	dup2(stdin_dup, STDIN_FILENO);
+	close(stdin_dup);
+	if (!input && !g_signum)
+		g_signum = EOF;
+	else if (g_signum == SIGINT)
+	{
+		if (!prev_signum)
+			ft_putstr_fd("\n", STDOUT_FILENO);
+		free_entire_array((void **)sh->rl.buf, free);
+		sh->rl.buf = 0;
+	}
+	if (input)
+		cut_input_into_lines(sh, input);
+	return ;
+}
+
+static void	cut_input_into_lines(t_sh *sh, char *input)
+{
 	char	**lines;
 
-	input = readline(prompt);
+	input = place_split_points_for_input(input);
 	if (!input)
 		return ;
-	lines = ft_split(input, '\n');
+	lines = ft_split(input, SEP);
 	free(input);
 	insert_array_elements((void ***)&sh->rl.buf, (void **)lines,
 		get_array_length((void **)sh->rl.buf));
 	if (!sh->rl.buf)
-		sh->exit_code = output_error(ENOMEM, compose_err_msg(SHELL,
-					"readline", 0, strerror(ENOMEM)));
+		sh->exit_code = output_error(ENOMEM, compose_err_msg(SHELL, "readline",
+					0, strerror(ENOMEM)));
 	return ;
 }
 
-void	extract_first_buffer_line(t_sh *sh, size_t *index, int is_heredoc)
+static char	*place_split_points_for_input(char *input)
 {
-	t_rl_arr	*elem;
+	char	*tmp;
+	char	*p_newline;
 
-	elem = ft_calloc(1, sizeof(t_rl_arr));
-	if (!elem)
-		return ;
-	if (!sh->rl.buf[0])
-		elem->value = ft_strdup("");
-	else
-		elem->value = extract_array_element((void **)sh->rl.buf, 0);
-	elem->is_heredoc = is_heredoc;
-	insert_array_element((void ***)&sh->rl.arr, elem, *index);
-	if (!sh->rl.arr[*index])
-		return ;
-	concatenate_with_previous_line(sh, index);
-	if (sh->rl.arr[*index]->is_heredoc)
-		return ;
-	sh->rl.arr[*index]->delimiters = get_delimiters(sh->rl.arr[*index]->value);
-	return ;
+	tmp = ft_strjoin(input, "\n");
+	free(input);
+	input = tmp;
+	if (!input)
+		return (0);
+	p_newline = ft_strchr(input, '\n');
+	while (p_newline)
+	{
+		tmp = insert_str_before_char(input, p_newline - input + 1, SEP_STR);
+		p_newline = tmp + (p_newline - input + 1);
+		free(input);
+		input = tmp;
+		if (!input)
+			break ;
+		p_newline = ft_strchr(p_newline + 1, '\n');
+	}
+	return (input);
 }

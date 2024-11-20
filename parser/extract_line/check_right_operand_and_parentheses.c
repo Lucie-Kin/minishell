@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:51 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:56:37 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:42:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static int	no_right_operand_missing(char **cmdl_tokens);
 static int	are_all_parentheses_closed(char **cmdl_tokens, char **prefix,
 				t_rl_arr **arr, size_t arr_len);
 static int	increment_nbr_parentheses(const char *s);
+static void	set_prefix_for_parentheses(char **cmdl_tokens, char **prefix,
+				t_rl_arr **rl_arr, size_t rl_arr_len);
 
 int	check_right_operand_and_parentheses(t_sh *sh, char **prefix)
 {
@@ -33,7 +35,10 @@ int	check_right_operand_and_parentheses(t_sh *sh, char **prefix)
 		return (is_input_complete);
 	is_input_complete = no_right_operand_missing(cmdl_tokens);
 	if (!is_input_complete)
-		*prefix = " ";
+	{
+		if (prefix)
+			*prefix = " ";
+	}
 	else
 		is_input_complete = are_all_parentheses_closed(cmdl_tokens, prefix,
 				sh->rl.arr, get_array_length((void **)sh->rl.arr));
@@ -59,7 +64,6 @@ static int	are_all_parentheses_closed(char **cmdl_tokens, char **prefix,
 	t_rl_arr **rl_arr, size_t rl_arr_len)
 {
 	size_t	i;
-	size_t	j;
 	int		nbr_parentheses;
 
 	if (!cmdl_tokens)
@@ -70,17 +74,8 @@ static int	are_all_parentheses_closed(char **cmdl_tokens, char **prefix,
 		nbr_parentheses += increment_nbr_parentheses(cmdl_tokens[i++]);
 	if (!nbr_parentheses)
 		return (1);
-	if (rl_arr && rl_arr_len && rl_arr[rl_arr_len - 1]->is_heredoc)
-		*prefix = " ";
-	else
-	{
-		*prefix = "; ";
-		j = ft_strlen(cmdl_tokens[i - 1]) - 1;
-		while (j && ft_isspace(cmdl_tokens[i - 1][j]))
-			--j;
-		if (cmdl_tokens[i - 1][j] == ';')
-			*prefix = " ";
-	}
+	if (prefix)
+		set_prefix_for_parentheses(cmdl_tokens, prefix, rl_arr, rl_arr_len);
 	return (0);
 }
 
@@ -98,4 +93,25 @@ static int	increment_nbr_parentheses(const char *s)
 	if (!s[i])
 		return (-i);
 	return (0);
+}
+
+static void	set_prefix_for_parentheses(char **cmdl_tokens, char **prefix,
+	t_rl_arr **rl_arr, size_t rl_arr_len)
+{
+	size_t	i;
+	size_t	j;
+
+	i = get_array_length((void **)cmdl_tokens);
+	if (rl_arr && rl_arr_len && rl_arr[rl_arr_len - 1]->is_heredoc)
+		*prefix = " ";
+	else
+	{
+		*prefix = "; ";
+		j = ft_strlen(cmdl_tokens[i - 1]) - 1;
+		while (j && ft_isspace(cmdl_tokens[i - 1][j]))
+			--j;
+		if (cmdl_tokens[i - 1][j] == '(' || cmdl_tokens[i - 1][j] == ';')
+			*prefix = " ";
+	}
+	return ;
 }

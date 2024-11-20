@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/19 17:11:08 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:46:40 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,29 @@ char	*find_unclosed_quote(const char *s);
 int		is_char_start_of_quote(const char *s, size_t i, char *quote);
 int		is_char_end_of_quote(const char *s, size_t i, char *quote);
 size_t	count_char_before(const char *s, size_t i, char c);
+int		is_char_within_quotes(const char *s, const char *p_char);
 char	*get_prefix_for_backslashes(t_sh *sh, size_t i, int *is_input_needed);
-int		handle_heredoc_content(t_sh *sh, size_t *index);
+int		create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
+			const char *delimiter);
+char	*compose_heredoc_name(size_t index);
+void	heredoc_ctrl_d(size_t *index, const char *delimiter);
+void	unlink_heredocs(t_sh *sh);
 int		check_right_operand_and_parentheses(t_sh *sh, char **prefix);
-void	append_heredoc_lines_with_a_newline_char(t_sh *sh);
 void	add_input_to_history(t_sh *sh);
+void	handle_ctrl_d(t_sh *sh, int *is_legal);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
 int		is_metacharacter(char c);
+int		is_hex_digit(char c);
 void	expansion(t_sh *sh);
 char	*expand_tilde(t_sh *sh, const char *s);
 char	*expand_environment_variables(t_sh *sh, const char *s);
 char	**expand_asterisk_wildcard(const char *s);
+char	**get_filtered_dir_content(const char *path, const char *pattern,
+			int only_dirs);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
+char	*pl_skip_parentheses(char **tokens, size_t *i);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(t_sh *sh);
 char	***get_pl_cmdl(char	**tokens, size_t len);
@@ -52,5 +61,6 @@ void	*destroy_pl_outf(t_outf **outf);
 void	clean_pl_tokens(t_pl *pl);
 char	*process_ansi_c_quoting(char *s, size_t *i, char **quote);
 char	*get_escaped_token(const char *s);
+int		get_utf8_codepoint(const char *unicode);
 
 #endif

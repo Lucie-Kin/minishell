@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/05 17:37:42 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:46:03 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
 static int	execute_subprocess(t_sh *sh, t_pl *pl);
-static void	wait_for_subprocesses(t_sh *sh, int *pid);
+static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd);
 
 int	execute_pipeline(t_sh *sh)
 {
@@ -63,6 +63,7 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		}
 		else if (!pid[sh->ex->pl.index])
 		{
+			++sh->subshell;
 			update_shlvl(&sh->env, TRUE);
 			free(pid);
 			child_exit_code = execute_subprocess(sh, &sh->ex->pl);
@@ -88,12 +89,46 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 		pl->exit_code = execute_builtin(sh);
 		return (restore_io(pl));
 	}
+
+	if (!ft_strcmp(pl->cmdl[pl->index][0], "("))
+	{
+		/*
+			- Remove parentheses.
+			- Extract the cmdl and store it in sh->rl.tokens.
+			- Call interpret_and_process_cmd(sh).
+			- Free what you can here.
+			- Return the exit code
+		*/
+		// Remove parentheses
+		remove_array_elements((void **)pl->cmdl[pl->index], 0, 0, free);
+		size_t	last;
+		last = get_array_length((void **)pl->cmdl[pl->index]) - 1;
+		remove_array_elements((void **)pl->cmdl[pl->index], last, last, free);
+
+		// Extract the cmdl and store it in sh->rl.tokens
+		sh->rl.tokens = (char **)extract_array_elements((void **)pl->cmdl[pl->index], 0, last - 1);
+
+		dprintf(2, "isatty(STDIN_FILENO) = %d / isatty(STDOUT_FILENO) = %d\n",
+			isatty(STDIN_FILENO), isatty(STDOUT_FILENO));
+
+		// Free everything except for the tokens (and don't restore any STD)
+
+		// Call interpret_and_process_cmd(sh)
+		interpret_and_process_cmd(sh);
+
+		// Return the exit code and restore the IO
+		//return (restore_io(pl));
+		return (sh->exit_code);
+	}
+
+
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (restore_io(pl));
 	if (cmd_fullpath)
 	{
 		if (is_shell(sh->shells, cmd_fullpath))
-			update_shlvl(&sh->env, FALSE);
+			prepare_for_shell_cmd(sh, cmd_fullpath);
+		set_signals(1);
 		execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(sh->env));
 		pl->exit_code = errno;
 		pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
@@ -103,36 +138,16 @@ static int	execute_subprocess(t_sh *sh, t_pl *pl)
 	return (restore_io(pl));
 }
 
-/*
-	The subprocess either exited normally (`exit` or returning from `main`) or 
-	due to a signal. Exit codes are in a [0-255] range, with the [0-127] range 
-	meant for normal exits, and the [128-255] range for signaled exits. Only a 
-	normal exit provides an exit code, which is why 128 is added to a signal 
-	number to create the exit code.
-
-	The macros in `wait_for_subprocesses` are part of `waitpid` and are not 
-	extra functions.
-*/
-static void	wait_for_subprocesses(t_sh *sh, int *pid)
+static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd)
 {
-	int	i;
-	int	status;
-	int	signal_number;
+	char	*p_slash;
 
-	i = 0;
-	while (pid[i])
-	{
-		waitpid(pid[i], &status, 0);
-		++i;
-	}
-	if (sh->ex->pl.exit_code)
-		return ;
-	else if (WIFEXITED(status))
-		sh->ex->pl.exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-	{
-		signal_number = WTERMSIG(status);
-		sh->ex->pl.exit_code = 128 + signal_number;
-	}
+	update_shlvl(&sh->env, FALSE);
+	p_slash = ft_strrchr(cmd, '/');
+	if (!ft_strcmp(cmd, "minishell")
+		|| (p_slash && !ft_strcmp(p_slash + 1, "minishell")))
+		handle_default_background_color(1);
+	else
+		reset_title_and_background_color();
 	return ;
 }

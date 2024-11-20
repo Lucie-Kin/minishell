@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/14 12:14:17 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:48:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*circular_pipeline(t_sh *sh, const char *cmdl)
 	sh->rl.tokens = tokenize(cmdl, 1, ft_isspace);
 	interpreter(sh);
 	free_entire_array((void **)sh->rl.tokens, free);
+	sh->rl.tokens = 0;
 	if (!sh->ex)
 		return (0);
 	data = 0;
@@ -45,17 +46,17 @@ int	get_pid(t_sh *sh, const char *first_arg)
 	char	*tmp2;
 
 	if (!sh || !first_arg)
-		return (12345);
+		return (0);
 	tmp1 = ft_strjoin("/bin/ps aux | /bin/grep ", first_arg);
 	tmp2 = ft_strjoin(tmp1, " | /bin/grep -v grep | /bin/awk '{print $2}'"
 			" | /bin/tail -n 1");
 	free(tmp1);
 	if (!tmp2)
-		return (12345);
+		return (0);
 	tmp1 = circular_pipeline(sh, tmp2);
 	free(tmp2);
 	if (!tmp1)
-		return (12345);
+		return (0);
 	pid = ft_atoi(tmp1);
 	free(tmp1);
 	return (pid);

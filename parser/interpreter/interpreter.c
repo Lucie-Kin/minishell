@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:57:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:36:29 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,38 @@
 void	interpreter(t_sh *sh)
 {
 	/*
-	typedef struct s_ex
-	{
-		int		logic_operator;
-		size_t	open_subshells;
-		t_pl	pl;
-		size_t	close_subshells;
-		t_ex	*next;
-	}	t_ex;
+	`echo a && (exit && cd .. && ls > out)`
+	a
+	[out not created]
 
+	`echo a && (exit && cd .. && ls) > out`
+	a
+	[out created in . but empty]
 
-	(a || b) && c || d
+	`echo a && (cd .. && ls) > out`
+	a
+	[out created in . and contains the right content]
 
-	A logop is what conditions access to a pipeline. Keep the previous exit 
-	code into memory, and pop the current node once it's been executed.
+	`echo a && (cd .. && ls > out)`
+	a
+	[out created in .. and contains the right content]
 
-	Then, for the next (now current) node, still execute the parentheses, but 
-	maybe not the pipeline itself.
+	`(echo b && echo a) | sort`
+	a
+	b
 
-	The first node of the list has a logop of ';' (0).
-	The first exit code is 0, meaning success.
-	*/
+	`((echo b && echo a) | sort) | tr '\n' ' '`
+	a b
 
-	/*
-		Isolate first pipeline.
+	---
 
-		If parentheses, know that it can be in different tokens. Count them fuckers.
+	$ (exit 2)
+	$ echo $?
+	2
 
-		Then, everything is a pipeline until a logop or a closing parenthese is found.
-
-		Get them closing parentheses, boy! Get 'em, come on!
+	$ ls | (aaaaaa)
+	$ echo $?
+	127
 	*/
 	
 	if (!sh->rl.tokens || !sh->rl.tokens[0])

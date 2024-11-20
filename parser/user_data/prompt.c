@@ -65,7 +65,7 @@ static char	*get_prompt_path(t_sh *sh)
 	char	*str_result;
 
 	alloc = 0;
-	str_path = get_env(sh->env, "PWD");
+	str_path = get_var_value(sh, "PWD");
 	if (!str_path)
 	{
 		alloc = 1;

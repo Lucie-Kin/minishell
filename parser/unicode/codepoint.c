@@ -1,29 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pl_len.c                                           :+:      :+:    :+:   */
+/*   codepoint.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 17:10:40 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 12:24:38 by libousse         ###   ########.fr       */
+/*   Created: 2024/11/16 11:38:54 by libousse          #+#    #+#             */
+/*   Updated: 2024/11/16 11:45:48 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-size_t	get_pl_len(char **tokens)
+int	get_utf8_codepoint(const char *unicode)
 {
 	size_t	i;
-	size_t	len;
+	size_t	hex_max_len;
+	char	*dup;
+	int		codepoint;
 
+	if (!is_unicode_format(unicode))
+		return (-1);
+	hex_max_len = 4;
+	if (unicode[0] == 'U')
+		hex_max_len = 8;
+	dup = ft_substr(unicode, 1, hex_max_len);
+	if (!dup)
+		return (-1);
 	i = 0;
-	len = 1;
-	while (pl_skip_parentheses(tokens, &i))
+	while (dup[i])
 	{
-		if (!ft_strcmp(tokens[i], "|"))
-			++len;
+		dup[i] = ft_toupper(dup[i]);
 		++i;
 	}
-	return (len);
+	codepoint = ft_atoi_base(dup, "0123456789ABCDEF");
+	free(dup);
+	return (codepoint);
 }

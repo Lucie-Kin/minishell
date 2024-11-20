@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/19 16:43:24 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:44:17 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@
 
 # define FALSE 0
 # define TRUE  1
-# define SEP   28
+# define SEP     28
+# define SEP_STR "\034"
 # define LOGOP_COLON 0
 # define LOGOP_OR    1
 # define LOGOP_AND   2
@@ -53,6 +54,8 @@
 
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
+
+extern int	g_signum;
 
 /* `pl` stands for "pipeline" */
 typedef struct s_outf
@@ -80,16 +83,12 @@ typedef struct s_pl
 }	t_pl;
 
 /* `ex` stands for `execution` */
-typedef struct s_ex	t_ex;
-
-struct s_ex
+typedef struct s_ex
 {
-	int		logic_operator;
-	size_t	open_subshells;
-	t_pl	pl;
-	size_t	close_subshells;
-	t_ex	*next;
-};
+	int			logop;
+	t_pl		pl;
+	struct s_ex	*next;
+}	t_ex;
 
 /* `rl` stands for "readline" */
 typedef struct s_rl_arr
@@ -123,13 +122,14 @@ typedef struct s_env
 /* `sh` stands for "shell" */
 typedef struct s_sh
 {
+	int		is_a_tty[2];
 	char	*first_arg;
 	char	*pid;
 	char	*user;
 	char	*host;
 	char	*home;
 	char	*shells;
-	int		level;
+	int		subshell;
 	int		keep_running;
 	int		exit_code;
 	t_env	*pwd;
@@ -142,17 +142,28 @@ typedef struct s_sh
 
 /* Parser ------------------------------------------------------------------- */
 
-void	set_background_color(const char *s);
+void	run_shell(t_sh *sh);
+void	free_shell(t_sh *sh);
+void	interpret_and_process_cmd(t_sh *sh);
+
+void	handle_no_tty(void);
+void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
+void	reset_title_and_background_color(void);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_home_path(t_sh *sh, const char *username);
 char	*get_shells(t_sh *sh);
 int		is_shell(const char *shells, const char *cmd);
-
-void	run_shell(t_sh *sh);
-void	free_shell(t_sh *sh);
 char	*get_clean_token(const char *s);
+int		is_unicode_format(const char *s);
+void	process_unicode_value(int is_echo_e, char **s, size_t *i);
+
+/* Signals ------------------------------------------------------------------ */
+
+int		set_signals(int reset);
+int		set_signal_handling(int signum, void (*handler)(int));
+void	signal_handler(int signum);
 
 /* Executor ----------------------------------------------------------------- */
 
@@ -167,8 +178,8 @@ int		set_last_infile_fd(t_pl *pl, int catch_err);
 int		set_last_outfile_fd(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
-
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+void	wait_for_subprocesses(t_sh *sh, int *pid);
 
 /* Utils -------------------------------------------------------------------- */
 
@@ -208,7 +219,7 @@ void	lst_clear(t_env **lst);
 int		list_size(t_env **lst);
 t_env	*list_dup(t_env *src);
 t_env	*add_node(t_env **lst, char *key, char *value);
-char	*get_env(t_env *env, char *key);
+char	*get_var_value(t_sh *sh, char *key);
 void	list_in_p_order(t_env **env);
 void	add_pwd(t_sh *sh);
 t_env	*find_key(t_env *env, char *key);

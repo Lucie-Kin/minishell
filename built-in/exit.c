@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/07 19:16:54 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:45:24 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 {
 	int		numb;
 
-	if (sh->level == 0)
+	if (sh->subshell == 0)
 		printf("exit\n");
 	if (bn_linelen(arg) > 2)
 	{

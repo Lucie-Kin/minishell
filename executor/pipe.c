@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 14:35:57 by libousse          #+#    #+#             */
-/*   Updated: 2024/09/17 17:36:35 by libousse         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:15:14 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	**open_pipes(t_pl *pl)
 		if (pipe(pipes[i]) < 0)
 		{
 			pl->exit_code = errno;
-			pl->err_msg = compose_err_msg(0, "pipe", 0, strerror(pl->exit_code));
+			pl->err_msg = compose_err_msg(0, "pipe", 0,
+					strerror(pl->exit_code));
 			close_pipes(pipes, i);
 			free_entire_array((void **)pipes, free);
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 16:54:43 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:47:48 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:27:39 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	***get_pl_cmdl(char	**tokens, size_t len)
 		return (0);
 	i = 0;
 	j = 0;
-	while (tokens[i])
+	while (pl_skip_parentheses(tokens, &i))
 	{
 		if (i && !ft_strcmp(tokens[i], "|"))
 		{
