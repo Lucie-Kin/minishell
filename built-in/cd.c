@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/19 17:12:13 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:27:02 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	go_to_home(t_sh *sh, char **target_dir)
 {
 	t_env	*home_var;
 
-	home_var = find_key(sh->hidden, "HOME");
+	home_var = find_key(sh->local, "HOME");
 	if (!home_var)
 		home_var = find_key(sh->env, "HOME");
 	if (!home_var || !home_var->value)
@@ -89,7 +89,9 @@ static int	go_to_oldpwd(t_sh *sh, char **target_dir)
 {
 	t_env	*oldpwd;
 
-	oldpwd = find_key(sh->env, "OLDPWD");
+	oldpwd = find_key(sh->local, "OLDPWD");
+	if (!oldpwd)
+		oldpwd = find_key(sh->env, "OLDPWD");
 	if (!oldpwd || !oldpwd->value)
 	{
 		output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
