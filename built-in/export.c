@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/19 17:13:38 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:12:32 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,19 @@ void	add_or_update_var(t_env **env, char *key_value)
 	char	*key;
 	int		separator;
 
+	key = NULL;
 	separator = bn_firstocc(key_value, '=');
 	if (separator > 0 && key_value[separator - 1] == '+')
 		key = bn_strldup(key_value, separator - 1);
 	else if (separator > 0)
 		key = bn_strldup(key_value, separator);
-	else
-		key = ft_strdup(key_value);
 	var = find_key(*env, key);
 	if (var)
 		update_var(var, key_value, separator);
 	else if (separator > 0)
 		add_node(env, key, get_literal_token(key_value + separator + 1));
 	else
-		add_node(env, key, NULL);
+		add_node(env, key_value, NULL);
 }
 
 char	**parse_key_value(char *to_separate)
@@ -141,6 +140,7 @@ int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 	int		n;
 
 	n = 1;
+	// print_list(hidden, FALSE);
 	update_env(env, hidden);
 	alpha_order = alpha_order_list(env);
 	if (bn_linelen(arg) == 1)

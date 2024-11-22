@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:56:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:57:46 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:33:01 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,21 @@ static void	process_cmd(t_sh *sh)
 	int	is_builtin;
 
 	is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
-	is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0],
-			sh->local);
+	is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0]);
 	if (is_only_var || is_builtin)
 	{
 		if (redirect_io(&sh->ex->pl))
 		{
 			if (is_only_var)
+			{
+				dprintf(2, "HIDDEN\n");
 				update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+			}
 			else
 				sh->ex->pl.exit_code = execute_builtin(sh);
 		}
 		sh->exit_code = restore_io(&sh->ex->pl);
+		lst_clear(&sh->local);
 	}
 	else
 		sh->exit_code = execute_pipeline(sh);
