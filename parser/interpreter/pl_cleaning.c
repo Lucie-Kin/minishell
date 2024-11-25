@@ -6,13 +6,14 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:51:35 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 15:47:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:52:58 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
 static void	clean_pl_cmdl_tokens(t_pl *pl);
+static void	tmp_clean_token(t_pl *pl, size_t i, size_t j);
 static void	clean_pl_inf_tokens(t_pl *pl);
 static void	clean_pl_outf_tokens(t_pl *pl);
 
@@ -30,7 +31,6 @@ static void	clean_pl_cmdl_tokens(t_pl *pl)
 {
 	size_t	i;
 	size_t	j;
-	char	*tmp;
 
 	i = 0;
 	while (pl->cmdl[i])
@@ -38,15 +38,33 @@ static void	clean_pl_cmdl_tokens(t_pl *pl)
 		j = 0;
 		while (pl->cmdl[i][j])
 		{
-			tmp = get_clean_token(pl->cmdl[i][j]);
-			if (tmp)
-			{
-				free(pl->cmdl[i][j]);
-				pl->cmdl[i][j] = tmp;
-			}
+			tmp_clean_token(pl, i, j);
 			++j;
 		}
 		++i;
+	}
+	return ;
+}
+
+/*
+	Temporary function to circumvent `\( a \)` becoming `( a )` and triggering 
+	a subshell. This wouldn't be an issue if tokens were labeled instead of 
+	remaining mere strings.
+*/
+static void	tmp_clean_token(t_pl *pl, size_t i, size_t j)
+{
+	char	*tmp;
+
+	if (!ft_strcmp(pl->cmdl[i][j], "(") || !ft_strcmp(pl->cmdl[i][j], ")"))
+		pl->cmdl[i][j][0] = SEP;
+	else
+	{
+		tmp = get_clean_token(pl->cmdl[i][j]);
+		if (tmp)
+		{
+			free(pl->cmdl[i][j]);
+			pl->cmdl[i][j] = tmp;
+		}
 	}
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/05 17:00:16 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/23 12:40:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	echo_option(char **arg, int *skip_newline, int *with_backlash,
 	*skip_newline = FALSE;
 	*with_backlash = FALSE;
 	*count = 1;
-	while (arg[*count] && arg[*count][0] == '-')
+	while (arg[*count] && arg[*count][0] == '-' && arg[*count][1])
 	{
 		i = 1;
 		while (arg[*count][i] && (arg[*count][i] == 'n'
@@ -55,8 +55,6 @@ int	bigerrno_echo(char **arg)
 			parsed = get_echo_escaped_token(arg[to_be_echoed], &skip_nl);
 			write(1, parsed, ft_strlen(parsed));
 			free(parsed);
-			if (skip_nl == 1)
-				break ;
 		}
 		else
 			write(1, arg[to_be_echoed], ft_strlen(arg[to_be_echoed]));

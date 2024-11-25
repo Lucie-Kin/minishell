@@ -6,31 +6,20 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/20 14:41:59 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:49:38 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
-	- You can increment the SHLVL variable when executing a new bigerrno 
-	(and not when forking for a subshell), as every shell increments it. 
-	And if this var didn't exist, add it and set it to 1. The t_sh `level` 
-	variable is different and is there to tell whether "exit" should be 
-	printed. It's the one you increment when forking for a subshell.
-
-	- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
-	and you can add `--trace-children=yes` to find out in which child 
-	process you need to close them.
-
-	- Get current background color with `echo -e "\033]11;?\007"`. It'd be 
-	used when exiting the main function, to restore the original color. If 
-	it's too tricky, just hardcode the grey color we have at school.
-*/
 
 int	g_signum;
 
 int	main(int argc, char **argv, char **envp)
 {
+	/*
+		cat > out1 < missing > out2
+		-> files need to be checked in order, not infiles and then outfiles
+	*/
 	t_sh	sh;
 
 	handle_no_tty();
@@ -86,13 +75,11 @@ int	main(int argc, char **argv, char **envp)
 
 	----------------------------------------------------------------------------
 
-	- You can increment the SHLVL variable when executing a new bigerrno (and 
-	not when forking for a subshell), as every shell increments it. And if this 
-	var didn't exist, add it and set it to 1. The t_sh `level` variable is 
-	different and is there to tell whether "exit" should be printed. It's the 
-	one you increment when forking for a subshell.
-
 	- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, and 
 	you can add `--trace-children=yes` to find out in which child process you 
 	need to close them.
+
+	----------------------------------------------------------------------------
+
+	local vars in external cmd
 */

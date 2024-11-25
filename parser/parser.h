@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:46:40 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:11:14 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ char	**get_filtered_dir_content(const char *path, const char *pattern,
 			int only_dirs);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
+int		get_logop_and_remove_token(char **tokens);
+char	**extract_beyond_first_pipeline(char **tokens);
 char	*pl_skip_parentheses(char **tokens, size_t *i);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(t_sh *sh);

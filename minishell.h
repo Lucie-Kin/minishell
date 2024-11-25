@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/20 14:44:17 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/24 20:02:18 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ void	signal_handler(int signum);
 /* Executor ----------------------------------------------------------------- */
 
 int		execute_pipeline(t_sh *sh);
+int		execute_subprocess(t_sh *sh, t_pl *pl);
 int		pop_head_ex(t_sh *sh);
 void	destroy_all_ex(t_sh *sh);
 

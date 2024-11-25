@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/20 14:45:24 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/24 15:01:59 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 {
 	int		numb;
 
+	sh->keep_running = FALSE;
 	if (sh->subshell == 0)
 		printf("exit\n");
 	if (bn_linelen(arg) > 2)
@@ -23,7 +24,6 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 		return (output_error(1, compose_err_msg
 				(SHELL, arg[0], NULL, ERR_NB_ARGS)));
 	}
-	sh->keep_running = FALSE;
 	if (arg[1])
 	{
 		numb = ft_atoi(arg[1]);
@@ -33,5 +33,5 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 		else
 			return (ft_atoi(arg[1]) % 256);
 	}
-	return (0);
+	return (sh->exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:48:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/22 14:00:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ char	*circular_pipeline(t_sh *sh, const char *cmdl)
 			*ft_strchr(data, '\n') = 0;
 		close(sh->ex->pl.fd_circ[0]);
 	}
-	while (sh->ex)
-		pop_head_ex(sh);
+	destroy_all_ex(sh);
 	return (data);
 }
 

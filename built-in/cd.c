@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/20 14:39:32 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/22 13:01:44 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static int	go_to_oldpwd(t_sh *sh, char **target_dir)
 		return (EPERM);
 	}
 	printf("%s\n", oldpwd->value);
-	target_dir = &oldpwd->value;
+	*target_dir = oldpwd->value;
 	return (0);
 }
 

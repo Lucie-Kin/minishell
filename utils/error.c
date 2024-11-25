@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:48:46 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:31:49 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ char	*compose_err_msg(const char *shell, const char *cmd, const char *arg,
 	char	*str;
 	char	**arr;
 
-	i = -1;
+	i = 0;
 	str = 0;
 	arr = 0;
-	while (++i < 4)
+	while (i < 4)
 	{
 		if (i == 0)
 			insert_string(&arr, ft_strjoin(shell, ": "), i);
@@ -53,6 +53,7 @@ int	output_error(int code, char *msg)
 
 static void	insert_string(char ***arr, char *s, size_t i)
 {
-	insert_array_element((void ***)arr, (void *)s, i);
+	if (s)
+		insert_array_element((void ***)arr, (void *)s, i);
 	return ;
 }

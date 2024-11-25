@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 16:40:19 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/04 14:03:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/24 19:13:33 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ int	redirect_io(t_pl *pl)
 
 int	restore_io(t_pl *pl)
 {
+	char	buffer[1024];
+
+	if (!isatty(STDIN_FILENO))
+	{
+		while (read(STDIN_FILENO, buffer, 1024 - 1) > 0)
+			;
+	}
 	if (pl->fd_src[0] >= 0)
 		close(pl->fd_src[0]);
 	if (pl->fd_src[1] >= 0)
