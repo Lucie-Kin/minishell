@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:21:27 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/14 12:36:04 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:45:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ t_env	*lst_new(const char *key, const char *value)
 	node->key = ft_strdup(key);
 	if (value)
 		node->value = ft_strdup(value);
+	else
+		node->value = NULL;
 	node->withvalue = (value != NULL);
 	node->next = NULL;
 	node->prev = NULL;
@@ -89,8 +91,6 @@ t_env	*list_dup(t_env *src)
 		node = add_node(&dup, to_copy->key, to_copy->value);
 		if (!node)
 		{
-			fprintf(stderr, "Duplication failed at key=%s, value=%s\n",
-				to_copy->key, to_copy->value);
 			lst_clear(&dup);
 			return (NULL);
 		}

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/22 16:44:43 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:56:07 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ void	print_in_p_order(t_env **to_print, t_env **not_to_print)
 	biggest = find_biggest_p(&p_order);
 	if (!smallest || !biggest || !p_order)
 		return (perror("Nothing to be printed"));
-	if (smallest->withvalue == TRUE && !find_key(*not_to_print,
-			smallest->key))
+	if (smallest && smallest->withvalue == TRUE && (!*not_to_print
+			|| !find_key(not_to_print, smallest->key)))
 		env_print(smallest);
 	while (smallest != biggest)
 	{
 		next_small = next_smallest(&p_order, smallest);
 		if (next_small && next_small->withvalue == TRUE
-			&& !find_key(*not_to_print, next_small->key))
+			&& !find_key(not_to_print, next_small->key))
 			env_print(next_small);
 		smallest = next_small;
 	}

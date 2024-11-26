@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:56:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/22 17:33:01 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:21:20 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,7 @@ static void	process_cmd(t_sh *sh)
 		if (redirect_io(&sh->ex->pl))
 		{
 			if (is_only_var)
-			{
-				dprintf(2, "HIDDEN\n");
 				update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-			}
 			else
 				sh->ex->pl.exit_code = execute_builtin(sh);
 		}

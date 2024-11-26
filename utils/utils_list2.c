@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 16:41:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/19 16:42:25 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:48:21 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ t_env	*add_node(t_env **lst, char *key, char *value)
 	return (new);
 }
 
-t_env	*find_key(t_env *env, char *key)
+t_env	*find_key(t_env **lst, char *key)
 {
-	t_env	*list;
+	t_env	*tmp;
 
-	list = env;
-	if (!key || !list)
+	if (!key || !lst || !*lst)
 		return (NULL);
-	while (list)
+	tmp = *lst;
+	while (tmp)
 	{
-		if (bn_isstrstr(list->key, key) == TRUE)
-			return (list);
-		list = list->next;
+		if (ft_strcmp(tmp->key, key) == 0)
+			return (tmp);
+		tmp = tmp->next;
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/22 15:40:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/23 17:17:52 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	valid_keyvalue(char *key_value)
 		return (FALSE);
 	else if (ft_isalpha(key_value[i]) == TRUE || key_value[i] == '_')
 	{
-		while (key_value[i] && (separator == -1 || i < separator))
+		while (key_value[i] && (separator == -1 || i < separator - !!i))
 		{
 			if (!(ft_isalnum(key_value[i]) == TRUE || key_value[i] == '_'))
 				return (FALSE);
@@ -65,6 +65,8 @@ int	valid_keyvalue(char *key_value)
 			return (TRUE);
 		}
 	}
+	else
+		return (FALSE);
 	return (TRUE);
 }
 

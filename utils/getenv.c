@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/20 14:49:30 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:56:35 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ char	*get_var_value(t_sh *sh, char *key)
 
 	var = NULL;
 	if (sh->hidden)
-		var = find_key(sh->hidden, key);
+		var = find_key(&sh->hidden, key);
 	if (!var && sh->env)
-		var = find_key(sh->env, key);
+		var = find_key(&sh->env, key);
 	if (var)
 		return (var->value);
 	return (NULL);

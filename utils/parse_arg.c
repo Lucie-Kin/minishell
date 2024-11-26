@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/22 17:32:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:01:13 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	update_local(char ***cmd, t_env **local)
 	t_env	*new;
 	char	**key_value;
 	int		i;
+	void	**extracted;
 
 	i = 0;
 	if (!cmd || !(*cmd) || !(**cmd))
@@ -41,7 +42,10 @@ void	update_local(char ***cmd, t_env **local)
 		i++;
 	}
 	if (i > 0)
-		extract_array_elements((void **)(*cmd), 0, i - 1);
+	{
+		extracted = extract_array_elements((void **)(*cmd), 0, i - 1);
+		free_entire_array(extracted, NULL);
+	}
 }
 
 static int	skip_var(char **cmd)
@@ -95,7 +99,7 @@ int	execute_builtin(t_sh *sh)
 	cmdl = sh->ex->pl.cmdl[sh->ex->pl.index];
 	update_local(&cmdl, &sh->local);
 	// print_list(&sh->hidden, FALSE);
-	print_list(&sh->local, FALSE);
+	// print_list(&sh->local, FALSE);
 	if (ft_strcmp(cmdl[0], "cd") == 0)
 		code_err = bigerrno_cd(sh, cmdl);
 	else if (ft_strcmp(cmdl[0], "echo") == 0)
@@ -109,7 +113,7 @@ int	execute_builtin(t_sh *sh)
 	else if (ft_strcmp(cmdl[0], "pwd") == 0)
 		code_err = bigerrno_pwd(sh);
 	else if (ft_strcmp(cmdl[0], "unset") == 0)
-		code_err = bigerrno_unset(&sh->env, cmdl);
+		code_err = bigerrno_unset(sh, cmdl);
 	else if (ft_strcmp(cmdl[0], "hidden") == 0)
 		code_err = bigerrno_hidden(&sh->hidden, cmdl);
 	lst_clear(&sh->local);

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/22 17:04:38 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:55:05 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ t_env	*add_node(t_env **lst, char *key, char *value);
 char	*get_var_value(t_sh *sh, char *key);
 void	list_in_p_order(t_env **env);
 void	add_pwd(t_sh *sh);
-t_env	*find_key(t_env *env, char *key);
+t_env	*find_key(t_env **lst, char *key);
 
 /* Built-ins ---------------------------------------------------------------- */
 
@@ -235,7 +235,7 @@ int		bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_exit(t_sh *sh, char **arg);
 int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_pwd(t_sh *sh);
-int		bigerrno_unset(t_env **env, char **arg);
+int		bigerrno_unset(t_sh *sh, char **arg);
 int		bigerrno_hidden(t_env **hidden, char **arg);
 
 /* Built-in utils ----------------------------------------------------------- */
