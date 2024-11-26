@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:51:35 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/25 16:52:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/26 13:28:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 
 static void	clean_pl_cmdl_tokens(t_pl *pl);
 static void	tmp_clean_token(t_pl *pl, size_t i, size_t j);
-static void	clean_pl_inf_tokens(t_pl *pl);
-static void	clean_pl_outf_tokens(t_pl *pl);
+static void	clean_pl_file_tokens(t_pl *pl);
 
 void	clean_pl_tokens(t_pl *pl)
 {
-	if (!pl || !pl->cmdl || !pl->inf || !pl->outf)
+	if (!pl || !pl->cmdl || !pl->file)
 		return ;
 	clean_pl_cmdl_tokens(pl);
-	clean_pl_inf_tokens(pl);
-	clean_pl_outf_tokens(pl);
+	clean_pl_file_tokens(pl);
 	return ;
 }
 
@@ -69,48 +67,23 @@ static void	tmp_clean_token(t_pl *pl, size_t i, size_t j)
 	return ;
 }
 
-static void	clean_pl_inf_tokens(t_pl *pl)
+static void	clean_pl_file_tokens(t_pl *pl)
 {
 	size_t	i;
 	size_t	j;
 	char	*tmp;
 
 	i = 0;
-	while (pl->inf[i])
+	while (pl->file[i])
 	{
 		j = 0;
-		while (pl->inf[i][j])
+		while (pl->file[i][j].filename)
 		{
-			tmp = get_clean_token(pl->inf[i][j]);
+			tmp = get_clean_token(pl->file[i][j].filename);
 			if (tmp)
 			{
-				free(pl->inf[i][j]);
-				pl->inf[i][j] = tmp;
-			}
-			++j;
-		}
-		++i;
-	}
-	return ;
-}
-
-static void	clean_pl_outf_tokens(t_pl *pl)
-{
-	size_t	i;
-	size_t	j;
-	char	*tmp;
-
-	i = 0;
-	while (pl->outf[i])
-	{
-		j = 0;
-		while (pl->outf[i][j].filename)
-		{
-			tmp = get_clean_token(pl->outf[i][j].filename);
-			if (tmp)
-			{
-				free(pl->outf[i][j].filename);
-				pl->outf[i][j].filename = tmp;
+				free(pl->file[i][j].filename);
+				pl->file[i][j].filename = tmp;
 			}
 			++j;
 		}

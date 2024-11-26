@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/25 17:49:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:02:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,33 @@ int	g_signum;
 int	main(int argc, char **argv, char **envp)
 {
 	/*
-		cat > out1 < missing > out2
-		-> files need to be checked in order, not infiles and then outfiles
+		$ mkdir test
+		$ cd test
+		$ rm -rf ../test
+		$ pwd
+		/home/libousse/lycoris/test
+		$ cd ..
+
+		minishell$ mkdir gab
+		minishell$ cd gab
+		minishell/gab$ mkdir gab1
+		minishell/gab$ cd gab1
+		minishell/gab/gab1$ rm -rf ../../gab
+		minishell/gab/gab1$ cd ..
+			cd: error retrieving current directory: getcwd: cannot access 
+			parent directories: No such file or directory
+		minishell/gab/gab1/..$ cd ..
+		minishell$
+
+		------------------------------------------------------------------------
+
+		- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
+		and you can add `--trace-children=yes` to find out in which child 
+		process you need to close them.
+
+		------------------------------------------------------------------------
+
+		local vars in external cmd
 	*/
 	t_sh	sh;
 
@@ -46,40 +71,3 @@ int	main(int argc, char **argv, char **envp)
 		reset_title_and_background_color();
 	return (sh.exit_code);
 }
-
-/*
-	$ mkdir test
-	$ cd test
-	$ rm -rf ../test
-	$ pwd
-	/home/libousse/lycoris/test
-	$ cd ..
-
-	minishell$ mkdir gab
-	minishell$ cd gab
-	minishell/gab$ mkdir gab1
-	minishell/gab$ cd gab1
-	minishell/gab/gab1$ rm -rf ../../gab
-	minishell/gab/gab1$ cd ..
-		cd: error retrieving current directory: getcwd: cannot access parent 
-		directories: No such file or directory
-	minishell/gab/gab1/..$ cd ..
-	minishell$
-
-	----------------------------------------------------------------------------
-
-	alias egrep='egrep --color=auto'
-	alias fgrep='fgrep --color=auto'
-	alias grep='grep --color=auto'
-	alias ls='ls --color=auto'
-
-	----------------------------------------------------------------------------
-
-	- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, and 
-	you can add `--trace-children=yes` to find out in which child process you 
-	need to close them.
-
-	----------------------------------------------------------------------------
-
-	local vars in external cmd
-*/

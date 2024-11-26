@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/24 20:02:18 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:56:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,12 @@
 extern int	g_signum;
 
 /* `pl` stands for "pipeline" */
-typedef struct s_outf
+typedef struct s_file
 {
 	char	*filename;
 	int		flags;
-}	t_outf;
+	int		io;
+}	t_file;
 
 typedef struct s_pl
 {
@@ -73,8 +74,7 @@ typedef struct s_pl
 	char	*err_msg;
 	char	**path;
 	char	***cmdl;
-	char	***inf;
-	t_outf	**outf;
+	t_file	**file;
 	int		fd_pipe_len;
 	int		**fd_pipe;
 	int		fd_std[2];
@@ -175,8 +175,7 @@ void	destroy_all_ex(t_sh *sh);
 int		**open_pipes(t_pl *pl);
 void	close_pipes(int **pipes, int len);
 void	close_unused_pipes(int index, int **pipes, int pipe_len);
-int		set_last_infile_fd(t_pl *pl, int catch_err);
-int		set_last_outfile_fd(t_pl *pl, int catch_err);
+int		set_fd_src_from_files(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
