@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 16:46:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:19:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@ static void	init_env(t_sh *sh, char **envp);
 
 int	main(int argc, char **argv, char **envp)
 {
-	/*
-		`< libft`
-		`> libft`
-		`> test/`
-		`< test/`
-		Fix segfault when IO redirected to dir
-	*/
 	/*
 		$ mkdir test
 		$ cd test

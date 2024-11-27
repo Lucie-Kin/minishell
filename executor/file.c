@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 17:05:31 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:28:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,18 @@ static int	open_outfile(t_pl *pl, size_t i, int catch_err)
 		pl->fd_src[1] = -1;
 		return (0);
 	}
+	errno = 0;
 	pl->fd_src[1] = open(pl->file[pl->index][i].filename,
 			pl->file[pl->index][i].flags, 0644);
+	if (pl->fd_src[1] < 0)
+	{
+		pl->exit_code = errno;
+		pl->err_msg = compose_err_msg(SHELL, 0, pl->file[pl->index][i].filename,
+				strerror(pl->exit_code));
+		if (pl->exit_code == EISDIR)
+			pl->exit_code = EPERM;
+		return (0);
+	}
 	return (1);
 }
 
