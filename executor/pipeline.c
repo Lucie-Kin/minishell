@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/25 15:04:24 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:39:25 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
 static int	execute_subprocess(t_sh *sh, t_pl *pl);
 static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd);
-
+//update_local(&cmdl, &sh->local);
 int	execute_pipeline(t_sh *sh)
 {
 	int	*pid;

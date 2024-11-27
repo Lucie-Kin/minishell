@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:28:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/14 12:38:35 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:31:35 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,10 @@ void	get_small_env(t_env	**lst)
 	if (!new)
 		lst_clear(lst);
 	lstadd_back(lst, new);
+	new = lst_new("TERM", "xterm-256color");
+	if (!new)
+		lst_clear(lst);
+	lstadd_back(lst, new);
 }
 
 void	copy_to_list(char **env, t_env **lst)
@@ -111,6 +115,17 @@ void	copy_to_list(char **env, t_env **lst)
 		i++;
 	}
 }
+
+// void	debug_copy_env(char **env, t_env **lst, int size)
+// {
+// 	int		i;
+
+// 	i = 0;
+// 	while (env[i] && i < size)
+// 	{
+// 		if ()
+// 	}
+// }
 
 t_env	*convert_to_list(char **env)
 {

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:56:32 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:21:11 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static char	*get_stylized_prompt(const char *user, const char *path)
 	free(tmp2);
 	tmp2 = ft_strjoin(tmp1, path);
 	free(tmp1);
-	tmp1 = ft_strjoin(tmp2, "\001\e[0m\002$ ");
+	tmp1 = ft_strjoin(tmp2, "\001\e[0m\002$ \001\002");
 	free(tmp2);
 	return (tmp1);
 }

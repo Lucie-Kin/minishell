@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/25 16:01:13 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:34:05 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ int	execute_builtin(t_sh *sh)
 	code_err = 0;
 	cmdl = sh->ex->pl.cmdl[sh->ex->pl.index];
 	update_local(&cmdl, &sh->local);
-	// print_list(&sh->hidden, FALSE);
-	// print_list(&sh->local, FALSE);
 	if (ft_strcmp(cmdl[0], "cd") == 0)
 		code_err = bigerrno_cd(sh, cmdl);
 	else if (ft_strcmp(cmdl[0], "echo") == 0)
