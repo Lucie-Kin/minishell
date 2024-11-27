@@ -6,51 +6,76 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:45:54 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:28:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	open_infile(t_pl *pl, size_t i, int catch_err);
+static int	open_outfile(t_pl *pl, size_t i, int catch_err);
 static int	check_file(t_pl *pl, char *file, int mode, int catch_err);
 
-int	set_last_infile_fd(t_pl *pl, int catch_err)
+int	set_fd_src_from_files(t_pl *pl, int catch_err)
 {
-	int	i;
+	size_t	i;
 
 	pl->fd_src[0] = -1;
-	if (!pl->inf || !pl->inf[pl->index])
+	pl->fd_src[1] = -1;
+	if (!pl->file || !pl->file[pl->index])
 		return (1);
 	i = 0;
-	while (pl->inf[pl->index][i])
+	while (pl->file[pl->index][i].filename)
 	{
-		if (!check_file(pl, pl->inf[pl->index][i], R_OK, catch_err))
-			return (0);
-		else if (!pl->inf[pl->index][i + 1])
-			pl->fd_src[0] = open(pl->inf[pl->index][i], O_RDONLY);
+		if (pl->file[pl->index][i].io == 0)
+		{
+			if (!open_infile(pl, i, catch_err))
+				return (0);
+		}
+		else
+		{
+			if (!open_outfile(pl, i, catch_err))
+				return (0);
+		}
 		++i;
 	}
 	return (1);
 }
 
-int	set_last_outfile_fd(t_pl *pl, int catch_err)
+static int	open_infile(t_pl *pl, size_t i, int catch_err)
 {
-	int	i;
-
-	pl->fd_src[1] = -1;
-	if (!pl->outf || !pl->outf[pl->index])
-		return (1);
-	i = 0;
-	while (pl->outf[pl->index][i].filename)
+	if (pl->fd_src[0] >= 0)
+		close(pl->fd_src[0]);
+	if (!check_file(pl, pl->file[pl->index][i].filename, R_OK, catch_err))
 	{
-		if (!check_file(pl, pl->outf[pl->index][i].filename, W_OK,
-			catch_err))
-			return (0);
-		pl->fd_src[1] = open(pl->outf[pl->index][i].filename,
-				pl->outf[pl->index][i].flags, 0777);
-		if (pl->outf[pl->index][i + 1].filename)
-			close(pl->fd_src[1]);
-		++i;
+		pl->fd_src[0] = -1;
+		return (0);
+	}
+	pl->fd_src[0] = open(pl->file[pl->index][i].filename,
+			pl->file[pl->index][i].flags);
+	return (1);
+}
+
+static int	open_outfile(t_pl *pl, size_t i, int catch_err)
+{
+	if (pl->fd_src[1] >= 0)
+		close(pl->fd_src[1]);
+	if (!check_file(pl, pl->file[pl->index][i].filename, W_OK, catch_err))
+	{
+		pl->fd_src[1] = -1;
+		return (0);
+	}
+	errno = 0;
+	pl->fd_src[1] = open(pl->file[pl->index][i].filename,
+			pl->file[pl->index][i].flags, 0644);
+	if (pl->fd_src[1] < 0)
+	{
+		pl->exit_code = errno;
+		pl->err_msg = compose_err_msg(SHELL, 0, pl->file[pl->index][i].filename,
+				strerror(pl->exit_code));
+		if (pl->exit_code == EISDIR)
+			pl->exit_code = EPERM;
+		return (0);
 	}
 	return (1);
 }
@@ -69,7 +94,7 @@ static int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 			pl->exit_code = errno;
 			pl->err_msg = compose_err_msg(SHELL, 0, file,
 					strerror(pl->exit_code));
-			if (pl->exit_code == EACCES)
+			if (pl->exit_code == ENOENT || pl->exit_code == EACCES)
 				pl->exit_code = EPERM;
 		}
 		return (0);

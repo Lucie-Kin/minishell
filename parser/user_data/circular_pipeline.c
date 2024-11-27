@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:48:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:55:27 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,33 @@ char	*circular_pipeline(t_sh *sh, const char *cmdl)
 			*ft_strchr(data, '\n') = 0;
 		close(sh->ex->pl.fd_circ[0]);
 	}
-	while (sh->ex)
-		pop_head_ex(sh);
+	destroy_all_ex(sh);
 	return (data);
+}
+
+int	is_term_var_valid(t_sh *sh)
+{
+	char	*term;
+	char	*tmp1;
+	char	*tmp2;
+	int		dup_err;
+	int		result;
+
+	term = getenv("TERM");
+	if (!term)
+		return (0);
+	tmp1 = ft_strjoin("/bin/infocmp ", term);
+	tmp2 = ft_strjoin(tmp1, " | /bin/head -c8");
+	free(tmp1);
+	dup_err = dup(STDERR_FILENO);
+	close(STDERR_FILENO);
+	tmp1 = circular_pipeline(sh, tmp2);
+	dup2(dup_err, STDERR_FILENO);
+	close(dup_err);
+	free(tmp2);
+	result = tmp1 && tmp1[0];
+	free(tmp1);
+	return (result);
 }
 
 int	get_pid(t_sh *sh, const char *first_arg)

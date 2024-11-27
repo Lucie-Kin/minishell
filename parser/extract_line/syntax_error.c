@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:47:38 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:48:33 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,11 @@ static int	check_meta_token(char **tok, size_t i, char **err_msg)
 // If no left operand (command can start with '(', '<', '>')
 // If '(' doesn't start the command and is preceded with non-meta
 // If bad token length
+// If ')' but no prior '('
 static int	err_on_curr(char **tok, size_t i)
 {
+	size_t	j;
+
 	if (!i && tok[i][0] != '(' && tok[i][0] != '<' && tok[i][0] != '>')
 		return (1);
 	else if (i && tok[i][0] == '(' && !is_metacharacter(tok[i - 1][0]))
@@ -92,6 +95,13 @@ static int	err_on_curr(char **tok, size_t i)
 	else if ((tok[i][0] == '&' && !tok[i][1])
 		|| (tok[i][0] == ';' && tok[i][1]))
 		return (1);
+	else if (tok[i][0] == ')')
+	{
+		j = 0;
+		while (j < i && tok[j][0] != '(')
+			++j;
+		return (j == i);
+	}
 	return (0);
 }
 

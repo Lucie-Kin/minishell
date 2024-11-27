@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/21 16:51:22 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:57:33 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	output_error(int code, char *msg)
 
 static void	insert_string(char ***arr, char *s, size_t i)
 {
-	insert_array_element((void ***)arr, (void *)s, i);
+	if (s)
+		insert_array_element((void ***)arr, (void *)s, i);
 	return ;
 }

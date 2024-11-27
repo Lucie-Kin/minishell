@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 12:55:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:02:53 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,12 @@
 extern int	g_signum;
 
 /* `pl` stands for "pipeline" */
-typedef struct s_outf
+typedef struct s_file
 {
 	char	*filename;
 	int		flags;
-}	t_outf;
+	int		io;
+}	t_file;
 
 typedef struct s_pl
 {
@@ -73,8 +74,7 @@ typedef struct s_pl
 	char	*err_msg;
 	char	**path;
 	char	***cmdl;
-	char	***inf;
-	t_outf	**outf;
+	t_file	**file;
 	int		fd_pipe_len;
 	int		**fd_pipe;
 	int		fd_std[2];
@@ -122,8 +122,8 @@ typedef struct s_env
 /* `sh` stands for "shell" */
 typedef struct s_sh
 {
-	int		is_a_tty[2];
 	char	*first_arg;
+	int		valid_term;
 	char	*pid;
 	char	*user;
 	char	*host;
@@ -150,6 +150,7 @@ void	handle_no_tty(void);
 void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
 void	reset_title_and_background_color(void);
+int		is_term_var_valid(t_sh *sh);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_home_path(t_sh *sh, const char *username);
@@ -168,14 +169,14 @@ void	signal_handler(int signum);
 /* Executor ----------------------------------------------------------------- */
 
 int		execute_pipeline(t_sh *sh);
+int		execute_subprocess(t_sh *sh, t_pl *pl);
 int		pop_head_ex(t_sh *sh);
 void	destroy_all_ex(t_sh *sh);
 
 int		**open_pipes(t_pl *pl);
 void	close_pipes(int **pipes, int len);
 void	close_unused_pipes(int index, int **pipes, int pipe_len);
-int		set_last_infile_fd(t_pl *pl, int catch_err);
-int		set_last_outfile_fd(t_pl *pl, int catch_err);
+int		set_fd_src_from_files(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
@@ -261,5 +262,6 @@ char	**alpha_order(char ***order);
 char	**parse_key_value(char *to_separate);
 void	update_pwd(t_sh *sh);
 void	update_env(t_env **env, t_env **hidden);
+void	update_local(char ***cmd, t_env **local);
 
 #endif

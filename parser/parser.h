@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:46:40 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 13:26:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,15 @@ char	**get_filtered_dir_content(const char *path, const char *pattern,
 			int only_dirs);
 void	free_rl_arr_element(void *ptr);
 void	interpreter(t_sh *sh);
+int		get_logop_and_remove_token(char **tokens);
+char	**extract_beyond_first_pipeline(char **tokens);
 char	*pl_skip_parentheses(char **tokens, size_t *i);
 size_t	get_pl_len(char **tokens);
 char	**get_pl_path(t_sh *sh);
 char	***get_pl_cmdl(char	**tokens, size_t len);
 void	*destroy_pl_cmdl(char ***cmdl);
-char	***get_pl_inf(t_pl *pl, char **hd_dup);
-void	*destroy_pl_inf(char ***inf);
-t_outf	**get_pl_outf(t_pl *pl);
-void	*destroy_pl_outf(t_outf **outf);
+t_file	**get_pl_file(t_pl *pl);
+void	*destroy_pl_file(t_file **file);
 void	clean_pl_tokens(t_pl *pl);
 char	*process_ansi_c_quoting(char *s, size_t *i, char **quote);
 char	*get_escaped_token(const char *s);

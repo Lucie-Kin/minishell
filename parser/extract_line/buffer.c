@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:47:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:32:07 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	add_input_to_buffer(t_sh *sh, const char *prompt)
 		g_signum = EOF;
 	else if (g_signum == SIGINT)
 	{
-		if (!prev_signum)
+		if (!prev_signum || !sh->valid_term)
 			ft_putstr_fd("\n", STDOUT_FILENO);
 		free_entire_array((void **)sh->rl.buf, free);
 		sh->rl.buf = 0;

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 18:39:25 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:56:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 static int	free_pipeline_resources(t_pl *pl);
 static void	fork_subprocesses(t_sh *sh, int *pid);
-static int	execute_subprocess(t_sh *sh, t_pl *pl);
-static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd);
-//update_local(&cmdl, &sh->local);
 int	execute_pipeline(t_sh *sh)
 {
 	int	*pid;
@@ -73,74 +70,5 @@ static void	fork_subprocesses(t_sh *sh, int *pid)
 		}
 		++sh->ex->pl.index;
 	}
-	return ;
-}
-
-static int	execute_subprocess(t_sh *sh, t_pl *pl)
-{
-	char	*cmd_fullpath;
-
-	cmd_fullpath = 0;
-	close_unused_pipes(pl->index, pl->fd_pipe, pl->fd_pipe_len);
-	if (!redirect_io(pl))
-		return (restore_io(pl));
-	if (isbuiltin(pl->cmdl[pl->index]))
-	{
-		pl->exit_code = execute_builtin(sh);
-		return (restore_io(pl));
-	}
-	if (!ft_strcmp(pl->cmdl[pl->index][0], "("))
-	{
-		/*
-			- Remove parentheses.
-			- Extract the cmdl and store it in sh->rl.tokens.
-			- Call interpret_and_process_cmd(sh).
-			- Free what you can here.
-			- Return the exit code
-		*/
-		// Remove parentheses
-		remove_array_elements((void **)pl->cmdl[pl->index], 0, 0, free);
-		size_t	last;
-		last = get_array_length((void **)pl->cmdl[pl->index]) - 1;
-		remove_array_elements((void **)pl->cmdl[pl->index], last, last, free);
-		// Extract the cmdl and store it in sh->rl.tokens
-		sh->rl.tokens = (char **)extract_array_elements((void **)pl->cmdl[pl->index], 0, last - 1);
-		dprintf(2, "isatty(STDIN_FILENO) = %d / isatty(STDOUT_FILENO) = %d\n",
-			isatty(STDIN_FILENO), isatty(STDOUT_FILENO));
-		// Free everything except for the tokens (and don't restore any STD)
-		// Call interpret_and_process_cmd(sh)
-		interpret_and_process_cmd(sh);
-		// Return the exit code and restore the IO
-		//return (restore_io(pl));
-		return (sh->exit_code);
-	}
-	//char **extract_local_vars(pl->cmdl[pl->index]);
-	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
-		return (restore_io(pl));
-	if (cmd_fullpath)
-	{
-		if (is_shell(sh->shells, cmd_fullpath))
-			prepare_for_shell_cmd(sh, cmd_fullpath);
-		set_signals(1);
-		execve(cmd_fullpath, pl->cmdl[pl->index], /*combine local_vars+*/convert_to_tab(sh->env));
-		pl->exit_code = errno;
-		pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
-				strerror(pl->exit_code));
-		free(cmd_fullpath);
-	}
-	return (restore_io(pl));
-}
-
-static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd)
-{
-	char	*p_slash;
-
-	update_shlvl(&sh->env, FALSE);
-	p_slash = ft_strrchr(cmd, '/');
-	if (!ft_strcmp(cmd, "minishell")
-		|| (p_slash && !ft_strcmp(p_slash + 1, "minishell")))
-		handle_default_background_color(1);
-	else
-		reset_title_and_background_color();
 	return ;
 }

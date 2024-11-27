@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:13:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/31 18:04:25 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:55:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,19 @@ static char	*insert_spaces(char *s, size_t i)
 	char	*tmp;
 
 	tmp = 0;
-	if (i && !ft_isspace(s[i - 1]) && ((s[i - 1] != s[i] && s[i - 1] != '\\')
-			|| s[i] == '(' || s[i] == ')' || count_char_before(s, i, s[i]) > 1))
+	if (i && !ft_isspace(s[i - 1]) && ((
+				(s[i - 1] != s[i] || s[i] == '(' || s[i] == ')')
+				&& s[i - 1] != '\\')
+			|| (s[i] == s[i - 1] && i > 1 && s[i - 2] == '\\')
+			|| count_char_before(s, i, s[i]) > 1))
 		tmp = insert_str_before_char(s, i, " ");
 	if (tmp)
 	{
 		free(s);
 		s = tmp;
 	}
-	if (s[i + 1] && !ft_isspace(s[i + 1]) && s[i + 1] != s[i])
+	if (s[i + 1] && !ft_isspace(s[i + 1]) && s[i + 1] != s[i]
+		&& (!i || s[i - 1] != '\\'))
 		tmp = insert_str_before_char(s, i + 1, " ");
 	if (tmp)
 	{

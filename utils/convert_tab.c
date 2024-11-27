@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 13:50:07 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 14:08:54 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:09:55 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	**convert_to_tab(t_env *env)
 	int		size;
 	int		i;
 
+	if (!env)
+		return (NULL);
 	size = list_size(&env);
 	env_tab = ft_calloc(sizeof(char *), size + 1);
 	i = 0;

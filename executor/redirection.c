@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 16:40:19 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/04 14:03:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:58:40 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int	redirect_io(t_pl *pl)
 	catch_err = 1;
 	pl->fd_std[0] = dup(STDIN_FILENO);
 	pl->fd_std[1] = dup(STDOUT_FILENO);
-	if (!set_last_infile_fd(pl, catch_err))
-		catch_err = 0;
-	else if (!set_last_outfile_fd(pl, catch_err))
+	if (!set_fd_src_from_files(pl, catch_err))
 		catch_err = 0;
 	if (pl->fd_src[0] < 0 && pl->index > 0)
 		pl->fd_src[0] = pl->fd_pipe[pl->index - 1][0];
@@ -45,6 +43,13 @@ int	redirect_io(t_pl *pl)
 
 int	restore_io(t_pl *pl)
 {
+	char	buffer[1024];
+
+	if (!isatty(STDIN_FILENO))
+	{
+		while (read(STDIN_FILENO, buffer, 1024 - 1) > 0)
+			;
+	}
 	if (pl->fd_src[0] >= 0)
 		close(pl->fd_src[0]);
 	if (pl->fd_src[1] >= 0)
