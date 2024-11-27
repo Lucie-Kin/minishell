@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/26 16:59:08 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:05:31 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int	check_file(t_pl *pl, char *file, int mode, int catch_err)
 			pl->exit_code = errno;
 			pl->err_msg = compose_err_msg(SHELL, 0, file,
 					strerror(pl->exit_code));
-			if (pl->exit_code == EACCES)
+			if (pl->exit_code == ENOENT || pl->exit_code == EACCES)
 				pl->exit_code = EPERM;
 		}
 		return (0);

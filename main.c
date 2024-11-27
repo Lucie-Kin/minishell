@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 17:02:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:46:38 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 
 int	g_signum;
 
+static void	init_env(t_sh *sh, char **envp);
+
 int	main(int argc, char **argv, char **envp)
 {
+	/*
+		`< libft`
+		`> libft`
+		`> test/`
+		`< test/`
+		Fix segfault when IO redirected to dir
+	*/
 	/*
 		$ mkdir test
 		$ cd test
@@ -57,17 +66,24 @@ int	main(int argc, char **argv, char **envp)
 	handle_default_background_color(0);
 	set_background_color_to_gnome_purple();
 	sh.first_arg = argv[0];
+	sh.valid_term = is_term_var_valid(&sh);
 	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));
 	sh.user = circular_pipeline(&sh, "/bin/whoami");
 	sh.host = circular_pipeline(&sh, "/bin/uname -n | /bin/cut -d. -f1");
 	sh.home = get_home_path(&sh, sh.user);
 	sh.shells = get_shells(&sh);
-	sh.env = convert_to_list(envp);
-	add_pwd(&sh);
-	update_shlvl(&sh.env, FALSE);
+	init_env(&sh, envp);
 	run_shell(&sh);
 	free_shell(&sh);
 	if (sh.subshell == 0)
 		reset_title_and_background_color();
 	return (sh.exit_code);
+}
+
+static void	init_env(t_sh *sh, char **envp)
+{
+	sh->env = convert_to_list(envp);
+	add_pwd(sh);
+	update_shlvl(&sh->env, FALSE);
+	return ;
 }

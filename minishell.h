@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 16:56:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:47:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ typedef struct s_env
 /* `sh` stands for "shell" */
 typedef struct s_sh
 {
-	int		is_a_tty[2];
 	char	*first_arg;
+	int		valid_term;
 	char	*pid;
 	char	*user;
 	char	*host;
@@ -150,6 +150,7 @@ void	handle_no_tty(void);
 void	handle_default_background_color(int set);
 void	set_background_color_to_gnome_purple(void);
 void	reset_title_and_background_color(void);
+int		is_term_var_valid(t_sh *sh);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
 char	*get_home_path(t_sh *sh, const char *username);

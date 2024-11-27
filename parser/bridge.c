@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:56:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/24 14:46:20 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:56:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	interpret_and_process_cmd(t_sh *sh)
 			process_cmd(sh);
 		else if (sh->ex->logop == LOGOP_AND && !sh->exit_code)
 			process_cmd(sh);
-		if (!ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
+		if (sh->ex->pl.cmdl[0][0] && !ft_strcmp(sh->ex->pl.cmdl[0][0], "exit"))
 			destroy_all_ex(sh);
 		else
 			pop_head_ex(sh);
