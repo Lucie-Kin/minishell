@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 19:02:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:59:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@
 # define ERR_EXPORT "not a valid identifier"
 # define ERR_NB_ARGS "too many arguments"
 # define ERR_NONUM "numeric argument required"
+# define ERR_CD "error retrieving current directory"
+# define ERR_ACS_DIR "cannot access parent directories"
 // errno -l : lister les macros d'erreur dans bash
 
 # define PROMPT_COLOR_OPEN "\e[35m"
@@ -243,7 +245,6 @@ int		bigerrno_hidden(t_env **hidden, char **arg);
 
 void	swap_node_content(t_env *s1, t_env *s2);
 void	swap_p(char **to_be_swap, char **swap_with);
-int		change_directory(char *path);
 int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
@@ -260,8 +261,11 @@ int		remove_tab_elements(char ***tab, int to_remove);
 char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
 char	**parse_key_value(char *to_separate);
-void	update_pwd(t_sh *sh);
 void	update_env(t_env **env, t_env **hidden);
 void	update_local(char ***cmd, t_env **local);
+int		go_to_oldpwd(t_sh *sh, char **target_dir);
+int		go_to_home(t_sh *sh, char **target_dir);
+void	update_oldpwd(t_sh *sh, t_env *pwd);
+void	update_pwd(t_sh *sh);
 
 #endif

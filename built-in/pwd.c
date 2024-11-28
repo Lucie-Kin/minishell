@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/16 16:04:04 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/28 10:44:10 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,15 @@ void	add_pwd(t_sh *sh)
 int	bigerrno_pwd(t_sh *sh)
 {
 	char	*str;
+	t_env	*node;
 
-	str = getcwd(NULL, 0);
+	node = NULL;
+	str = NULL;
+	node = find_key(&sh->env, "PWD");
+	if (node)
+		str = ft_strdup(node->value);
+	if (!str)
+		str = getcwd(NULL, 0);
 	if (str)
 	{
 		free(sh->pwd->value);

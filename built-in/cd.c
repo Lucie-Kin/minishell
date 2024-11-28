@@ -6,113 +6,23 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 18:56:06 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:10:44 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	update_pwd(t_sh *sh)
+static int	check_paths_and_update(t_sh *sh, int cod_err)
 {
-	t_env	*pwd;
-	t_env	*oldpwd;
-	char	*current_dir;
-
-	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
-		return ;
-	pwd = find_key(&sh->env, "PWD");
-	if (pwd)
+	if (!cod_err)
 	{
-		oldpwd = find_key(&sh->env, "OLDPWD");
-		if (!oldpwd)
-			oldpwd = find_key(&sh->hidden, "OLDPWD");
-		if (oldpwd)
-		{
-			if (oldpwd->value)
-				free(oldpwd->value);
-			oldpwd->value = ft_strdup(pwd->value);
-			oldpwd->withvalue = TRUE;
-		}
-		else
-		{
-			oldpwd = lst_new("OLDPWD", pwd->value);
-			if (oldpwd)
-				lstadd_back(&sh->hidden, oldpwd);
-		}
-		if (pwd->value)
-			free(pwd->value);
-		pwd->value = current_dir;
-		pwd->withvalue = TRUE;
+		if (getcwd(NULL, 0) == NULL)
+			cod_err = output_error(EPERM, compose_err_msg(NULL, "cd",
+				ft_strjoin(ft_strjoin(ft_strjoin(ERR_CD, ": "),ft_strjoin
+				("getcwd", ": ")), ERR_ACS_DIR), strerror(ENOENT)));
+		update_pwd(sh);
 	}
-	else
-		free(current_dir);
-}
-
-int	change_directory(char *path)
-{
-	if (ft_strcmp(path, "HOME") == 0)
-	{
-		output_error(EPERM,
-			compose_err_msg(SHELL, "cd", NULL, "HOME not set"));
-		return (EPERM);
-	}
-	if (ft_strcmp(path, "OLDPWD") == 0)
-	{
-		output_error(EPERM,
-			compose_err_msg(SHELL, "cd", NULL, "OLDPWD not set"));
-		return (EPERM);
-	}
-	if (chdir(path) != 0)
-	{
-		if (access(path, F_OK) == 0)
-			output_error(EPERM,
-				compose_err_msg(SHELL, "cd", path, strerror(EACCES)));
-		else
-			output_error(EPERM,
-				compose_err_msg(SHELL, "cd", path, strerror(ENOENT)));
-		return (EPERM);
-	}
-	return (0);
-}
-
-static int	go_to_home(t_sh *sh, char **target_dir)
-{
-	t_env	*home_var;
-
-	home_var = find_key(&sh->local, "HOME");
-	if (!home_var)
-	{
-		home_var = find_key(&sh->env, "HOME");
-	}
-	if (!home_var || !home_var->value)
-	{
-		output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
-				"HOME not set"));
-		return (EPERM);
-	}
-	*target_dir = home_var->value;
-	return (0);
-}
-
-static int	go_to_oldpwd(t_sh *sh, char **target_dir)
-{
-	t_env	*oldpwd;
-
-	oldpwd = find_key(&sh->local, "OLDPWD");
-	if (!oldpwd)
-		oldpwd = find_key(&sh->env, "OLDPWD");
-	if (!oldpwd)
-		oldpwd = find_key(&sh->hidden, "OLDPWD");
-	if (!oldpwd || !oldpwd->value)
-	{
-		output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
-				"OLDPWD not set"));
-		return (EPERM);
-	}
-	printf("%s\n", oldpwd->value);
-	*target_dir = oldpwd->value;
-	return (0);
+	return (cod_err);
 }
 
 int	bigerrno_cd(t_sh *sh, char **arg)
@@ -133,6 +43,7 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 		target_dir = arg[1];
 	if (!cod_err && chdir(target_dir) != 0)
 	{
+		dprintf(2, "hey\n");
 		if (access(target_dir, F_OK) == 0)
 			cod_err = output_error(EPERM, compose_err_msg
 					(SHELL, "cd", target_dir, strerror(EACCES)));
@@ -140,7 +51,6 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 			cod_err = output_error(EPERM, compose_err_msg
 					(SHELL, "cd", target_dir, strerror(ENOENT)));
 	}
-	if (!cod_err)
-		update_pwd(sh);
+	cod_err = check_paths_and_update(sh, cod_err);
 	return (cod_err);
 }
