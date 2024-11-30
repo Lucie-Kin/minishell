@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 12:56:07 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:15:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	print_in_p_order(t_env **to_print, t_env **not_to_print)
 	biggest = find_biggest_p(&p_order);
 	if (!smallest || !biggest || !p_order)
 		return (perror("Nothing to be printed"));
-	if (smallest && smallest->withvalue == TRUE && (!*not_to_print
-			|| !find_key(not_to_print, smallest->key)))
+	if (smallest && smallest->withvalue == TRUE \
+	&& ((!not_to_print || !*not_to_print) \
+	|| !find_key(not_to_print, smallest->key)))
 		env_print(smallest);
 	while (smallest != biggest)
 	{
@@ -59,7 +60,7 @@ int	bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg)
 	(void)local;
 	if (!arg[1])
 	{
-		// print_in_p_order(local, NULL);
+		print_in_p_order(local, NULL);
 		print_in_p_order(env, local);
 	}
 	else if (arg[1])

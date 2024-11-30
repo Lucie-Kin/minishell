@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 12:56:39 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:04:20 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ int	only_var(char **arg)
 	}
 	return (TRUE);
 }
+
 void	update_value(t_env *found_node, char *key, char *value, int is_append)
 {
-	char *joined;
+	char	*joined;
 
 	if (is_append && found_node->value)
 	{
@@ -50,14 +51,14 @@ void	update_value(t_env *found_node, char *key, char *value, int is_append)
 	}
 }
 
-void process_token(t_env **hidden, char *token)
+void	process_token(t_env **hidden, char *token)
 {
-	t_env *found_node;
-	t_env *node;
-	int first_equal_occurence;
-	int is_append;
+	t_env	*found_node;
+	t_env	*node;
+	int		first_equal_occurence;
+	int		is_append;
 	char	*key_value[2];
-	
+
 	first_equal_occurence = bn_firstocc(token, '=');
 	is_append = token[first_equal_occurence - 1] == '+';
 	key_value[0] = bn_strldup(token, first_equal_occurence - is_append);
@@ -86,5 +87,4 @@ void	update_hidden(t_env **hidden, char **token)
 		process_token(hidden, token[i]);
 		++i;
 	}
-	// print_list(hidden, false);
 }

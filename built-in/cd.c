@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/28 14:10:44 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:05:41 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ static int	check_paths_and_update(t_sh *sh, int cod_err)
 	if (!cod_err)
 	{
 		if (getcwd(NULL, 0) == NULL)
-			cod_err = output_error(EPERM, compose_err_msg(NULL, "cd",
-				ft_strjoin(ft_strjoin(ft_strjoin(ERR_CD, ": "),ft_strjoin
-				("getcwd", ": ")), ERR_ACS_DIR), strerror(ENOENT)));
+			cod_err = output_error(EPERM, compose_err_msg(NULL, "cd", \
+			ft_strjoin(ft_strjoin(ft_strjoin(ERR_CD, ": "), ft_strjoin \
+			("getcwd", ": ")), ERR_ACS_DIR), strerror(ENOENT)));
 		update_pwd(sh);
 	}
 	return (cod_err);
@@ -43,7 +43,6 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 		target_dir = arg[1];
 	if (!cod_err && chdir(target_dir) != 0)
 	{
-		dprintf(2, "hey\n");
 		if (access(target_dir, F_OK) == 0)
 			cod_err = output_error(EPERM, compose_err_msg
 					(SHELL, "cd", target_dir, strerror(EACCES)));

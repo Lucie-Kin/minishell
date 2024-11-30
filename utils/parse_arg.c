@@ -6,28 +6,23 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 18:34:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:08:53 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	update_local(char ***cmd, t_env **local)
+static void	update_local(char ***cmd, t_env **local, int *i)
 {
 	t_env	*new;
 	char	**key_value;
-	int		i;
-	void	**extracted;
 
-	i = 0;
-	if (!cmd || !(*cmd) || !(**cmd))
-		return ;
-	while ((*cmd)[i])
+	while ((*cmd)[*i])
 	{
-		if (ft_strchr((*cmd)[i], '=') == 0 ||
-		valid_keyvalue((*cmd)[i]) == FALSE)
+		if (ft_strchr((*cmd)[*i], '=') == 0 ||
+		valid_keyvalue((*cmd)[*i]) == FALSE)
 			break ;
-		key_value = parse_key_value((*cmd)[i]);
+		key_value = parse_key_value((*cmd)[*i]);
 		if (key_value)
 		{
 			new = lst_new(key_value[0], key_value[1]);
@@ -39,8 +34,19 @@ void	update_local(char ***cmd, t_env **local)
 			}
 			lstadd_back(local, new);
 		}
-		i++;
+		(*i)++;
 	}
+}
+
+void	extract_local_update(char ***cmd, t_env **local)
+{
+	int		i;
+	void	**extracted;
+
+	i = 0;
+	if (!cmd || !(*cmd) || !(**cmd))
+		return ;
+	update_local(cmd, local, &i);
 	if (i > 0)
 	{
 		extracted = extract_array_elements((void **)(*cmd), 0, i - 1);
@@ -74,7 +80,8 @@ int	isbuiltin(char **cmd)
 	if (!cmd[0])
 		return (FALSE);
 	j = skip_var(cmd);
-	cmd_tab = ft_split("cd:echo:env:exit:export:pwd:unset:hidden", ':');
+	cmd_tab = ft_split("cd:echo:env:exit:export:pwd:unset:\
+	hidden:lulu:shoot", ':');
 	state = FALSE;
 	i = 0;
 	while (cmd[j] && cmd_tab[i])
@@ -97,7 +104,7 @@ int	execute_builtin(t_sh *sh)
 
 	code_err = 0;
 	cmdl = sh->ex->pl.cmdl[sh->ex->pl.index];
-	update_local(&cmdl, &sh->local);
+	extract_local_update(&cmdl, &sh->local);
 	if (ft_strcmp(cmdl[0], "cd") == 0)
 		code_err = bigerrno_cd(sh, cmdl);
 	else if (ft_strcmp(cmdl[0], "echo") == 0)
@@ -112,8 +119,8 @@ int	execute_builtin(t_sh *sh)
 		code_err = bigerrno_pwd(sh);
 	else if (ft_strcmp(cmdl[0], "unset") == 0)
 		code_err = bigerrno_unset(sh, cmdl);
-	else if (ft_strcmp(cmdl[0], "hidden") == 0)
-		code_err = bigerrno_hidden(&sh->hidden, cmdl);
+	else
+		bigerrno_bonus(sh, cmdl, &code_err);
 	lst_clear(&sh->local);
 	return (code_err);
 }

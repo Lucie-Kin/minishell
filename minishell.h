@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/28 12:59:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:20:23 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,24 @@
 
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
+// colors
+# define GNOME "\033]11;rgb:3030/0a0a/2424\007"
+# define PEACH "\033]11;rgb:aaaa/5555/5050\007"
+# define AZUL "\033]11;rgb:afaf/d0d0/e1e1\007"
+# define POWDER "\033]11;rgb:1010/5050/aaaa\007"
+# define PURPLE "\033]11;rgb:3030/0a0a/5050\007"
+# define PINK "\033]11;rgb:aaaa/5555/9999\007"
+
+enum e_color
+{
+	E_GNOME,
+	E_PEACH,
+	E_AZUL,
+	E_POWDER,
+	E_PURPLE,
+	E_PINK,
+	E_DEFAULT
+};
 
 extern int	g_signum;
 
@@ -69,46 +87,46 @@ typedef struct s_file
 
 typedef struct s_pl
 {
-	size_t	len;
-	size_t	index;
-	int		circular;
-	int		exit_code;
-	char	*err_msg;
-	char	**path;
-	char	***cmdl;
-	t_file	**file;
-	int		fd_pipe_len;
-	int		**fd_pipe;
-	int		fd_std[2];
-	int		fd_src[2];
-	int		fd_circ[2];
+	size_t			len;
+	size_t			index;
+	int				circular;
+	int				exit_code;
+	char			*err_msg;
+	char			**path;
+	char			***cmdl;
+	t_file			**file;
+	int				fd_pipe_len;
+	int				**fd_pipe;
+	int				fd_std[2];
+	int				fd_src[2];
+	int				fd_circ[2];
 }	t_pl;
 
 /* `ex` stands for `execution` */
 typedef struct s_ex
 {
-	int			logop;
-	t_pl		pl;
-	struct s_ex	*next;
+	int				logop;
+	t_pl			pl;
+	struct s_ex		*next;
 }	t_ex;
 
 /* `rl` stands for "readline" */
 typedef struct s_rl_arr
 {
-	char	*value;
-	int		is_heredoc;
-	int		backslashes;
-	char	**delimiters;
+	char			*value;
+	int				is_heredoc;
+	int				backslashes;
+	char			**delimiters;
 }	t_rl_arr;
 
 typedef struct s_rl
 {
-	char		*user;
-	char		*prompt;
-	char		**buf;
-	t_rl_arr	**arr;
-	char		**tokens;
-	char		**hd;
+	char			*user;
+	char			*prompt;
+	char			**buf;
+	t_rl_arr		**arr;
+	char			**tokens;
+	char			**hd;
 }	t_rl;
 
 /* `env` stands for "environment" */
@@ -124,22 +142,23 @@ typedef struct s_env
 /* `sh` stands for "shell" */
 typedef struct s_sh
 {
-	char	*first_arg;
-	int		valid_term;
-	char	*pid;
-	char	*user;
-	char	*host;
-	char	*home;
-	char	*shells;
-	int		subshell;
-	int		keep_running;
-	int		exit_code;
-	t_env	*pwd;
-	t_env	*env;
-	t_env	*hidden;
-	t_env	*local;
-	t_rl	rl;
-	t_ex	*ex;
+	char			*first_arg;
+	int				valid_term;
+	char			*pid;
+	char			*user;
+	char			*host;
+	char			*home;
+	char			*shells;
+	int				subshell;
+	int				keep_running;
+	int				exit_code;
+	t_env			*pwd;
+	t_env			*env;
+	t_env			*hidden;
+	t_env			*local;
+	t_rl			rl;
+	t_ex			*ex;
+	enum e_color	color;
 }	t_sh;
 
 /* Parser ------------------------------------------------------------------- */
@@ -150,7 +169,8 @@ void	interpret_and_process_cmd(t_sh *sh);
 
 void	handle_no_tty(void);
 void	handle_default_background_color(int set);
-void	set_background_color_to_gnome_purple(void);
+void	set_bg_color(enum e_color *color);
+void	set_background_color_to(char *color);
 void	reset_title_and_background_color(void);
 int		is_term_var_valid(t_sh *sh);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
@@ -240,6 +260,9 @@ int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_pwd(t_sh *sh);
 int		bigerrno_unset(t_sh *sh, char **arg);
 int		bigerrno_hidden(t_env **hidden, char **arg);
+int		bigerrno_shoot(enum e_color *color, char **arg);
+int		bigerrno_lulu(enum e_color *color);
+void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
 
 /* Built-in utils ----------------------------------------------------------- */
 
@@ -262,7 +285,7 @@ char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
 char	**parse_key_value(char *to_separate);
 void	update_env(t_env **env, t_env **hidden);
-void	update_local(char ***cmd, t_env **local);
+void	extract_local_update(char ***cmd, t_env **local);
 int		go_to_oldpwd(t_sh *sh, char **target_dir);
 int		go_to_home(t_sh *sh, char **target_dir);
 void	update_oldpwd(t_sh *sh, t_env *pwd);

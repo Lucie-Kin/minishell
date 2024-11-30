@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 14:50:09 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:36:15 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	update_var(t_env *var, char *key_value, int separator)
 	char	*tmp_value;
 	char	*tmp_newvalue;
 
-		if (separator > 0 && key_value[separator - 1] == '+')
+	if (separator > 0 && key_value[separator - 1] == '+')
 	{
-				tmp_newvalue = get_literal_token(key_value + separator + 1);
+		tmp_newvalue = get_literal_token(key_value + separator + 1);
 		tmp_value = ft_strjoin(var->value, tmp_newvalue);
 		free(var->value);
 		free(tmp_newvalue);
@@ -28,14 +28,12 @@ void	update_var(t_env *var, char *key_value, int separator)
 	}
 	else if (separator > 0)
 	{
-				if (var->value != NULL)
-		{
-						free(var->value);
-		}
+		if (var->value != NULL)
+			free(var->value);
 		var->value = get_literal_token(key_value + separator + 1);
 		var->withvalue = TRUE;
 	}
-	}
+}
 
 void	add_or_update_var(t_env **env, char *key_value)
 {
@@ -44,7 +42,7 @@ void	add_or_update_var(t_env **env, char *key_value)
 	int		separator;
 
 	key = NULL;
-		separator = bn_firstocc(key_value, '=');
+	separator = bn_firstocc(key_value, '=');
 	if (separator > 0 && key_value[separator - 1] == '+')
 		key = bn_strldup(key_value, separator - 1);
 	else if (separator > 0)
@@ -90,43 +88,6 @@ char	**parse_key_value(char *to_separate)
 	else
 		key_value = ft_split(to_separate, ';');
 	return (key_value);
-}
-
-void	update_env(t_env **env, t_env **hidden)
-{
-	t_env	*current;
-	t_env	*next;
-	t_env	*env_var;
-	char	*append_value;
-
-		if (!hidden || !*hidden)
-		return ;
-		current = *hidden;
-	append_value = NULL;
-	while (current)
-	{
-				next = current->next;
-		env_var = find_key(env, current->key);
-		if (env_var && ft_strcmp(current->key, "_") != 0)
-		{
-			if (env_var->key[ft_strlen(env_var->key) - 1] == '+')
-				append_value = ft_strjoin(env_var->value, current->value);
-			if (env_var->value)
-			{
-				free(env_var->value);
-				env_var->value = NULL;
-			}
-			if (append_value)
-				env_var->value = append_value;
-			else
-				env_var->value = ft_strdup(current->value);
-			env_var->withvalue = TRUE;
-			if (current == *hidden)
-				*hidden = current->next;
-			clear_node(current);
-		}
-		current = next;
-	}
 }
 
 int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)

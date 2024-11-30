@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/19 13:44:52 by libousse         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:57:09 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,26 @@ void	handle_default_background_color(int set)
 	return ;
 }
 
-void	set_background_color_to_gnome_purple(void)
+void	set_background_color_to(char *color)
 {
-	ft_putstr_fd("\033]11;rgb:3030/0a0a/2424\007", 1);
+	ft_putstr_fd(color, 1);
+	return ;
+}
+
+void	set_bg_color(enum e_color *color)
+{
+	if (*color == E_GNOME)
+		set_background_color_to(GNOME);
+	else if (*color == E_PEACH)
+		set_background_color_to(PEACH);
+	else if (*color == E_POWDER)
+		set_background_color_to(POWDER);
+	else if (*color == E_PINK)
+		set_background_color_to(PINK);
+	else if (*color == E_AZUL)
+		set_background_color_to(AZUL);
+	else if (*color == E_PURPLE)
+		set_background_color_to(PURPLE);
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:38:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 19:22:11 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:17:21 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	execute_subprocess(t_sh *sh, t_pl *pl)
 	}
 	if (!ft_strcmp(pl->cmdl[pl->index][0], SEP_STR))
 		return (execute_subshell(sh, pl));
-	update_local(&pl->cmdl[pl->index], &sh->local);
+	extract_local_update(&pl->cmdl[pl->index], &sh->local);
 	if (!resolve_command(pl, pl->cmdl[pl->index][0], &cmd_fullpath))
 		return (restore_io(pl));
 	if (cmd_fullpath)

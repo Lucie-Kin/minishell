@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:41:14 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/22 13:42:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:02:47 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ t_env	*next_smallest(t_env **p_order, t_env *smallest)
 	tmp = *p_order;
 	next_small = NULL;
 	if (!p_order)
-		return (NULL);//return (perror("No struct list found"), NULL);
+		return (NULL);
 	if (!smallest)
-		return (NULL);//return (perror("Node not found"), NULL);
+		return (NULL);
 	while (tmp)
 	{
 		if (tmp > smallest && (!next_small || tmp < next_small))

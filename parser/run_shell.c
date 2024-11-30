@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:47:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:01:04 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	run_shell(t_sh *sh)
 	while (sh->subshell == 0 && sh->keep_running)
 	{
 		update_prompt(sh);
-		set_background_color_to_gnome_purple();
+		set_bg_color(&sh->color);
 		add_input_to_buffer(sh, sh->rl.prompt);
 		while (sh->keep_running && sh->rl.buf && sh->rl.buf[0])
 			process_current_line(sh);
