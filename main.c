@@ -16,32 +16,6 @@ int	g_signum;
 
 static void	init_env(t_sh *sh, char **envp);
 
-/*
-	$ mkdir test
-	$ cd test
-	$ rm -rf ../test
-	$ pwd
-	/home/libousse/lycoris/test
-	$ cd ..
-
-	minishell$ mkdir gab
-	minishell$ cd gab
-	minishell/gab$ mkdir gab1
-	minishell/gab$ cd gab1
-	minishell/gab/gab1$ rm -rf ../../gab
-	minishell/gab/gab1$ cd ..
-		cd: error retrieving current directory: getcwd: cannot access 
-		parent directories: No such file or directory
-	minishell/gab/gab1/..$ cd ..
-	minishell$
-
-	------------------------------------------------------------------------
-
-	- As for Valgrind flags, check for unclosed FDs with `--track-fds=yes`, 
-	and you can add `--trace-children=yes` to find out in which child 
-	process you need to close them.
-*/
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_sh	sh;

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 18:57:16 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 18:02:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static char	*get_prompt_path(t_sh *sh)
 	{
 		alloc = 1;
 		str_path = getcwd(NULL, 0);
+		if (!str_path)
+			str_path = ft_strdup(".");
 	}
 	if (!str_path)
 		return (0);

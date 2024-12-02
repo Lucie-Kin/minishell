@@ -24,21 +24,7 @@ void	add_pwd(t_sh *sh)
 
 int	bigerrno_pwd(t_sh *sh)
 {
-	char	*str;
-	t_env	*node;
-
-	node = NULL;
-	str = NULL;
-	node = find_key(&sh->env, "PWD");
-	if (node)
-		str = ft_strdup(node->value);
-	if (!str)
-		str = getcwd(NULL, 0);
-	if (str)
-	{
-		free(sh->pwd->value);
-		sh->pwd->value = str;
-	}
-	printf("%s\n", sh->pwd->value);
+	if (sh->pwd && sh->pwd->value)
+		printf("%s\n", sh->pwd->value);
 	return (0);
 }

@@ -6,31 +6,28 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:53:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 22:03:02 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 23:32:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	update_pwd(t_sh *sh)
+void	update_pwd(t_sh *sh, char *cwd)
 {
-	t_env	*pwd;
-	char	*current_dir;
+	t_env	*var;
 
-	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
+	if (!cwd)
 		return ;
-	pwd = find_key(&sh->env, "PWD");
-	if (pwd)
+	free(sh->pwd->value);
+	sh->pwd->value = cwd;
+	var = find_key(&sh->env, "PWD");
+	if (var)
 	{
-		update_oldpwd(sh, pwd);
-		if (pwd->value)
-			free(pwd->value);
-		pwd->value = current_dir;
-		pwd->withvalue = TRUE;
+		update_oldpwd(sh, var);
+		free(var->value);
+		var->value = ft_strdup(sh->pwd->value);
+		var->withvalue = TRUE;
 	}
-	else
-		free(current_dir);
 }
 
 void	update_oldpwd(t_sh *sh, t_env *pwd)
@@ -84,12 +81,8 @@ int	go_to_oldpwd(t_sh *sh, char **target_dir)
 	if (!oldpwd)
 		oldpwd = find_key(&sh->hidden, "OLDPWD");
 	if (!oldpwd || !oldpwd->value)
-	{
-		output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
-				"OLDPWD not set"));
-		return (EPERM);
-	}
-	printf("%s\n", oldpwd->value);
+		return (output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
+					"OLDPWD not set")));
 	*target_dir = oldpwd->value;
 	return (0);
 }

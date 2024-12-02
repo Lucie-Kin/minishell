@@ -6,55 +6,59 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 14:01:26 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 23:54:38 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	check_paths_and_update(t_sh *sh, int cod_err)
+static int	check_paths_and_update(t_sh *sh, const char *arg, int code_err)
 {
+	char	*cwd;
 	char	*tmp;
 
-	tmp = NULL;
-	if (!cod_err)
+	if (code_err)
+		return (code_err);
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
 	{
-		tmp = getcwd(NULL, 0);
-		if (tmp == NULL)
-			cod_err = output_error(EPERM, compose_err_msg(NULL, "cd", \
-			ft_strjoin(ft_strjoin(ft_strjoin(ERR_CD, ": "), ft_strjoin \
-			("getcwd", ": ")), ERR_ACS_DIR), strerror(ENOENT)));
-		update_pwd(sh);
+		tmp = ft_strjoin("getcwd: ", ERR_ACS_DIR);
+		code_err = output_error(EPERM, compose_err_msg("cd", ERR_CD, tmp,
+					strerror(ENOENT)));
+		free(tmp);
+		tmp = ft_strjoin(sh->pwd->value, "/");
+		cwd = ft_strjoin(tmp, arg);
+		free(tmp);
 	}
-	free(tmp);
-	return (cod_err);
+	update_pwd(sh, cwd);
+	return (code_err);
 }
 
 int	bigerrno_cd(t_sh *sh, char **arg)
 {
-	int		cod_err;
+	int		code_err;
 	char	*target_dir;
 
-	cod_err = 0;
+	code_err = 0;
 	update_env(&sh->env, &sh->hidden);
 	if (bn_linelen(arg) > 2)
 		return (output_error(EPERM, compose_err_msg
 				(SHELL, "cd", NULL, ERR_NB_ARGS)));
 	if (!arg[1])
-		cod_err = go_to_home(sh, &target_dir);
+		code_err = go_to_home(sh, &target_dir);
 	else if (ft_strcmp(arg[1], "-") == 0)
-		cod_err = go_to_oldpwd(sh, &target_dir);
+		code_err = go_to_oldpwd(sh, &target_dir);
 	else
 		target_dir = arg[1];
-	if (!cod_err && chdir(target_dir) != 0)
+	if (!code_err && chdir(target_dir) != 0)
 	{
 		if (access(target_dir, F_OK) == 0)
-			cod_err = output_error(EPERM, compose_err_msg
-					(SHELL, "cd", target_dir, strerror(EACCES)));
-		else
-			cod_err = output_error(EPERM, compose_err_msg
-					(SHELL, "cd", target_dir, strerror(ENOENT)));
+			return (output_error(EPERM, compose_err_msg
+					(SHELL, "cd", target_dir, strerror(EACCES))));
+		return (output_error(EPERM, compose_err_msg
+				(SHELL, "cd", target_dir, strerror(ENOENT))));
 	}
-	cod_err = check_paths_and_update(sh, cod_err);
-	return (cod_err);
+	else if (ft_strcmp(arg[1], "-") == 0)
+		printf("%s\n", target_dir);
+	return (check_paths_and_update(sh, arg[1], code_err));
 }

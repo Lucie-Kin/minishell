@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 21:20:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 23:33:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,6 +289,6 @@ void	extract_local_update(char ***cmd, t_env **local);
 int		go_to_oldpwd(t_sh *sh, char **target_dir);
 int		go_to_home(t_sh *sh, char **target_dir);
 void	update_oldpwd(t_sh *sh, t_env *pwd);
-void	update_pwd(t_sh *sh);
+void	update_pwd(t_sh *sh, char *cwd);
 
 #endif
