@@ -6,18 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:05:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/10/14 14:31:18 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 00:10:37 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBBN_H
 # define LIBBN_H
 
-# include <stdlib.h>
-# include <stdint.h>
-# include <stdarg.h>
-# include <unistd.h>
-# include <stdbool.h>
 # include "../libft/libft.h"
 
 # define FALSE 0

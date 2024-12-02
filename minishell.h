@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 23:33:04 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 00:08:35 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #  define DBUG 0
 # endif
 
-# include <curses.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -26,16 +25,10 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdarg.h>
 # include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/ioctl.h>
 # include <sys/stat.h>
-# include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
-# include <unistd.h>
 
 # define FALSE 0
 # define TRUE  1
@@ -52,7 +45,6 @@
 # define ERR_NONUM "numeric argument required"
 # define ERR_CD "error retrieving current directory"
 # define ERR_ACS_DIR "cannot access parent directories"
-// errno -l : lister les macros d'erreur dans bash
 
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
@@ -64,6 +56,8 @@
 # define PURPLE "\033]11;rgb:3030/0a0a/5050\007"
 # define PINK "\033]11;rgb:aaaa/5555/9999\007"
 
+extern int	g_signum;
+
 enum e_color
 {
 	E_GNOME,
@@ -74,8 +68,6 @@ enum e_color
 	E_PINK,
 	E_DEFAULT
 };
-
-extern int	g_signum;
 
 /* `pl` stands for "pipeline" */
 typedef struct s_file

@@ -6,18 +6,16 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:31:10 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 10:52:04 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 00:04:15 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <stdlib.h>
 # include <stdint.h>
-# include <stdarg.h>
+# include <stdlib.h>
 # include <unistd.h>
-# include <stdbool.h>
 
 int		ft_atoi(const char *n);
 int		ft_atoi_base(const char *n, const char *base);
