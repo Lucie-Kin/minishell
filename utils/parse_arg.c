@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 22:08:53 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:00:16 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,14 @@ static void	update_local(char ***cmd, t_env **local, int *i)
 
 void	extract_local_update(char ***cmd, t_env **local)
 {
-	int		i;
-	void	**extracted;
+	int	i;
 
 	i = 0;
 	if (!cmd || !(*cmd) || !(**cmd))
 		return ;
 	update_local(cmd, local, &i);
 	if (i > 0)
-	{
-		extracted = extract_array_elements((void **)(*cmd), 0, i - 1);
-		free_entire_array(extracted, NULL);
-	}
+		remove_array_elements((void **)(*cmd), 0, i - 1, free);
 }
 
 static int	skip_var(char **cmd)
@@ -121,6 +117,5 @@ int	execute_builtin(t_sh *sh)
 		code_err = bigerrno_unset(sh, cmdl);
 	else
 		bigerrno_bonus(sh, cmdl, &code_err);
-	lst_clear(&sh->local);
 	return (code_err);
 }

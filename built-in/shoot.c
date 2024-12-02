@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 20:56:50 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:17:07 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	animate_shoot(int rows, int cols)
 	v = 0.1;
 	(void)rows;
 	dot = ft_strdup("\e[35m•\e[0m");
-	while (pixel_pos < cols)
+	while (pixel_pos < cols && !g_signum)
 		draw_bullet(&dot, &pixel_pos, &v);
 	write(STDOUT_FILENO, "\r", 1);
 	i = -1;
@@ -64,7 +64,7 @@ void	get_terminal_size(int *rows_cols)
 	struct termios	newt;
 
 	tcgetattr(STDIN_FILENO, &oldt);
-	newt = oldt;
+	ft_memcpy(&newt, &oldt, sizeof(struct termios));
 	newt.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 	if (pipe(pipefd) == -1)

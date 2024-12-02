@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 22:05:41 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:01:26 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 
 static int	check_paths_and_update(t_sh *sh, int cod_err)
 {
+	char	*tmp;
+
+	tmp = NULL;
 	if (!cod_err)
 	{
-		if (getcwd(NULL, 0) == NULL)
+		tmp = getcwd(NULL, 0);
+		if (tmp == NULL)
 			cod_err = output_error(EPERM, compose_err_msg(NULL, "cd", \
 			ft_strjoin(ft_strjoin(ft_strjoin(ERR_CD, ": "), ft_strjoin \
 			("getcwd", ": ")), ERR_ACS_DIR), strerror(ENOENT)));
 		update_pwd(sh);
 	}
+	free(tmp);
 	return (cod_err);
 }
 

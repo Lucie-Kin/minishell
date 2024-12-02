@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/28 17:01:04 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:56:47 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	free_shell(t_sh *sh)
 	rl_clear_history();
 	lst_clear(&sh->env);
 	lst_clear(&sh->hidden);
+	lst_clear(&sh->local);
 	free(sh->pwd->key);
 	if (sh->pwd->value)
 		free(sh->pwd->value);

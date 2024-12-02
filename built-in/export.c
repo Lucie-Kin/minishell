@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 21:36:15 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:57:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,24 @@ void	update_var(t_env *var, char *key_value, int separator)
 	}
 }
 
+static char	*extract_key(int separator, char *key_value)
+{
+	if (separator > 0 && key_value[separator - 1] == '+')
+		return (bn_strldup(key_value, separator - 1));
+	else if (separator > 0)
+		return (bn_strldup(key_value, separator));
+	return (ft_strdup(key_value));
+}
+
 void	add_or_update_var(t_env **env, char *key_value)
 {
 	t_env	*var;
 	char	*key;
+	char	*value;
 	int		separator;
 
-	key = NULL;
 	separator = bn_firstocc(key_value, '=');
-	if (separator > 0 && key_value[separator - 1] == '+')
-		key = bn_strldup(key_value, separator - 1);
-	else if (separator > 0)
-		key = bn_strldup(key_value, separator);
-	else
-		key = key_value;
+	key = extract_key(separator, key_value);
 	var = find_key(env, key);
 	if (var)
 	{
@@ -56,9 +60,14 @@ void	add_or_update_var(t_env **env, char *key_value)
 			update_var(var, key_value, separator);
 	}
 	else if (separator > 0)
-		add_node(env, key, get_literal_token(key_value + separator + 1));
+	{
+		value = get_literal_token(key_value + separator + 1);
+		add_node(env, key, value);
+		free(value);
+	}
 	else
 		add_node(env, key_value, NULL);
+	free(key);
 }
 
 char	**parse_key_value(char *to_separate)
