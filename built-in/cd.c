@@ -6,33 +6,14 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 13:57:09 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:24:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	check_paths_and_update(t_sh *sh, const char *arg, int code_err)
-{
-	char	*cwd;
-	char	*tmp;
-
-	if (code_err)
-		return (code_err);
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
-	{
-		tmp = ft_strjoin("getcwd: ", ERR_ACS_DIR);
-		code_err = output_error(EPERM, compose_err_msg("cd", ERR_CD, tmp,
-					strerror(ENOENT)));
-		free(tmp);
-		tmp = ft_strjoin(sh->pwd->value, "/");
-		cwd = ft_strjoin(tmp, arg);
-		free(tmp);
-	}
-	update_pwd(sh, cwd);
-	return (code_err);
-}
+static int	go_to_home(t_sh *sh, char **target_dir);
+static int	go_to_oldpwd(t_sh *sh, char **target_dir);
 
 int	bigerrno_cd(t_sh *sh, char **arg)
 {
@@ -60,5 +41,40 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 	}
 	else if (ft_strcmp(arg[1], "-") == 0)
 		printf("%s\n", target_dir);
-	return (check_paths_and_update(sh, arg[1], code_err));
+	return (update_pwd(sh, arg[1], code_err));
+}
+
+static int	go_to_home(t_sh *sh, char **target_dir)
+{
+	t_env	*home_var;
+
+	home_var = find_key(&sh->local, "HOME");
+	if (!home_var)
+	{
+		home_var = find_key(&sh->env, "HOME");
+	}
+	if (!home_var || !home_var->value)
+	{
+		output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
+				"HOME not set"));
+		return (EPERM);
+	}
+	*target_dir = home_var->value;
+	return (0);
+}
+
+static int	go_to_oldpwd(t_sh *sh, char **target_dir)
+{
+	t_env	*oldpwd;
+
+	oldpwd = find_key(&sh->local, "OLDPWD");
+	if (!oldpwd)
+		oldpwd = find_key(&sh->env, "OLDPWD");
+	if (!oldpwd)
+		oldpwd = find_key(&sh->hidden, "OLDPWD");
+	if (!oldpwd || !oldpwd->value)
+		return (output_error(EPERM, compose_err_msg(SHELL, "cd", NULL,
+					"OLDPWD not set")));
+	*target_dir = oldpwd->value;
+	return (0);
 }

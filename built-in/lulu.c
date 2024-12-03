@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus.c                                            :+:      :+:    :+:   */
+/*   lulu.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 21:17:00 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 15:39:35 by libousse         ###   ########.fr       */
+/*   Created: 2024/12/03 15:38:43 by libousse          #+#    #+#             */
+/*   Updated: 2024/12/03 15:39:27 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err)
+int	bigerrno_lulu(enum e_color *color)
 {
-	if (ft_strcmp(cmdl[0], "lulu") == 0)
-		*code_err = bigerrno_lulu(&sh->color);
-	else if (ft_strcmp(cmdl[0], "shoot") == 0)
-		*code_err = bigerrno_shoot(&sh->color, cmdl);
+	++(*color);
+	if (*color >= E_DEFAULT)
+		*color = 0;
+	set_bg_color(color);
+	return (0);
 }

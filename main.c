@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 20:55:22 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:42:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 
 static void	init_env(t_sh *sh, char **envp)
 {
-	sh->env = convert_to_list(envp);
+	sh->env = convert_to_lst(envp);
 	add_pwd(sh);
 	update_shlvl(&sh->env, FALSE);
 	return ;

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:56:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 15:34:51 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:11:52 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,12 @@ void	interpret_and_process_cmd(t_sh *sh)
 
 static void	process_cmd(t_sh *sh)
 {
-	int	is_only_var;
-	int	is_builtin;
-
-	is_only_var = sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]);
-	is_builtin = sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0]);
-	if (is_only_var || is_builtin)
+	if (sh->ex->pl.len == 1 && only_var(sh->ex->pl.cmdl[0]))
+		sh->exit_code = update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
+	else if (sh->ex->pl.len == 1 && isbuiltin(sh->ex->pl.cmdl[0]))
 	{
 		if (redirect_io(&sh->ex->pl))
-		{
-			if (is_only_var)
-				update_hidden(&sh->hidden, sh->ex->pl.cmdl[0]);
-			else
-				sh->ex->pl.exit_code = execute_builtin(sh);
-		}
+			sh->ex->pl.exit_code = execute_builtin(sh);
 		sh->exit_code = restore_io(&sh->ex->pl);
 		lst_clear(&sh->local);
 	}

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:38:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 15:33:30 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:14:09 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int		execute_subshell(t_sh *sh, t_pl *pl);
 static void		run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath);
-static t_env	*merge_lists(t_env *lst1, t_env *lst2);
-static void		prepare_for_shell_cmd(t_sh *sh, const char *cmd);
+static t_env	*merge_lst(t_env *lst1, t_env *lst2);
+static char		**convert_to_arr(t_env *env);
 
 int	execute_subprocess(t_sh *sh, t_pl *pl)
 {
@@ -69,12 +69,21 @@ static int	execute_subshell(t_sh *sh, t_pl *pl)
 static void	run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath)
 {
 	t_env	*exec_env;
+	char	*p_slash;
 
-	exec_env = merge_lists(sh->local, sh->env);
+	exec_env = merge_lst(sh->local, sh->env);
 	if (is_shell(sh->shells, cmd_fullpath))
-		prepare_for_shell_cmd(sh, cmd_fullpath);
+	{
+		update_shlvl(&sh->env, FALSE);
+		p_slash = ft_strrchr(cmd_fullpath, '/');
+		if (!ft_strcmp(cmd_fullpath, "minishell")
+			|| (p_slash && !ft_strcmp(p_slash + 1, "minishell")))
+			handle_default_background_color(1);
+		else
+			reset_title_and_background_color();
+	}
 	set_signals(1);
-	execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_tab(exec_env));
+	execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_arr(exec_env));
 	pl->exit_code = errno;
 	pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
 			strerror(pl->exit_code));
@@ -82,7 +91,7 @@ static void	run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath)
 	return ;
 }
 
-static t_env	*merge_lists(t_env *lst1, t_env *lst2)
+static t_env	*merge_lst(t_env *lst1, t_env *lst2)
 {
 	t_env	*merge;
 	t_env	*node;
@@ -110,16 +119,24 @@ static t_env	*merge_lists(t_env *lst1, t_env *lst2)
 	return (merge);
 }
 
-static void	prepare_for_shell_cmd(t_sh *sh, const char *cmd)
+static char	**convert_to_arr(t_env *env)
 {
-	char	*p_slash;
+	char	**env_arr;
+	char	*tmp;
+	int		size;
+	int		i;
 
-	update_shlvl(&sh->env, FALSE);
-	p_slash = ft_strrchr(cmd, '/');
-	if (!ft_strcmp(cmd, "minishell")
-		|| (p_slash && !ft_strcmp(p_slash + 1, "minishell")))
-		handle_default_background_color(1);
-	else
-		reset_title_and_background_color();
-	return ;
+	if (!env)
+		return (NULL);
+	size = lst_size(&env);
+	env_arr = ft_calloc(size + 1, sizeof(char *));
+	i = 0;
+	while (env)
+	{
+		tmp = ft_strjoin(env->key, "=");
+		env_arr[i++] = ft_strjoin(tmp, env->value);
+		free(tmp);
+		env = env->next;
+	}
+	return (env_arr);
 }

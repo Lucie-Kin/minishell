@@ -1,44 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_list2.c                                      :+:      :+:    :+:   */
+/*   shlvl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 16:41:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 15:48:21 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/10/26 19:03:50 by lchauffo          #+#    #+#             */
+/*   Updated: 2024/11/26 12:56:43 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_env	*add_node(t_env **lst, char *key, char *value)
+void	update_shlvl(t_env **env, int inpipe)
 {
-	t_env	*new;
+	t_env	*var;
+	int		shlvl;
 
-	new = lst_new(key, value);
-	if (!new || !new->key)
+	var = find_key(env, "SHLVL");
+	if (!var)
 	{
-		if (new)
-			free(new);
-		return (lst_clear(lst), NULL);
+		shlvl = 1;
+		add_node(env, "SHLVL", "1");
 	}
-	lstadd_back(lst, new);
-	return (new);
-}
-
-t_env	*find_key(t_env **lst, char *key)
-{
-	t_env	*tmp;
-
-	if (!key || !lst || !*lst)
-		return (NULL);
-	tmp = *lst;
-	while (tmp)
+	else
 	{
-		if (ft_strcmp(tmp->key, key) == 0)
-			return (tmp);
-		tmp = tmp->next;
+		shlvl = ft_atoi(var->value);
+		free(var->value);
+		if (inpipe == TRUE)
+			shlvl--;
+		else
+			shlvl++;
+		var->value = ft_itoa(shlvl);
 	}
-	return (NULL);
 }

@@ -1,42 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_export.c                                     :+:      :+:    :+:   */
+/*   keyvalue.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 21:55:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:12:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	swap_p(char **to_be_swap, char **swap_with)
-{
-	char	*tmp;
-
-	tmp = *to_be_swap;
-	*to_be_swap = *swap_with;
-	*swap_with = tmp;
-}
-
-void	swap_node_content(t_env *s1, t_env *s2)
-{
-	int		tmp_bool;
-	char	*tmp_key;
-	char	*tmp_value;
-
-	tmp_bool = s1->withvalue;
-	s1->withvalue = s2->withvalue;
-	s2->withvalue = tmp_bool;
-	tmp_key = s1->key;
-	s1->key = s2->key;
-	s2->key = tmp_key;
-	tmp_value = s1->value;
-	s1->value = s2->value;
-	s2->value = tmp_value;
-}
+static t_env	*lst_dup(t_env *src);
+static void		manage_env(t_env **hidden, t_env *env_var, t_env *current,
+					char **append_value);
 
 int	valid_keyvalue(char *key_value)
 {
@@ -44,7 +22,7 @@ int	valid_keyvalue(char *key_value)
 	int		separator;
 
 	i = 0;
-	separator = bn_firstocc(key_value, '=');
+	separator = firstocc(key_value, '=');
 	if (key_value[0] == '_' && (!key_value[1] || separator == 1))
 		return (FALSE);
 	else if (ft_isdigit(key_value[0]) == TRUE)
@@ -66,34 +44,7 @@ int	valid_keyvalue(char *key_value)
 	return (TRUE);
 }
 
-void	print_list(t_env **list, int export)
-{
-	t_env	*tmp;
-
-	tmp = *list;
-	if (!tmp)
-		return ;
-	while (tmp)
-	{
-		if (export == TRUE)
-		{
-			if (ft_strcmp(tmp->key, "_") == 0)
-				;
-			else if (tmp->withvalue == TRUE)
-				printf("%s %s=\"%s\"\n", MSG_EXPORT, tmp->key, tmp->value);
-			else
-				printf("%s %s\n", MSG_EXPORT, tmp->key);
-		}
-		else
-		{
-			if (tmp->withvalue == TRUE)
-				printf("%s=%s\n", tmp->key, tmp->value);
-		}
-		tmp = tmp->next;
-	}
-}
-
-t_env	*alpha_order_list(t_env **env)
+t_env	*alpha_order_lst(t_env **env)
 {
 	t_env	*start;
 	t_env	*ordered;
@@ -101,7 +52,7 @@ t_env	*alpha_order_list(t_env **env)
 
 	if (!*env)
 		return (NULL);
-	start = list_dup(*env);
+	start = lst_dup(*env);
 	if (!start)
 		return (NULL);
 	swapped = 1;
@@ -120,4 +71,71 @@ t_env	*alpha_order_list(t_env **env)
 		}
 	}
 	return (start);
+}
+
+void	update_env(t_env **env, t_env **hidden)
+{
+	t_env	*current;
+	t_env	*next;
+	t_env	*env_var;
+	char	*append_value;
+
+	if (!hidden || !*hidden)
+		return ;
+	current = *hidden;
+	append_value = NULL;
+	while (current)
+	{
+		next = current->next;
+		env_var = find_key(env, current->key);
+		if (env_var && ft_strcmp(current->key, "_") != 0)
+			manage_env(hidden, env_var, current, &append_value);
+		current = next;
+	}
+}
+
+static t_env	*lst_dup(t_env *src)
+{
+	t_env	*to_copy;
+	t_env	*dup;
+	t_env	*node;
+	int		len;
+	int		i;
+
+	to_copy = src;
+	dup = NULL;
+	len = lst_size(&src);
+	i = 0;
+	while (to_copy && i < len)
+	{
+		node = add_node(&dup, to_copy->key, to_copy->value);
+		if (!node)
+		{
+			lst_clear(&dup);
+			return (NULL);
+		}
+		to_copy = to_copy->next;
+		i++;
+	}
+	return (dup);
+}
+
+static void	manage_env(t_env **hidden, t_env *env_var, t_env *current,
+	char **append_value)
+{
+	if (env_var->key[ft_strlen(env_var->key) - 1] == '+')
+		*append_value = ft_strjoin(env_var->value, current->value);
+	if (env_var->value)
+	{
+		free(env_var->value);
+		env_var->value = NULL;
+	}
+	if (*append_value)
+		env_var->value = *append_value;
+	else
+		env_var->value = ft_strdup(current->value);
+	env_var->withvalue = TRUE;
+	if (current == *hidden)
+		*hidden = current->next;
+	clear_node(current);
 }

@@ -1,43 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_list.c                                       :+:      :+:    :+:   */
+/*   lst.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:21:27 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/25 17:45:06 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:31:49 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_env	*lst_last(t_env *last)
-{
-	if (!last)
-		return (NULL);
-	while (last->next)
-		last = last->next;
-	return (last);
-}
-
-t_env	*lstadd_back(t_env **lst, t_env *new)
-{
-	t_env	*tmp;
-
-	if (!new)
-		return (NULL);
-	tmp = *lst;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return (*lst);
-	}
-	tmp = lst_last(*lst);
-	tmp->next = new;
-	new->prev = tmp;
-	return (*lst);
-}
+static t_env	*lst_last(t_env *last);
 
 t_env	*lst_new(const char *key, const char *value)
 {
@@ -59,7 +34,25 @@ t_env	*lst_new(const char *key, const char *value)
 	return (node);
 }
 
-int	list_size(t_env **lst)
+t_env	*lstadd_back(t_env **lst, t_env *new)
+{
+	t_env	*tmp;
+
+	if (!new)
+		return (NULL);
+	tmp = *lst;
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return (*lst);
+	}
+	tmp = lst_last(*lst);
+	tmp->next = new;
+	new->prev = tmp;
+	return (*lst);
+}
+
+int	lst_size(t_env **lst)
 {
 	int		size;
 	t_env	*loc;
@@ -74,28 +67,31 @@ int	list_size(t_env **lst)
 	return (size);
 }
 
-t_env	*list_dup(t_env *src)
+void	lst_clear(t_env **lst)
 {
-	t_env	*to_copy;
-	t_env	*dup;
-	t_env	*node;
-	int		len;
-	int		i;
+	t_env	*current;
+	t_env	*next;
 
-	to_copy = src;
-	dup = NULL;
-	len = list_size(&src);
-	i = 0;
-	while (to_copy && i < len)
+	if (!lst || !*lst)
+		return ;
+	current = *lst;
+	while (current)
 	{
-		node = add_node(&dup, to_copy->key, to_copy->value);
-		if (!node)
-		{
-			lst_clear(&dup);
-			return (NULL);
-		}
-		to_copy = to_copy->next;
-		i++;
+		next = current->next;
+		free(current->key);
+		if (current->value)
+			free(current->value);
+		free(current);
+		current = next;
 	}
-	return (dup);
+	*lst = NULL;
+}
+
+static t_env	*lst_last(t_env *last)
+{
+	if (!last)
+		return (NULL);
+	while (last->next)
+		last = last->next;
+	return (last);
 }

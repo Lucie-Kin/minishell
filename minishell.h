@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 15:34:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:29:56 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,23 +218,19 @@ void	remove_array_elements(void **array, size_t from, size_t to,
 void	free_entire_array(void **array, void (*free_element)(void *));
 
 int		only_var(char **arg);
-void	update_hidden(t_env **hidden, char **token);
+int		update_hidden(t_env **hidden, char **token);
 
 void	update_shlvl(t_env **env, int inpipe);
 
-/* Utils list --------------------------------------------------------------- */
+/* Utils lst ---------------------------------------------------------------- */
 
-t_env	*convert_to_list(char **env);
-char	**convert_to_tab(t_env *env);
-t_env	*lst_last(t_env *last);
+t_env	*convert_to_lst(char **env);
 t_env	*lstadd_back(t_env **lst, t_env *new);
 t_env	*lst_new(const char *key, const char *value);
 void	lst_clear(t_env **lst);
-int		list_size(t_env **lst);
-t_env	*list_dup(t_env *src);
+int		lst_size(t_env **lst);
 t_env	*add_node(t_env **lst, char *key, char *value);
 char	*get_var_value(t_sh *sh, char *key);
-void	list_in_p_order(t_env **env);
 void	add_pwd(t_sh *sh);
 t_env	*find_key(t_env **lst, char *key);
 
@@ -257,30 +253,26 @@ void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
 
 /* Built-in utils ----------------------------------------------------------- */
 
-void	swap_node_content(t_env *s1, t_env *s2);
 void	swap_p(char **to_be_swap, char **swap_with);
 int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
 char	*get_echo_escaped_token(const char *s, int *is_c_found);
+void	swap_node_content(t_env *s1, t_env *s2);
 t_env	*find_smallest_p(t_env **p_order);
 t_env	*find_biggest_p(t_env **p_order);
 t_env	*next_smallest(t_env **p_order, t_env *smallest);
 void	lst_clear(t_env **lst);
 void	clear_node(t_env *node);
-void	print_list(t_env **list, int export);
-t_env	*alpha_order_list(t_env **env);
+t_env	*alpha_order_lst(t_env **env);
 int		init_expand(char ***expand);
-int		remove_tab_elements(char ***tab, int to_remove);
+int		remove_arr_elements(char ***arr, int to_remove);
 char	**clean_expand(char **expand);
 char	**alpha_order(char ***order);
-char	**parse_key_value(char *to_separate);
 void	update_env(t_env **env, t_env **hidden);
 void	extract_local_update(char ***cmd, t_env **local);
-int		go_to_oldpwd(t_sh *sh, char **target_dir);
-int		go_to_home(t_sh *sh, char **target_dir);
-void	update_oldpwd(t_sh *sh, t_env *pwd);
-void	update_pwd(t_sh *sh, char *cwd);
-int		bn_firstocc(char *s, char c);
+int		update_pwd(t_sh *sh, const char *arg, int code_err);
+int		firstocc(char *s, char c);
+int		continued_occurence(char *s, char c);
 
 #endif

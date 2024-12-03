@@ -36,19 +36,18 @@ SRC_EXC = executor/cmd.c executor/file.c        executor/pipe.c \
 	executor/pipeline.c  executor/redirection.c executor/subprocess.c \
 	executor/wait.c
 
-SRC_BLT = built-in/cd.c built-in/echo.c   built-in/env.c \
-	built-in/exit.c     built-in/export.c built-in/pwd.c \
-	built-in/set.c      built-in/shoot.c  built-in/unset.c \
-	built-in/bonus.c
+SRC_BLT = built-in/bonus.c built-in/cd.c    built-in/echo.c \
+	built-in/env.c         built-in/exit.c  built-in/export.c \
+	built-in/lulu.c        built-in/pwd.c   built-in/set.c \
+	built-in/shoot.c       built-in/unset.c
 
-SRC_UTL = utils/array_delete.c utils/array_get.c     utils/array_update.c \
-	utils/bn_firstocc.c        utils/convert_list.c  utils/convert_tab.c \
-	utils/echo_escaped_token.c utils/error.c         utils/getenv.c \
-	utils/hidden_list.c        utils/is_shell.c      utils/literal_token.c \
-	utils/parse_arg.c          utils/string.c        utils/update_shlvl.c \
-	utils/utils_cd.c           utils/utils_end.c     utils/utils_env.c \
-	utils/utils_export.c       utils/utils_export2.c utils/utils_list2.c \
-	utils/utils_list.c         utils/utils_shoot.c
+
+SRC_UTL = utils/array_delete.c utils/array_get.c          utils/array_update.c \
+	utils/convert_lst.c        utils/echo_escaped_token.c utils/error.c \
+	utils/getenv.c             utils/hidden_lst.c         utils/is_shell.c \
+	utils/keyvalue.c           utils/literal_token.c      utils/local.c \
+	utils/lst.c                utils/node.c               utils/occurence.c \
+	utils/parse_builtin.c      utils/shlvl.c              utils/string.c
 
 SRC = $(SRC_BLT) $(SRC_EXC) $(SRC_PRS) $(SRC_UTL) main.c
 OBJ = $(SRC:.c=.o)
@@ -78,8 +77,6 @@ clean:
 fclean: clean
 	@$(RM) $(NAME) $(LIBFT_BIN)
 
-fcklean: fclean
-
 re: fclean all
 
-.PHONY: all clean fclean re debug_env fcklean
+.PHONY: all clean fclean re debug_env

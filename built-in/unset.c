@@ -6,30 +6,13 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 15:11:24 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:51:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	node_clear(t_env *node)
-{
-	t_env	*tmp_p;
-	t_env	*tmp_n;
-
-	if (!node)
-		return ;
-	tmp_p = node->prev;
-	tmp_n = node->next;
-	if (tmp_p)
-		tmp_p->next = tmp_n;
-	if (tmp_n)
-		tmp_n->prev = tmp_p;
-	free(node->key);
-	if (node->withvalue == TRUE)
-		free(node->value);
-	free(node);
-}
+static void	node_clear(t_env *node);
 
 int	bigerrno_unset(t_sh *sh, char **arg)
 {
@@ -53,4 +36,23 @@ int	bigerrno_unset(t_sh *sh, char **arg)
 		n++;
 	}
 	return (0);
+}
+
+static void	node_clear(t_env *node)
+{
+	t_env	*tmp_p;
+	t_env	*tmp_n;
+
+	if (!node)
+		return ;
+	tmp_p = node->prev;
+	tmp_n = node->next;
+	if (tmp_p)
+		tmp_p->next = tmp_n;
+	if (tmp_n)
+		tmp_n->prev = tmp_p;
+	free(node->key);
+	if (node->withvalue == TRUE)
+		free(node->value);
+	free(node);
 }

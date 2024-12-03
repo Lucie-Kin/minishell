@@ -1,35 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_end.c                                        :+:      :+:    :+:   */
+/*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 13:43:54 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/23 18:18:41 by lchauffo         ###   ########.fr       */
+/*   Created: 2024/12/03 18:47:30 by libousse          #+#    #+#             */
+/*   Updated: 2024/12/03 18:47:48 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	lst_clear(t_env **lst)
+t_env	*add_node(t_env **lst, char *key, char *value)
 {
-	t_env	*current;
-	t_env	*next;
+	t_env	*new;
 
-	if (!lst || !*lst)
-		return ;
-	current = *lst;
-	while (current)
+	new = lst_new(key, value);
+	if (!new || !new->key)
 	{
-		next = current->next;
-		free(current->key);
-		if (current->value)
-			free(current->value);
-		free(current);
-		current = next;
+		if (new)
+			free(new);
+		return (lst_clear(lst), NULL);
 	}
-	*lst = NULL;
+	lstadd_back(lst, new);
+	return (new);
 }
 
 void	clear_node(t_env *node)

@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hidden_list.c                                      :+:      :+:    :+:   */
+/*   hidden_lst.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 15:19:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:18:09 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	process_token(t_env **hidden, char *token);
+static void	update_value(t_env *node, char *key, char *value, int is_append);
 
 int	only_var(char **arg)
 {
@@ -30,28 +33,22 @@ int	only_var(char **arg)
 	return (TRUE);
 }
 
-void	update_value(t_env *found_node, char *key, char *value, int is_append)
+int	update_hidden(t_env **hidden, char **token)
 {
-	char	*joined;
+	int	i;
 
-	if (is_append && found_node->value)
+	i = 0;
+	if (!token)
+		return (0);
+	while (token[i])
 	{
-		joined = ft_strjoin(found_node->value, value);
-		free(found_node->value);
-		found_node->value = joined;
-		free(key);
-		free(value);
+		process_token(hidden, token[i]);
+		++i;
 	}
-	else
-	{
-		if (found_node->value)
-			free(found_node->value);
-		found_node->value = value;
-		free(key);
-	}
+	return (0);
 }
 
-void	process_token(t_env **hidden, char *token)
+static void	process_token(t_env **hidden, char *token)
 {
 	t_env	*found_node;
 	t_env	*node;
@@ -59,7 +56,7 @@ void	process_token(t_env **hidden, char *token)
 	int		is_append;
 	char	*key_value[2];
 
-	first_equal_occurence = bn_firstocc(token, '=');
+	first_equal_occurence = firstocc(token, '=');
 	is_append = token[first_equal_occurence - 1] == '+';
 	key_value[0] = ft_substr(token, 0, first_equal_occurence - is_append);
 	key_value[1] = ft_strdup(token + first_equal_occurence + 1);
@@ -75,16 +72,23 @@ void	process_token(t_env **hidden, char *token)
 	}
 }
 
-void	update_hidden(t_env **hidden, char **token)
+static void	update_value(t_env *node, char *key, char *value, int is_append)
 {
-	int	i;
+	char	*joined;
 
-	i = 0;
-	if (!token)
-		return ;
-	while (token[i])
+	if (is_append && node->value)
 	{
-		process_token(hidden, token[i]);
-		++i;
+		joined = ft_strjoin(node->value, value);
+		free(node->value);
+		node->value = joined;
+		free(key);
+		free(value);
+	}
+	else
+	{
+		if (node->value)
+			free(node->value);
+		node->value = value;
+		free(key);
 	}
 }

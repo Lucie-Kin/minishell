@@ -6,13 +6,23 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 18:57:33 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:34:10 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void	insert_string(char ***arr, char *s, size_t i);
+
+int	output_error(int code, char *msg)
+{
+	if (code)
+	{
+		ft_putstr_fd(msg, 2);
+		free(msg);
+	}
+	return (code);
+}
 
 char	*compose_err_msg(const char *shell, const char *cmd, const char *arg,
 	const char *msg)
@@ -39,16 +49,6 @@ char	*compose_err_msg(const char *shell, const char *cmd, const char *arg,
 	str = concatenate_strings(arr, 0);
 	free_entire_array((void **)arr, free);
 	return (str);
-}
-
-int	output_error(int code, char *msg)
-{
-	if (code)
-	{
-		ft_putstr_fd(msg, 2);
-		free(msg);
-	}
-	return (code);
 }
 
 static void	insert_string(char ***arr, char *s, size_t i)
