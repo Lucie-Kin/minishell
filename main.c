@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:14:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 18:42:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:15:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	ft_bzero(&sh, sizeof(t_sh));
 	handle_default_background_color(0);
-	set_background_color_to(GNOME);
+	set_background_color(E_GNOME);
 	sh.first_arg = argv[0];
 	sh.valid_term = is_term_var_valid(&sh);
 	sh.pid = ft_itoa(get_pid(&sh, sh.first_arg));

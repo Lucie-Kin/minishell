@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 14:26:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 14:59:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:27:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 int	is_pattern_for_subdirs(const char *pattern)
 {

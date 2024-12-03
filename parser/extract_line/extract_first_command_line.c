@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:22:28 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 17:14:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:28:13 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	add_prefix_to_first_buffer_line(t_sh *sh, char *prefix);
 static int	check_need_for_input(t_sh *sh, size_t *index, char **prefix,

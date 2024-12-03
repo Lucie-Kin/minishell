@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 18:24:50 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:21:55 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static int	go_to_home(t_sh *sh, char **target_dir);
 static int	go_to_oldpwd(t_sh *sh, char **target_dir);

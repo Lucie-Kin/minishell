@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:15:09 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 12:21:40 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:31:36 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 char	*pl_skip_parentheses(char **tokens, size_t *i)
 {

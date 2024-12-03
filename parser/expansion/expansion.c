@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/26 20:55:26 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:25:34 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char	**get_expanded_token(t_sh *sh, const char *s);
 

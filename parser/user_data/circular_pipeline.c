@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:05:45 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 16:55:27 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:33:05 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 char	*circular_pipeline(t_sh *sh, const char *cmdl)
 {

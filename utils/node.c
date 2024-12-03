@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 18:47:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 18:47:48 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:18:59 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_env	*add_node(t_env **lst, char *key, char *value)
 {

@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:02:27 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/02 16:04:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:26:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static int	is_correct_file(const char *path, const char *pattern,
 				struct dirent *ent, int only_dirs);

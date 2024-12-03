@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:50:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 14:49:11 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:30:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char	*handle_end_of_quote(char *parsed, size_t *i, char **quote,
 				int *is_ansi_c_quote);

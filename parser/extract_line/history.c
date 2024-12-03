@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 17:45:00 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/12 14:34:13 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:28:24 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void		remove_unused_newline_chars(t_rl_arr **rl_arr);
 static void		remove_nl_if_only_one_and_unclosed_quote(char *s);

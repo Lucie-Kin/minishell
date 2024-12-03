@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:10:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 14:58:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:26:20 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	get_path_and_pattern(const char *s, char **path, char **pattern);
 static int	is_pattern_for_dirs(char **pattern);

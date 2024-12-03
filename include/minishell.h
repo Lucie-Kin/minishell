@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 19:29:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 00:13:34 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
-# include "libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -28,7 +27,9 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include "../libft/libft.h"
 
+# define SHELL "bigerrno"
 # define FALSE 0
 # define TRUE  1
 # define SEP     28
@@ -37,7 +38,6 @@
 # define LOGOP_OR    1
 # define LOGOP_AND   2
 
-# define SHELL "bigerrno"
 # define MSG_EXPORT "declare -x"
 # define ERR_EXPORT "not a valid identifier"
 # define ERR_NB_ARGS "too many arguments"
@@ -47,7 +47,7 @@
 
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
-// colors
+/* colors */
 # define GNOME "\033]11;rgb:3030/0a0a/2424\007"
 # define PEACH "\033]11;rgb:aaaa/5555/5050\007"
 # define AZUL "\033]11;rgb:afaf/d0d0/e1e1\007"
@@ -160,9 +160,8 @@ void	interpret_and_process_cmd(t_sh *sh);
 
 void	handle_no_tty(void);
 void	handle_default_background_color(int set);
-void	set_bg_color(enum e_color *color);
-void	set_background_color_to(char *color);
 void	reset_title_and_background_color(void);
+void	set_background_color(enum e_color color);
 int		is_term_var_valid(t_sh *sh);
 char	*circular_pipeline(t_sh *sh, const char *cmdl);
 int		get_pid(t_sh *sh, const char *first_arg);
@@ -195,6 +194,23 @@ int		restore_io(t_pl *pl);
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
 void	wait_for_subprocesses(t_sh *sh, int *pid);
 
+/* Built-ins ---------------------------------------------------------------- */
+
+int		isbuiltin(char **cmd);
+int		execute_builtin(t_sh *sh);
+
+int		bigerrno_cd(t_sh *sh, char **arg);
+int		bigerrno_echo(char **arg);
+int		bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg);
+int		bigerrno_exit(t_sh *sh, char **arg);
+int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
+int		bigerrno_pwd(t_sh *sh);
+int		bigerrno_unset(t_sh *sh, char **arg);
+int		bigerrno_hidden(t_env **hidden, char **arg);
+void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
+int		bigerrno_shoot(enum e_color *color, char **arg);
+int		bigerrno_lulu(enum e_color *color);
+
 /* Utils -------------------------------------------------------------------- */
 
 char	*compose_err_msg(const char *shell, const char *cmd, const char *arg,
@@ -219,41 +235,17 @@ void	free_entire_array(void **array, void (*free_element)(void *));
 
 int		only_var(char **arg);
 int		update_hidden(t_env **hidden, char **token);
-
 void	update_shlvl(t_env **env, int inpipe);
-
-/* Utils lst ---------------------------------------------------------------- */
-
 t_env	*convert_to_lst(char **env);
 t_env	*lstadd_back(t_env **lst, t_env *new);
 t_env	*lst_new(const char *key, const char *value);
 void	lst_clear(t_env **lst);
 int		lst_size(t_env **lst);
 t_env	*add_node(t_env **lst, char *key, char *value);
+t_env	*find_key(t_env **lst, char *key);
 char	*get_var_value(t_sh *sh, char *key);
 void	add_pwd(t_sh *sh);
-t_env	*find_key(t_env **lst, char *key);
-
-/* Built-ins ---------------------------------------------------------------- */
-
-int		isbuiltin(char **cmd);
-int		execute_builtin(t_sh *sh);
-
-int		bigerrno_cd(t_sh *sh, char **arg);
-int		bigerrno_echo(char **arg);
-int		bigerrno_env(t_env **env, t_env **hidden, t_env **local, char **arg);
-int		bigerrno_exit(t_sh *sh, char **arg);
-int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
-int		bigerrno_pwd(t_sh *sh);
-int		bigerrno_unset(t_sh *sh, char **arg);
-int		bigerrno_hidden(t_env **hidden, char **arg);
-int		bigerrno_shoot(enum e_color *color, char **arg);
-int		bigerrno_lulu(enum e_color *color);
-void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
-
-/* Built-in utils ----------------------------------------------------------- */
-
-void	swap_p(char **to_be_swap, char **swap_with);
+int		update_pwd(t_sh *sh, const char *arg, int code_err);
 int		valid_keyvalue(char *key_value);
 void	print_in_p_order(t_env **to_print, t_env **not_to_print);
 char	*get_literal_token(const char *s);
@@ -262,16 +254,10 @@ void	swap_node_content(t_env *s1, t_env *s2);
 t_env	*find_smallest_p(t_env **p_order);
 t_env	*find_biggest_p(t_env **p_order);
 t_env	*next_smallest(t_env **p_order, t_env *smallest);
-void	lst_clear(t_env **lst);
 void	clear_node(t_env *node);
 t_env	*alpha_order_lst(t_env **env);
-int		init_expand(char ***expand);
-int		remove_arr_elements(char ***arr, int to_remove);
-char	**clean_expand(char **expand);
-char	**alpha_order(char ***order);
 void	update_env(t_env **env, t_env **hidden);
 void	extract_local_update(char ***cmd, t_env **local);
-int		update_pwd(t_sh *sh, const char *arg, int code_err);
 int		firstocc(char *s, char c);
 int		continued_occurence(char *s, char c);
 

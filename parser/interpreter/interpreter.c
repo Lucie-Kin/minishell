@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:25:21 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/26 13:27:30 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:33:31 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	process_current_ex_pl(t_sh *sh, t_ex *ex);
 static void	replace_delimiters_by_filenames(t_sh *sh);

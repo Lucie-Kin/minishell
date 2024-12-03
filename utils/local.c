@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 18:16:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 19:01:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:20:58 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static void	update_local(char ***cmd, t_env **local, int *i);
 static char	**parse_key_value(char *to_separate);

@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 16:51:46 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:22:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static void	node_clear(t_env *node);
 

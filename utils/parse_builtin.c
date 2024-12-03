@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 19:18:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:20:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static int	skip_var(char **cmd);
 

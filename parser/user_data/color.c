@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/30 20:57:09 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:16:10 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,20 @@ void	handle_default_background_color(int set)
 	return ;
 }
 
-void	set_background_color_to(char *color)
+void	set_background_color(enum e_color color)
 {
-	ft_putstr_fd(color, 1);
-	return ;
-}
-
-void	set_bg_color(enum e_color *color)
-{
-	if (*color == E_GNOME)
-		set_background_color_to(GNOME);
-	else if (*color == E_PEACH)
-		set_background_color_to(PEACH);
-	else if (*color == E_POWDER)
-		set_background_color_to(POWDER);
-	else if (*color == E_PINK)
-		set_background_color_to(PINK);
-	else if (*color == E_AZUL)
-		set_background_color_to(AZUL);
-	else if (*color == E_PURPLE)
-		set_background_color_to(PURPLE);
+	if (color == E_GNOME)
+		ft_putstr_fd(GNOME, 1);
+	else if (color == E_PEACH)
+		ft_putstr_fd(PEACH, 1);
+	else if (color == E_POWDER)
+		ft_putstr_fd(POWDER, 1);
+	else if (color == E_PINK)
+		ft_putstr_fd(PINK, 1);
+	else if (color == E_AZUL)
+		ft_putstr_fd(AZUL, 1);
+	else if (color == E_PURPLE)
+		ft_putstr_fd(PURPLE, 1);
 	return ;
 }
 

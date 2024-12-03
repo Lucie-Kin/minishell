@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 18:02:57 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:33:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char	*get_prompt_user(t_sh *sh);
 static char	*get_prompt_path(t_sh *sh);

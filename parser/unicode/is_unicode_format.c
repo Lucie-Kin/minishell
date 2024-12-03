@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:35:40 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/15 16:27:46 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:32:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 int	is_unicode_format(const char *s)
 {

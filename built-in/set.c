@@ -6,18 +6,18 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:21:10 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/25 14:18:39 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:41:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	bigerrno_hidden(t_env **hidden, char **arg)
 {
 	if (arg[0] && !arg[1])
 	{
 		if (!hidden && !*hidden)
-			perror("Nothing_to_print");
+			ft_putstr_fd("Nothing_to_print\n", 2);
 		else
 			print_in_p_order(hidden, NULL);
 	}

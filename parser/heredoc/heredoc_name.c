@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:40:23 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/11 16:40:47 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:29:42 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 char	*compose_heredoc_name(size_t index)
 {

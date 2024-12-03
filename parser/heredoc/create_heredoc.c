@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 14:47:58 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:29:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter);
 static int	compare_delimiter_and_line(const char *del, const char *line);

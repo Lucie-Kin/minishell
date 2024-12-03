@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:42:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 15:32:07 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:27:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	cut_input_into_lines(t_sh *sh, char *input);
 static char	*place_split_points_for_input(char *input);

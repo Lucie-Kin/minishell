@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 17:20:02 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:44:28 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 #define DOT "\e[35m•\e[0m"
 
@@ -21,17 +21,20 @@ static void	animate_shoot(int cols);
 
 int	bigerrno_shoot(enum e_color *color, char **arg)
 {
-	int		rows_cols[2];
+	int	rows_cols[2];
 
 	if (get_array_length((void **)arg) > 1)
-		perror("Don't shoot anything");
-	write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
-	write(1, "  minishell$ ", 14);
-	write(1, PROMPT_COLOR_CLOSE, ft_strlen(PROMPT_COLOR_CLOSE));
-	get_terminal_size(rows_cols);
-	animate_shoot(rows_cols[1]);
-	*color = E_PINK;
-	return (TRUE);
+		ft_putstr_fd("Don't shoot anything!\n", 2);
+	else
+	{
+		write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
+		write(1, "  bigerrno$ ", 13);
+		write(1, PROMPT_COLOR_CLOSE, ft_strlen(PROMPT_COLOR_CLOSE));
+		get_terminal_size(rows_cols);
+		animate_shoot(rows_cols[1]);
+		*color = E_PINK;
+	}
+	return (0);
 }
 
 static void	get_terminal_size(int *rows_cols)
@@ -45,11 +48,11 @@ static void	get_terminal_size(int *rows_cols)
 	ft_memcpy(&newt, &oldt, sizeof(struct termios));
 	newt.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-	if (pipe(pipefd) == -1)
-		return (perror("Impossible pipe creation\n"));
+	if (pipe(pipefd) < 0)
+		return (ft_putstr_fd("Impossible pipe creation\n", 2));
 	cpid = fork();
-	if (cpid == -1)
-		return (perror("Impossible child creation\n"));
+	if (cpid < 0)
+		return (ft_putstr_fd("Impossible child creation\n", 2));
 	if (cpid == 0)
 		execute_in_child(pipefd);
 	else

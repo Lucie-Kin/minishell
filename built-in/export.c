@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 19:04:04 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:21:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static void	print_lst(t_env **lst, int export);
 static void	add_or_update_var(t_env **env, char *key_value);

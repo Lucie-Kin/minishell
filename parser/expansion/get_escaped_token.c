@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 19:25:17 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 11:43:56 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:26:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static int	is_escaped_character(const char *s);
 static void	replace_with_special_character(char *s);

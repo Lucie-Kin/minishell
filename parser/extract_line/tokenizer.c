@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:13:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/25 17:55:03 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:29:11 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char		*surround_metacharacters_with_spaces(char *s);
 static char		*insert_spaces(char *s, size_t i);

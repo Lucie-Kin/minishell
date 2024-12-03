@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:31:53 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 18:33:14 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:20:01 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_env	*find_key(t_env **lst, char *key)
 {

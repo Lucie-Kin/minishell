@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:47:46 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 11:45:39 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:32:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char		*get_utf8_char(const char *unicode);
 static void		four_byte_encoding(char *encoded, int codepoint);

@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 18:21:48 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:57:02 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:31:52 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char	**get_split_path(t_sh *sh);
 static char	**append_slash_to_path_strings(char **path);

@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 13:57:54 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:23:08 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	bigerrno_exit(t_sh *sh, char **arg)
 {

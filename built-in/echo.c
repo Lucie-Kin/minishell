@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 15:43:25 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:23:44 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static int	echo_option(char **arg, int *skip_newline, int *with_backlash,
 				int *count);

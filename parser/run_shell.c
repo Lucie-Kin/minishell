@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 14:56:47 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:11:46 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	run_shell(t_sh *sh)
 	while (sh->subshell == 0 && sh->keep_running)
 	{
 		update_prompt(sh);
-		set_bg_color(&sh->color);
+		set_background_color(sh->color);
 		add_input_to_buffer(sh, sh->rl.prompt);
 		while (sh->keep_running && sh->rl.buf && sh->rl.buf[0])
 			process_current_line(sh);

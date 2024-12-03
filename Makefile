@@ -1,11 +1,10 @@
-CC = cc 
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
 DBUG_FLAG = -DDBUG=1
 RM = rm -f
 
 NAME = minishell
-HDR = minishell.h
 
 SRC_PRS = parser/bridge.c                        parser/run_shell.c \
 	parser/expansion/ansi_c_quoting.c            parser/expansion/expansion.c \
@@ -67,8 +66,8 @@ $(LIBFT_BIN):
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-%.o: %.c $(HDR)
-	@$(CC) $(CFLAGS) -I. -o $@ -c $<
+%.o: %.c
+	@$(CC) $(CFLAGS) -Iinclude -o $@ -c $<
 
 clean:
 	@$(RM) $(OBJ)

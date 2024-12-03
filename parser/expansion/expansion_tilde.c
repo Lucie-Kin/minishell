@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/24 19:56:24 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:25:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static size_t	get_tilde_index(const char *s);
 static char		*get_full_tilde_string(const char *s, size_t i, size_t len,

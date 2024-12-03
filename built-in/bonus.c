@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 21:17:00 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 15:39:35 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:22:13 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err)
 {

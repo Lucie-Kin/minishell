@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 19:03:50 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/26 12:56:43 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:20:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	update_shlvl(t_env **env, int inpipe)
 {

@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 12:56:49 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 19:12:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:20:15 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static t_env	*lst_dup(t_env *src);
 static void		manage_env(t_env **hidden, t_env *env_var, t_env *current,

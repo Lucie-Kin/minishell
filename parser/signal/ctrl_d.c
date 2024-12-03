@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 14:55:57 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/13 15:06:39 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:32:17 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	check_cases(t_sh *sh, int *is_legal);
 static int	case_unclosed_quote(t_sh *sh, int *is_legal, size_t arr_len);

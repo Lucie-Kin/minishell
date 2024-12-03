@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 18:06:34 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 17:13:12 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:28:32 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 char	*concatenate_all_cmdl_lines(t_sh *sh)
 {

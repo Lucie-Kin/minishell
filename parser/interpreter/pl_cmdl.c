@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 16:54:43 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/20 12:27:39 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:30:53 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static char	**extract_cmdl_element(char	**tokens, size_t *i);
 

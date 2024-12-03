@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:29:07 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/22 14:53:24 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:25:25 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static int	is_ansi_c_quoting(char *s, char **quote);
 static void	remove_dollar(size_t *i, char **quote);

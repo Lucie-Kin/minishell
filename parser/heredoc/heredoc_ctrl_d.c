@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:36:47 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/11 16:38:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:29:32 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static void	display_heredoc_warning(const char *delimiter);
 

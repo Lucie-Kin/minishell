@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 13:55:04 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/21 15:34:13 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:31:23 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 int	get_logop_and_remove_token(char **tokens)
 {

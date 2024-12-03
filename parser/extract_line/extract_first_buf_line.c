@@ -6,11 +6,11 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 12:10:20 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/01 12:10:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:28:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 void	extract_first_buffer_line(t_sh *sh, size_t *index, int is_heredoc)
 {

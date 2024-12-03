@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:00:15 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:29:01 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parser.h"
+#include "parser.h"
 
 static int	check_meta_token(char **tok, size_t i, char **err_msg);
 static int	err_on_curr(char **tok, size_t i);
