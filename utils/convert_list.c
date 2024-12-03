@@ -6,11 +6,29 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 17:28:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 14:31:35 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:19:45 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	bn_strnlen(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (-1);
+	while (s[i])
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	if (c == '\n')
+		return (-1);
+	return (i);
+}
 
 // void	list_in_p_order(t_env **env)
 // {
@@ -102,7 +120,7 @@ void	copy_to_list(char **env, t_env **lst)
 	while (env[i])
 	{
 		size = bn_strnlen(env[i], '=');
-		key = bn_strldup(env[i], size);
+		key = ft_substr(env[i], 0, size);
 		if (!key)
 			break ;
 		value = ft_strdup(getenv(key));

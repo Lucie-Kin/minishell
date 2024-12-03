@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:10:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/02 17:18:50 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:58:03 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ static void	get_path_and_pattern(const char *s, char **path, char **pattern)
 }
 
 /*
-	The `bn_onlychar` bit is in order to abort if the pattern is about subdirs, 
-	as this feature is not implemented. The pattern matching only happens in 
-	the current directory of said path.
+	The `is_pattern_for_subdirs` bit is in order to abort if the pattern is 
+	about subdirs, as this feature is not implemented. The pattern matching 
+	only happens in the current directory of said path.
 
 	Also note that there can be more than one asterisk in a row, interpret them 
 	as one. Having more than one asterisk is only relevant when searching 
@@ -89,7 +89,7 @@ static int	is_pattern_for_dirs(char **pattern)
 	p_slash = ft_strchr(*pattern, '/');
 	if (p_slash)
 	{
-		if (!bn_onlychar(p_slash, '/'))
+		if (is_pattern_for_subdirs(p_slash))
 		{
 			free(*pattern);
 			*pattern = 0;

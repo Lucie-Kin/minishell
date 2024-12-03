@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 20:51:50 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 17:03:05 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:48:04 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,6 @@ void	execute_in_parent(int pipefd[2], int *rows_cols)
 	}
 	else
 		printf("Erreur lors de la récupération des dimensions du terminal.\n");
-	bn_freetab(split);
+	free_entire_array((void **)split, free);
 	close(pipefd[0]);
 }

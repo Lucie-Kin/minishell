@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/27 18:56:36 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:57:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 	sh->keep_running = FALSE;
 	if (sh->subshell == 0)
 		printf("exit\n");
-	if (bn_linelen(arg) > 2)
+	if (get_array_length((void **)arg) > 2)
 	{
 		return (output_error(1, compose_err_msg
 				(SHELL, arg[0], NULL, ERR_NB_ARGS)));

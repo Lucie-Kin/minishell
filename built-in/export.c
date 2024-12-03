@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 15:57:12 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:20:14 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ void	update_var(t_env *var, char *key_value, int separator)
 static char	*extract_key(int separator, char *key_value)
 {
 	if (separator > 0 && key_value[separator - 1] == '+')
-		return (bn_strldup(key_value, separator - 1));
+		return (ft_substr(key_value, 0, separator - 1));
 	else if (separator > 0)
-		return (bn_strldup(key_value, separator));
+		return (ft_substr(key_value, 0, separator));
 	return (ft_strdup(key_value));
 }
 
@@ -107,7 +107,7 @@ int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 	n = 1;
 	update_env(env, hidden);
 	alpha_order = alpha_order_list(env);
-	if (bn_linelen(arg) == 1)
+	if (get_array_length((void **)arg) == 1)
 		print_list(&alpha_order, TRUE);
 	else
 	{

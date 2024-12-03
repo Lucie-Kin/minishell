@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 17:17:07 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:59:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	bigerrno_shoot(enum e_color *color, char **arg)
 {
 	int		rows_cols[2];
 
-	if (bn_linelen(arg) > 1)
+	if (get_array_length((void **)arg) > 1)
 		perror("Don't shoot anything");
 	write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
 	write(1, "  minishell$ ", 14);

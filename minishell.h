@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 00:08:35 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:34:43 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
-# include "libbn/libbn.h"
 # include "libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -282,5 +281,6 @@ int		go_to_oldpwd(t_sh *sh, char **target_dir);
 int		go_to_home(t_sh *sh, char **target_dir);
 void	update_oldpwd(t_sh *sh, t_env *pwd);
 void	update_pwd(t_sh *sh, char *cwd);
+int		bn_firstocc(char *s, char c);
 
 #endif

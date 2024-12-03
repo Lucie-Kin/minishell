@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 22:04:20 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:19:24 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	process_token(t_env **hidden, char *token)
 
 	first_equal_occurence = bn_firstocc(token, '=');
 	is_append = token[first_equal_occurence - 1] == '+';
-	key_value[0] = bn_strldup(token, first_equal_occurence - is_append);
+	key_value[0] = ft_substr(token, 0, first_equal_occurence - is_append);
 	key_value[1] = ft_strdup(token + first_equal_occurence + 1);
 	found_node = find_key(hidden, key_value[0]);
 	if (found_node)

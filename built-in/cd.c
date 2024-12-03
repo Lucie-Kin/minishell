@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 23:54:38 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:57:09 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 
 	code_err = 0;
 	update_env(&sh->env, &sh->hidden);
-	if (bn_linelen(arg) > 2)
+	if (get_array_length((void **)arg) > 2)
 		return (output_error(EPERM, compose_err_msg
 				(SHELL, "cd", NULL, ERR_NB_ARGS)));
 	if (!arg[1])
