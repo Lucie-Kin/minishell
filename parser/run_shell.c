@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 14:56:47 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:00:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	free_shell(t_sh *sh)
 	free(sh->shells);
 	free(sh->rl.user);
 	free(sh->rl.prompt);
+	free(sh->prompt_color1);
+	free(sh->prompt_color2);
 	free_entire_array((void **)sh->rl.buf, free);
 	free_entire_array((void **)sh->rl.arr, free_rl_arr_element);
 	free_entire_array((void **)sh->rl.tokens, free);

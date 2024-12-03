@@ -1,5 +1,5 @@
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
 DBUG_FLAG = -DDBUG=1
 RM = rm -f
@@ -39,7 +39,7 @@ SRC_EXC = executor/cmd.c        executor/file.c        executor/pipe.c \
 SRC_BLT = built-in/cd.c         built-in/echo.c         built-in/env.c \
 	built-in/exit.c       built-in/export.c       built-in/pwd.c \
 	built-in/set.c        built-in/shoot.c        built-in/unset.c \
-	built-in/bonus.c
+	built-in/bonus.c      built-in/matrix.c
 
 SRC_LBN = libbn/bn_countiter.c  libbn/bn_firstocc.c    libbn/bn_freetab.c \
 	libbn/bn_isstrstr.c   libbn/bn_joinline.c    libbn/bn_linelen.c \

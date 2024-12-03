@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 21:20:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:56:00 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@
 
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
+# define PRPT_COL_GRN "\001\e[1;32m\002"
+# define PRPT_COL_DGN "\001\e[1;92m\002"
+# define PRPT_COL_BLU "\001\e[1;34m\002"
+# define PRPT_COL_MAG "\001\e[1;35m\002"
 // colors
 # define GNOME "\033]11;rgb:3030/0a0a/2424\007"
 # define PEACH "\033]11;rgb:aaaa/5555/5050\007"
@@ -63,6 +67,7 @@
 # define POWDER "\033]11;rgb:1010/5050/aaaa\007"
 # define PURPLE "\033]11;rgb:3030/0a0a/5050\007"
 # define PINK "\033]11;rgb:aaaa/5555/9999\007"
+# define BLACK "\033]11;rgb:0000/0000/0000\007"
 
 enum e_color
 {
@@ -159,6 +164,8 @@ typedef struct s_sh
 	t_rl			rl;
 	t_ex			*ex;
 	enum e_color	color;
+	char			*prompt_color1;
+	char			*prompt_color2;
 }	t_sh;
 
 /* Parser ------------------------------------------------------------------- */
@@ -169,6 +176,7 @@ void	interpret_and_process_cmd(t_sh *sh);
 
 void	handle_no_tty(void);
 void	handle_default_background_color(int set);
+void	update_prompt(t_sh *sh);
 void	set_bg_color(enum e_color *color);
 void	set_background_color_to(char *color);
 void	reset_title_and_background_color(void);
@@ -260,8 +268,9 @@ int		bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg);
 int		bigerrno_pwd(t_sh *sh);
 int		bigerrno_unset(t_sh *sh, char **arg);
 int		bigerrno_hidden(t_env **hidden, char **arg);
-int		bigerrno_shoot(enum e_color *color, char **arg);
+int		bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg);
 int		bigerrno_lulu(enum e_color *color);
+int		bigerrno_matrix(t_sh *sh, enum e_color *color, char **arg);
 void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
 
 /* Built-in utils ----------------------------------------------------------- */
@@ -290,5 +299,6 @@ int		go_to_oldpwd(t_sh *sh, char **target_dir);
 int		go_to_home(t_sh *sh, char **target_dir);
 void	update_oldpwd(t_sh *sh, t_env *pwd);
 void	update_pwd(t_sh *sh);
+void	get_terminal_size(int *rows_cols);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/02 17:17:07 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:43:14 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	trim_newline(char *str);
 void	execute_in_child(int pipefd[2]);
 void	execute_in_parent(int pipefd[2], int *rows_cols);
 
-void	draw_bullet(char **dot, int *pixel_pos, float *v)
+static void	draw_bullet(char **dot, int *pixel_pos, float *v)
 {
 	int		i;
 	int		j;
@@ -35,7 +35,7 @@ void	draw_bullet(char **dot, int *pixel_pos, float *v)
 		*v = 10.0;
 }
 
-void	animate_shoot(int rows, int cols)
+static void	animate_shoot(int cols)
 {
 	int		pixel_pos;
 	int		i;
@@ -44,7 +44,6 @@ void	animate_shoot(int rows, int cols)
 
 	pixel_pos = 0;
 	v = 0.1;
-	(void)rows;
 	dot = ft_strdup("\e[35m•\e[0m");
 	while (pixel_pos < cols && !g_signum)
 		draw_bullet(&dot, &pixel_pos, &v);
@@ -82,17 +81,25 @@ void	get_terminal_size(int *rows_cols)
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }
 
-int	bigerrno_shoot(enum e_color *color, char **arg)
+int	bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg)
 {
 	int		rows_cols[2];
 
 	if (bn_linelen(arg) > 1)
 		perror("Don't shoot anything");
+	if (sh->prompt_color1)
+		free(sh->prompt_color1);
+	sh->prompt_color1 = ft_strdup(PRPT_COL_MAG);
+	if (sh->prompt_color2)
+		free(sh->prompt_color2);
+	sh->prompt_color2 = ft_strdup(PRPT_COL_MAG);
+	update_prompt(sh);
 	write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
 	write(1, "  minishell$ ", 14);
 	write(1, PROMPT_COLOR_CLOSE, ft_strlen(PROMPT_COLOR_CLOSE));
 	get_terminal_size(rows_cols);
-	animate_shoot(rows_cols[0], rows_cols[1]);
+	animate_shoot(rows_cols[1]);
 	*color = E_PINK;
+	ft_putstr_fd("\033[H\033[J", 1);
 	return (TRUE);
 }

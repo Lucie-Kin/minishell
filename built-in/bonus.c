@@ -6,21 +6,24 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 21:17:00 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/11/30 21:17:03 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:25:52 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err)
+int	bigerrno_disco(enum e_color *color)
 {
-	if (ft_strcmp(cmdl[0], "lulu") == 0)
-		*code_err = bigerrno_lulu(&sh->color);
-	else if (ft_strcmp(cmdl[0], "shoot") == 0)
-		*code_err = bigerrno_shoot(&sh->color, cmdl);
+	int	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		while ("DISCO YAY")
+			bigerrno_lulu(color);
+	}
+	return (0);
 }
-	// else if (ft_strcmp(cmdl[0], "hidden") == 0)
-	// 	code_err = bigerrno_hidden(&sh->hidden, cmdl);
 
 int	bigerrno_lulu(enum e_color *color)
 {
@@ -30,3 +33,19 @@ int	bigerrno_lulu(enum e_color *color)
 	set_bg_color(color);
 	return (0);
 }
+
+void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err)
+{
+	if (ft_strcmp(cmdl[0], "lulu") == 0)
+		*code_err = bigerrno_lulu(&sh->color);
+	else if (ft_strcmp(cmdl[0], "disco") == 0)
+		*code_err = bigerrno_disco(&sh->color);
+	else if (ft_strcmp(cmdl[0], "shoot") == 0)
+		*code_err = bigerrno_shoot(sh, &sh->color, cmdl);
+	else if (ft_strcmp(cmdl[0], "matrix") == 0)
+	{
+		*code_err = bigerrno_matrix(sh, &sh->color, cmdl);
+	}
+}
+	// else if (ft_strcmp(cmdl[0], "hidden") == 0)
+	// 	code_err = bigerrno_hidden(&sh->hidden, cmdl);
