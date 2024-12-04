@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:25:34 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:32:45 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ void	expansion(t_sh *sh)
 	return ;
 }
 
+/*
+	TODO:
+
+	export A="ls -l"
+	$A
+	-> Should execute `ls -l`
+*/
 static char	**get_expanded_token(t_sh *sh, const char *s)
 {
 	char	**arr;
