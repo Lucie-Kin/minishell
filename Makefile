@@ -61,7 +61,7 @@ OBJ = $(SRC:.c=.o)
 LIBFT_DIR = libft
 LIBFT_BIN = $(LIBFT_DIR)/libft.a
 
-all: $(LIBFT_BIN) $(NAME)
+all: animation $(LIBFT_BIN) $(NAME)
 
 debug_env: CFLAGS += $(DBUG_FLAG)
 
@@ -76,6 +76,9 @@ $(NAME): $(OBJ)
 %.o: %.c $(HDR)
 	@$(CC) $(CFLAGS) -I. -o $@ -c $<
 
+animation:
+	@bash animation.sh
+
 clean:
 	@$(RM) $(OBJ)
 	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
@@ -87,4 +90,4 @@ fcklean: fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re debug_env fcklean
+.PHONY: all clean fclean re debug_env fcklean animation

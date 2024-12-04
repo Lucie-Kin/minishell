@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/02 20:13:03 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:12:03 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ void	set_bg_color(enum e_color *color)
 		set_background_color_to(PEACH);
 	else if (*color == E_POWDER)
 		set_background_color_to(POWDER);
-	else if (*color == E_PINK)
-		set_background_color_to(PINK);
 	else if (*color == E_AZUL)
 		set_background_color_to(AZUL);
 	else if (*color == E_PURPLE)
 		set_background_color_to(PURPLE);
+	else if (*color == E_PINK)
+		set_background_color_to(PINK);
 	return ;
 }
 

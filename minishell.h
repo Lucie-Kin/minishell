@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 19:56:00 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:39:10 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ int		bigerrno_unset(t_sh *sh, char **arg);
 int		bigerrno_hidden(t_env **hidden, char **arg);
 int		bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg);
 int		bigerrno_lulu(enum e_color *color);
-int		bigerrno_matrix(t_sh *sh, enum e_color *color, char **arg);
+int		bigerrno_matrix(t_sh *sh, char **arg);
 void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
 
 /* Built-in utils ----------------------------------------------------------- */

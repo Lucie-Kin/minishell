@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 14:43:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:48:11 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg)
 	get_terminal_size(rows_cols);
 	animate_shoot(rows_cols[1]);
 	*color = E_PINK;
+	ft_putstr_fd("\a", 1);
 	ft_putstr_fd("\033[H\033[J", 1);
 	return (TRUE);
 }
