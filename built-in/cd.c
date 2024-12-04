@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:13:59 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/04 18:15:52 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:23:48 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	bigerrno_cd(t_sh *sh, char **arg)
 		return (output_error(EPERM, compose_err_msg
 				(SHELL, "cd", target_dir, strerror(ENOENT))));
 	}
-	else if (arg[1] && ft_strcmp(arg[1], "-") == 0)
+	else if (arg[1] && target_dir && ft_strcmp(arg[1], "-") == 0)
 		printf("%s\n", target_dir);
 	return (update_pwd(sh, arg[1], code_err));
 }
@@ -67,6 +67,7 @@ static int	go_to_oldpwd(t_sh *sh, char **target_dir)
 {
 	t_env	*oldpwd;
 
+	*target_dir = NULL;
 	oldpwd = find_key(&sh->local, "OLDPWD");
 	if (!oldpwd)
 		oldpwd = find_key(&sh->env, "OLDPWD");
