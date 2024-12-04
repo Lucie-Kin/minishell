@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   handle_no_tty.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 16:32:16 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/14 16:37:54 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:55:33 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	execute_each_line(int fd);
 
 void	handle_no_tty(void)
 {
@@ -28,11 +26,12 @@ void	handle_no_tty(void)
 	set_signal_handling(SIGPIPE, SIG_DFL);
 	if (res)
 		exit(EPIPE);
-	if (!isatty(STDIN_FILENO))
-		execute_each_line(STDIN_FILENO);
+	if (!isatty(STDIN_FILENO) || !is_stdout_tty)
+		exit(EPERM);
 	return ;
 }
 
+/*
 static void	execute_each_line(int fd)
 {
 	size_t	i;
@@ -57,3 +56,4 @@ static void	execute_each_line(int fd)
 	exit(EPERM);
 	return ;
 }
+*/
