@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:38:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 19:14:09 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:27:14 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int		execute_subshell(t_sh *sh, t_pl *pl);
 static void		run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath);
 static t_env	*merge_lst(t_env *lst1, t_env *lst2);
-static char		**convert_to_arr(t_env *env);
 
 int	execute_subprocess(t_sh *sh, t_pl *pl)
 {
@@ -119,7 +118,7 @@ static t_env	*merge_lst(t_env *lst1, t_env *lst2)
 	return (merge);
 }
 
-static char	**convert_to_arr(t_env *env)
+char	**convert_to_arr(t_env *env)
 {
 	char	**env_arr;
 	char	*tmp;

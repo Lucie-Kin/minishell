@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:33:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:39:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 static char	*get_prompt_user(t_sh *sh);
 static char	*get_prompt_path(t_sh *sh);
-static char	*get_stylized_prompt(const char *user, const char *path);
+static char	*get_stylized_prompt(const char *user, const char *path, \
+char **col1, char **col2);
 
 void	init_prompt(t_sh *sh)
 {
+	sh->prompt_color1 = PRPT_COL_GRN;
+	sh->prompt_color2 = PRPT_COL_BLU;
 	sh->rl.user = get_prompt_user(sh);
 	sh->rl.prompt = 0;
 	return ;
@@ -35,7 +38,8 @@ void	update_prompt(t_sh *sh)
 		return ;
 	}
 	free(sh->rl.prompt);
-	sh->rl.prompt = get_stylized_prompt(sh->rl.user, str_path);
+	sh->rl.prompt = get_stylized_prompt(sh->rl.user, str_path, \
+	&sh->prompt_color1, &sh->prompt_color2);
 	free(str_path);
 	return ;
 }
@@ -86,10 +90,12 @@ static char	*get_prompt_path(t_sh *sh)
 	return (str_result);
 }
 
-static char	*get_stylized_prompt(const char *user, const char *path)
+static char	*get_stylized_prompt(const char *user, const char *path, \
+char **col1, char **col2)
 {
 	char	*tmp1;
 	char	*tmp2;
+	char	*tmp3;
 
 	tmp1 = ft_strjoin("\001\e]0;", user);
 	tmp2 = ft_strjoin(tmp1, ": ");
@@ -98,11 +104,13 @@ static char	*get_stylized_prompt(const char *user, const char *path)
 	free(tmp2);
 	tmp2 = ft_strjoin(tmp1, "\a\002");
 	free(tmp1);
-	tmp1 = ft_strjoin(tmp2, "\001\e[1;32m\002");
+	tmp1 = ft_strjoin(tmp2, *col1);
 	free(tmp2);
 	tmp2 = ft_strjoin(tmp1, user);
 	free(tmp1);
-	tmp1 = ft_strjoin(tmp2, "\001\e[0m\002:\001\e[1;34m\002");
+	tmp3 = ft_strjoin("\001\e[0m\002:", *col2);
+	tmp1 = ft_strjoin(tmp2, tmp3);
+	free(tmp3);
 	free(tmp2);
 	tmp2 = ft_strjoin(tmp1, path);
 	free(tmp1);

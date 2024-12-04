@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:16:10 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:16:42 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ void	set_background_color(enum e_color color)
 		ft_putstr_fd(PEACH, 1);
 	else if (color == E_POWDER)
 		ft_putstr_fd(POWDER, 1);
-	else if (color == E_PINK)
-		ft_putstr_fd(PINK, 1);
 	else if (color == E_AZUL)
 		ft_putstr_fd(AZUL, 1);
 	else if (color == E_PURPLE)
 		ft_putstr_fd(PURPLE, 1);
+	else if (color == E_PINK)
+		ft_putstr_fd(PINK, 1);
 	return ;
 }
 

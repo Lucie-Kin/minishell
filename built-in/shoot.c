@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:44:28 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:37:14 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	execute_in_child(int pipefd[2]);
 static void	execute_in_parent(int pipefd[2], int *rows_cols);
 static void	animate_shoot(int cols);
 
-int	bigerrno_shoot(enum e_color *color, char **arg)
+int	bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg)
 {
 	int	rows_cols[2];
 
@@ -27,12 +27,17 @@ int	bigerrno_shoot(enum e_color *color, char **arg)
 		ft_putstr_fd("Don't shoot anything!\n", 2);
 	else
 	{
+		sh->prompt_color1 = PRPT_COL_MAG;
+		sh->prompt_color2 = PRPT_COL_MAG;
+		update_prompt(sh);
 		write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
 		write(1, "  bigerrno$ ", 13);
 		write(1, PROMPT_COLOR_CLOSE, ft_strlen(PROMPT_COLOR_CLOSE));
 		get_terminal_size(rows_cols);
 		animate_shoot(rows_cols[1]);
 		*color = E_PINK;
+		ft_putstr_fd("\a", 1);
+		ft_putstr_fd("\033[H\033[J", 1);
 	}
 	return (0);
 }

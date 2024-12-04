@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:21:04 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 16:30:36 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:24:49 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_status_of_last_child(int *pid);
+static int	get_status_of_last_child(int *pid, int options);
 
 /*
 	The subprocess either exited normally (`exit` or returning from `main`) or 
@@ -27,13 +27,13 @@ static int	get_status_of_last_child(int *pid);
 	About the core dump, it should be generated on SIGQUIT, but I'm not certain 
 	it happens and print the flavor text anyway.
 */
-void	wait_for_subprocesses(t_sh *sh, int *pid)
+void	wait_for_subprocesses(t_sh *sh, int *pid, int options)
 {
 	int	status;
 	int	signal_number;
 
 	set_signal_handling(SIGINT, SIG_IGN);
-	status = get_status_of_last_child(pid);
+	status = get_status_of_last_child(pid, options);
 	set_signal_handling(SIGINT, signal_handler);
 	if (sh->ex->pl.exit_code || !status)
 		return ;
@@ -50,7 +50,7 @@ void	wait_for_subprocesses(t_sh *sh, int *pid)
 	return ;
 }
 
-static int	get_status_of_last_child(int *pid)
+static int	get_status_of_last_child(int *pid, int options)
 {
 	size_t	i;
 	int		err;
@@ -60,7 +60,7 @@ static int	get_status_of_last_child(int *pid)
 	status = 0;
 	while (pid[i])
 	{
-		err = waitpid(pid[i], &status, 0);
+		err = waitpid(pid[i], &status, options);
 		while (err < 0 && errno == EINTR)
 			err = waitpid(pid[i], &status, 0);
 		++i;

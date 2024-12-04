@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:10:30 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:20:46 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:18:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	isbuiltin(char **cmd)
 		return (FALSE);
 	j = skip_var(cmd);
 	cmd_arr = ft_split("cd:echo:env:exit:export:pwd:unset:\
-	hidden:lulu:shoot", ':');
+	hidden:lulu:shoot:disco:matrix", ':');
 	state = FALSE;
 	i = 0;
 	while (cmd[j] && cmd_arr[i])

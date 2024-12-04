@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/04 00:13:34 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:52:54 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,26 @@
 # define ERR_CD "error retrieving current directory"
 # define ERR_ACS_DIR "cannot access parent directories"
 
+/* colors */
+
 # define PROMPT_COLOR_OPEN "\e[35m"
 # define PROMPT_COLOR_CLOSE "\e[0m"
-/* colors */
+
+# define PRPT_COL_GRN "\001\e[1;32m\002"
+# define PRPT_COL_DGN "\001\e[1;92m\002"
+# define PRPT_COL_ORG "\001\e[1;38;5;208m\002"
+# define PRPT_COL_BLU "\001\e[1;34m\002"
+# define PRPT_COL_DBL "\001\e[1;38;5;18m\002"
+# define PRPT_COL_LPP "\001\e[1;38;5;183m\002"
+# define PRPT_COL_MAG "\001\e[1;35m\002"
+
 # define GNOME "\033]11;rgb:3030/0a0a/2424\007"
 # define PEACH "\033]11;rgb:aaaa/5555/5050\007"
-# define AZUL "\033]11;rgb:afaf/d0d0/e1e1\007"
-# define POWDER "\033]11;rgb:1010/5050/aaaa\007"
+# define POWDER "\033]11;rgb:afaf/d0d0/e1e1\007"
+# define AZUL "\033]11;rgb:1010/5050/aaaa\007"
 # define PURPLE "\033]11;rgb:3030/0a0a/5050\007"
 # define PINK "\033]11;rgb:aaaa/5555/9999\007"
+# define BLACK "\033]11;rgb:0000/0000/0000\007"
 
 extern int	g_signum;
 
@@ -61,8 +72,8 @@ enum e_color
 {
 	E_GNOME,
 	E_PEACH,
-	E_AZUL,
 	E_POWDER,
+	E_AZUL,
 	E_PURPLE,
 	E_PINK,
 	E_DEFAULT
@@ -150,6 +161,9 @@ typedef struct s_sh
 	t_rl			rl;
 	t_ex			*ex;
 	enum e_color	color;
+	char			*prompt_color1;
+	char			*prompt_color2;
+	int				pid_disco;
 }	t_sh;
 
 /* Parser ------------------------------------------------------------------- */
@@ -192,7 +206,7 @@ int		set_fd_src_from_files(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
 int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
-void	wait_for_subprocesses(t_sh *sh, int *pid);
+void	wait_for_subprocesses(t_sh *sh, int *pid, int options);
 
 /* Built-ins ---------------------------------------------------------------- */
 
@@ -208,8 +222,10 @@ int		bigerrno_pwd(t_sh *sh);
 int		bigerrno_unset(t_sh *sh, char **arg);
 int		bigerrno_hidden(t_env **hidden, char **arg);
 void	bigerrno_bonus(t_sh *sh, char **cmdl, int *code_err);
-int		bigerrno_shoot(enum e_color *color, char **arg);
-int		bigerrno_lulu(enum e_color *color);
+int		bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg);
+int		bigerrno_lulu(t_sh *sh, enum e_color *color);
+int		bigerrno_disco(t_sh *sh, enum e_color *color);
+int		bigerrno_matrix(t_sh *sh, char **arg);
 
 /* Utils -------------------------------------------------------------------- */
 
@@ -260,5 +276,7 @@ void	update_env(t_env **env, t_env **hidden);
 void	extract_local_update(char ***cmd, t_env **local);
 int		firstocc(char *s, char c);
 int		continued_occurence(char *s, char c);
+char	**convert_to_arr(t_env *env);
+void	update_prompt(t_sh *sh);
 
 #endif

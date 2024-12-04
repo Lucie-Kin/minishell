@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:23:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:11:46 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:02:12 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ void	free_shell(t_sh *sh)
 	free_entire_array((void **)sh->rl.arr, free_rl_arr_element);
 	free_entire_array((void **)sh->rl.tokens, free);
 	free_entire_array((void **)sh->rl.hd, free);
+	if (!sh->keep_running && sh->pid_disco)
+		kill(sh->pid_disco, SIGINT);
+	sh->pid_disco = 0;
+	return ;
 }
 
 void	free_rl_arr_element(void *ptr)

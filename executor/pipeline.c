@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:49:18 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/30 22:02:23 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:23:47 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	execute_pipeline(t_sh *sh)
 	}
 	fork_subprocesses(sh, pid);
 	free_pipeline_resources(&sh->ex->pl);
-	wait_for_subprocesses(sh, pid);
+	wait_for_subprocesses(sh, pid, 0);
 	free(pid);
 	return (sh->ex->pl.exit_code);
 }

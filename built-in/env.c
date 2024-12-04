@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:16 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:41:35 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:36:59 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void	print_in_p_order(t_env **to_print, t_env **not_to_print)
 	t_env	*biggest;
 
 	if (!to_print)
-		return (ft_putstr_fd("To print is NULL\n", 2));
+		return ;
 	p_order = *to_print;
 	smallest = find_smallest_p(&p_order);
 	biggest = find_biggest_p(&p_order);
 	if (!smallest || !biggest || !p_order)
-		return (ft_putstr_fd("Nothing to be printed\n", 2));
+		return ;
 	if (smallest && smallest->withvalue == TRUE \
 	&& ((!not_to_print || !*not_to_print) \
 	|| !find_key(not_to_print, smallest->key)))

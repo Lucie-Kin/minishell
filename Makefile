@@ -35,11 +35,10 @@ SRC_EXC = executor/cmd.c executor/file.c        executor/pipe.c \
 	executor/pipeline.c  executor/redirection.c executor/subprocess.c \
 	executor/wait.c
 
-SRC_BLT = built-in/bonus.c built-in/cd.c    built-in/echo.c \
-	built-in/env.c         built-in/exit.c  built-in/export.c \
-	built-in/lulu.c        built-in/pwd.c   built-in/set.c \
-	built-in/shoot.c       built-in/unset.c
-
+SRC_BLT = built-in/bonus.c built-in/cd.c        built-in/echo.c \
+	built-in/env.c         built-in/exit.c      built-in/export.c \
+	built-in/lulu.c        built-in/matrix.c    built-in/pwd.c \
+	built-in/set.c         built-in/shoot.c     built-in/unset.c 
 
 SRC_UTL = utils/array_delete.c utils/array_get.c          utils/array_update.c \
 	utils/convert_lst.c        utils/echo_escaped_token.c utils/error.c \
@@ -69,6 +68,9 @@ $(NAME): $(OBJ)
 %.o: %.c
 	@$(CC) $(CFLAGS) -Iinclude -o $@ -c $<
 
+animation:
+	@bash animation.sh
+
 clean:
 	@$(RM) $(OBJ)
 	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
@@ -76,6 +78,8 @@ clean:
 fclean: clean
 	@$(RM) $(NAME) $(LIBFT_BIN)
 
-re: fclean all
+fcklean: fclean
 
-.PHONY: all clean fclean re debug_env
+re: fclean animation all
+
+.PHONY: all clean fclean re debug_env fcklean animation

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 00:01:01 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:33:19 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "minishell.h"
 
 void	init_prompt(t_sh *sh);
-void	update_prompt(t_sh *sh);
 void	add_input_to_buffer(t_sh *sh, const char *prompt);
 int		extract_first_command_line(t_sh *sh);
 char	**get_delimiters(const char *s);
