@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 17:37:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 16:39:06 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:21:40 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,12 @@ char **col1, char **col2)
 	char	*tmp2;
 	char	*tmp3;
 
-	tmp1 = ft_strjoin("\001\e]0;", user);
+	tmp1 = ft_strjoin("\001\e]0;🐚 ", user);
 	tmp2 = ft_strjoin(tmp1, ": ");
 	free(tmp1);
 	tmp1 = ft_strjoin(tmp2, path);
 	free(tmp2);
-	tmp2 = ft_strjoin(tmp1, "\a\002");
+	tmp2 = ft_strjoin(tmp1, " 🐚\a\002");
 	free(tmp1);
 	tmp1 = ft_strjoin(tmp2, *col1);
 	free(tmp2);

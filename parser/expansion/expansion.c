@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 19:32:45 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:02:11 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	**get_expanded_token(t_sh *sh, const char *s);
 
 /*
 	- Expand tilde: `~`, `~+` and `~-`.
-	- Expand special parameters: `$0` and `$?`.
+	- Expand special parameters: `$0`, `$$` and `$?`.
 	- Expand environment variables.
 	- Expand asterisk wildcards.
 */
