@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   local.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 18:16:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:20:58 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:11:09 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	update_local(char ***cmd, t_env **local, int *i);
 static char	**parse_key_value(char *to_separate);
+static int	add_local(t_env **local, char **key_value);
 
 void	extract_local_update(char ***cmd, t_env **local)
 {
@@ -27,10 +28,25 @@ void	extract_local_update(char ***cmd, t_env **local)
 		remove_array_elements((void **)(*cmd), 0, i - 1, free);
 }
 
-static void	update_local(char ***cmd, t_env **local, int *i)
+static int	add_local(t_env **local, char **key_value)
 {
 	t_env	*new;
+
+	new = lst_new(key_value[0], key_value[1]);
+	free_entire_array((void **)key_value, free);
+	if (!new)
+	{
+		lst_clear(local);
+		return (-1);
+	}
+	lstadd_back(local, new);
+	return (0);
+}
+
+static void	update_local(char ***cmd, t_env **local, int *i)
+{
 	char	**key_value;
+	t_env	*node;
 
 	while ((*cmd)[*i])
 	{
@@ -38,16 +54,17 @@ static void	update_local(char ***cmd, t_env **local, int *i)
 		valid_keyvalue((*cmd)[*i]) == FALSE)
 			break ;
 		key_value = parse_key_value((*cmd)[*i]);
-		if (key_value)
+		node = find_key(local, key_value[0]);
+		if (node)
 		{
-			new = lst_new(key_value[0], key_value[1]);
+			free(node->value);
+			node->value = ft_strdup(key_value[1]);
 			free_entire_array((void **)key_value, free);
-			if (!new)
-			{
-				lst_clear(local);
+		}
+		else if (key_value)
+		{
+			if (add_local(local, key_value) == -1)
 				break ;
-			}
-			lstadd_back(local, new);
 		}
 		(*i)++;
 	}

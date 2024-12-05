@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:21:43 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:41:26 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	print_lst(t_env **lst, int export);
 static void	add_or_update_var(t_env **env, char *key_value);
 static void	update_var(t_env *var, char *key_value, int separator);
 static char	*extract_key(int separator, char *key_value);
+static void	switch_key_to_localvar(char **onlykey, t_env **local);
 
 int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 {
@@ -31,6 +32,7 @@ int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 	{
 		while (arg[n])
 		{
+			switch_key_to_localvar(&arg[n], local);
 			if (valid_keyvalue(arg[n]) == TRUE)
 				add_or_update_var(env, arg[n]);
 			else
@@ -42,6 +44,27 @@ int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
 	lst_clear(&alpha_order);
 	lst_clear(local);
 	return (0);
+}
+
+static void	switch_key_to_localvar(char **onlykey, t_env **local)
+{
+	t_env	*tmp;
+	char	*compose;
+
+	tmp = *local;
+	if (!local || !*local || !onlykey || !*onlykey)
+		return ;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, *onlykey) == 0)
+		{
+			free(*onlykey);
+			compose = ft_strjoin(tmp->key, "=");
+			*onlykey = ft_strjoin(compose, tmp->value);
+			free(compose);
+		}
+		tmp = tmp->next;
+	}
 }
 
 static void	print_lst(t_env **lst, int export)
