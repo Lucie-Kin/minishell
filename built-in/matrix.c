@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 11:31:07 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/04 17:36:18 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/07 14:49:40 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ int	bigerrno_matrix(t_sh *sh, char **arg)
 	char	*args[4];
 
 	if (get_array_length((void **)arg) > 1)
-		return (ft_putstr_fd("You can only choose one!\n", 2), 42);
-	write(STDOUT_FILENO, "\x0c", 1);
-	ft_putstr_fd("\033[H\033[J", 1);
+		return (ft_putstr_fd("You can only choose one!\n", STDERR_FILENO), 42);
+	ft_putstr_fd("\x0c", STDOUT_FILENO);
+	ft_putstr_fd("\033[H\033[J", STDOUT_FILENO);
 	pid = fork();
-	if (pid == -1)
+	if (pid < 0)
 		return (1);
 	if (pid == 0)
 	{
@@ -42,11 +42,11 @@ int	bigerrno_matrix(t_sh *sh, char **arg)
 		args[2] = MATRIX;
 		args[3] = NULL;
 		execve("/bin/bash", args, convert_to_arr(sh->env));
-		ft_putstr_fd("bigerrno: execve matrix: fail", 2);
+		ft_putstr_fd("bigerrno: execve matrix: fail", STDERR_FILENO);
 		exit(1);
 	}
 	status = 0;
 	waitpid(pid, &status, 0);
-	write(STDOUT_FILENO, "\x0c", 1);
+	ft_putstr_fd("\x0c", STDOUT_FILENO);
 	return (WIFEXITED(status) || 1);
 }

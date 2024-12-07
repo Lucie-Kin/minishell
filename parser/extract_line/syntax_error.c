@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 22:33:41 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:29:01 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:37:38 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	check_for_syntax_errors(t_sh *sh, size_t index)
 	if (!is_legal)
 	{
 		sh->exit_code = 2;
-		output_error(2, err_msg);
+		output_error(ENOENT, err_msg);
 	}
 	free_entire_array((void **)tokens, free);
 	return (is_legal);

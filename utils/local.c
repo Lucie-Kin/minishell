@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 18:16:37 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/05 13:11:09 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/07 14:49:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	update_local(char ***cmd, t_env **local, int *i)
 		}
 		else if (key_value)
 		{
-			if (add_local(local, key_value) == -1)
+			if (add_local(local, key_value) < 0)
 				break ;
 		}
 		(*i)++;

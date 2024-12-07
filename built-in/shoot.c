@@ -6,13 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:49:32 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/04 16:37:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/07 12:58:02 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-#define DOT "\e[35m•\e[0m"
 
 static void	get_terminal_size(int *rows_cols);
 static void	execute_in_child(int pipefd[2]);
@@ -24,20 +22,20 @@ int	bigerrno_shoot(t_sh *sh, enum e_color *color, char **arg)
 	int	rows_cols[2];
 
 	if (get_array_length((void **)arg) > 1)
-		ft_putstr_fd("Don't shoot anything!\n", 2);
+		ft_putstr_fd("Don't shoot anything!\n", STDERR_FILENO);
 	else
 	{
 		sh->prompt_color1 = PRPT_COL_MAG;
 		sh->prompt_color2 = PRPT_COL_MAG;
 		update_prompt(sh);
-		write(1, PROMPT_COLOR_OPEN, ft_strlen(PROMPT_COLOR_OPEN));
-		write(1, "  bigerrno$ ", 13);
-		write(1, PROMPT_COLOR_CLOSE, ft_strlen(PROMPT_COLOR_CLOSE));
+		ft_putstr_fd(PROMPT_COLOR_OPEN, STDOUT_FILENO);
+		ft_putstr_fd("  bigerrno$ ", STDOUT_FILENO);
+		ft_putstr_fd(PROMPT_COLOR_CLOSE, STDOUT_FILENO);
 		get_terminal_size(rows_cols);
 		animate_shoot(rows_cols[1]);
 		*color = E_PINK;
-		ft_putstr_fd("\a", 1);
-		ft_putstr_fd("\033[H\033[J", 1);
+		ft_putstr_fd("\a", STDOUT_FILENO);
+		ft_putstr_fd("\033[H\033[J", STDOUT_FILENO);
 	}
 	return (0);
 }
@@ -54,16 +52,16 @@ static void	get_terminal_size(int *rows_cols)
 	newt.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 	if (pipe(pipefd) < 0)
-		return (ft_putstr_fd("Impossible pipe creation\n", 2));
+		return (ft_putstr_fd("Impossible pipe creation\n", STDERR_FILENO));
 	cpid = fork();
 	if (cpid < 0)
-		return (ft_putstr_fd("Impossible child creation\n", 2));
+		return (ft_putstr_fd("Impossible child creation\n", STDERR_FILENO));
 	if (cpid == 0)
 		execute_in_child(pipefd);
 	else
 	{
 		execute_in_parent(pipefd, rows_cols);
-		wait(NULL);
+		waitpid(cpid, NULL, 0);
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }
@@ -74,12 +72,12 @@ static void	execute_in_child(int pipefd[2])
 	int		n_bytes;
 
 	close(pipefd[0]);
-	write(STDOUT_FILENO, "\e[18t", 6);
+	ft_putstr_fd("\e[18t", STDOUT_FILENO);
 	n_bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
 	if (n_bytes > 0)
 	{
 		buffer[n_bytes] = '\0';
-		write(pipefd[1], buffer, ft_strlen(buffer));
+		ft_putstr_fd(buffer, pipefd[1]);
 	}
 	close(pipefd[1]);
 	exit(0);
@@ -101,7 +99,8 @@ static void	execute_in_parent(int pipefd[2], int *rows_cols)
 		rows_cols[1] = atoi(split[1]);
 	}
 	else
-		printf("Erreur lors de la récupération des dimensions du terminal.\n");
+		ft_putstr_fd("Erreur lors de la récupération des dimensions du "
+			"terminal.\n", STDERR_FILENO);
 	free_entire_array((void **)split, free);
 	close(pipefd[0]);
 }
@@ -116,11 +115,11 @@ static void	animate_shoot(int cols)
 	v = 0.1;
 	while (++pixel_pos < cols && !g_signum)
 	{
-		write(STDOUT_FILENO, "\r", 1);
+		ft_putstr_fd("\r", STDOUT_FILENO);
 		i = -1;
 		while (++i < pixel_pos)
-			write(STDOUT_FILENO, " ", 1);
-		write(STDOUT_FILENO, DOT, ft_strlen(DOT));
+			ft_putstr_fd(" ", STDOUT_FILENO);
+		ft_putstr_fd("\e[35m•\e[0m", STDOUT_FILENO);
 		i = 0;
 		while (i < 80000000 / v)
 			++i;
@@ -128,9 +127,9 @@ static void	animate_shoot(int cols)
 		if (v > 10.0)
 			v = 10.0;
 	}
-	write(STDOUT_FILENO, "\r", 1);
+	ft_putstr_fd("\r", STDOUT_FILENO);
 	i = -1;
 	while (++i < cols)
-		write(STDOUT_FILENO, " ", 1);
-	write(STDOUT_FILENO, "\r", 1);
+		ft_putstr_fd(" ", STDOUT_FILENO);
+	ft_putstr_fd("\r", STDOUT_FILENO);
 }

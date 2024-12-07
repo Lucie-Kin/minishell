@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 16:32:16 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 18:55:33 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:37:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	handle_no_tty(void)
 	if (errno == ENOTTY)
 		exit(ENOTTY);
 	set_signal_handling(SIGPIPE, SIG_IGN);
-	res = !is_stdout_tty && write(1, "", 1) < 0 && errno == EPIPE;
+	res = !is_stdout_tty && write(STDOUT_FILENO, "", 1) < 0 && errno == EPIPE;
 	set_signal_handling(SIGPIPE, SIG_DFL);
 	if (res)
 		exit(EPIPE);
@@ -46,7 +46,7 @@ static void	execute_each_line(int fd)
 		str_itoa = ft_itoa(i);
 		str_line_num = ft_strjoin("line ", str_itoa);
 		line[ft_strlen(line) - 1] = 0;
-		output_error(1, compose_err_msg(SHELL, str_line_num, line, "nope"));
+		output_error(EPERM, compose_err_msg(SHELL, str_line_num, line, "nope"));
 		free(str_itoa);
 		free(str_line_num);
 		free(line);

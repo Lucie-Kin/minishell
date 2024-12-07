@@ -1,4 +1,4 @@
-# valgrind --suppressions=readline.supp ./minishell
+# valgrind --suppressions=valgrind.supp ./minishell
 {
    readline_leak
    Memcheck:Leak

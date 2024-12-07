@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/04 17:52:54 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:22:51 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,5 +278,6 @@ int		firstocc(char *s, char c);
 int		continued_occurence(char *s, char c);
 char	**convert_to_arr(t_env *env);
 void	update_prompt(t_sh *sh);
+char	*extract_key(int separator, char *key_value);
 
 #endif

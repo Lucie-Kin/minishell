@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:22 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/05 12:41:26 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:22:40 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static void	print_lst(t_env **lst, int export);
 static void	add_or_update_var(t_env **env, char *key_value);
 static void	update_var(t_env *var, char *key_value, int separator);
-static char	*extract_key(int separator, char *key_value);
 static void	switch_key_to_localvar(char **onlykey, t_env **local);
 
 int	bigerrno_export(t_env **env, t_env **hidden, t_env **local, char **arg)
@@ -141,13 +140,4 @@ static void	update_var(t_env *var, char *key_value, int separator)
 		var->value = get_literal_token(key_value + separator + 1);
 		var->withvalue = TRUE;
 	}
-}
-
-static char	*extract_key(int separator, char *key_value)
-{
-	if (separator > 0 && key_value[separator - 1] == '+')
-		return (ft_substr(key_value, 0, separator - 1));
-	else if (separator > 0)
-		return (ft_substr(key_value, 0, separator));
-	return (ft_strdup(key_value));
 }

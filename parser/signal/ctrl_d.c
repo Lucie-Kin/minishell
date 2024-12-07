@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 14:55:57 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:32:17 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:38:12 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	handle_ctrl_d(t_sh *sh, int *is_legal)
 	}
 	check_cases(sh, is_legal);
 	if (sh->subshell == 0 && !sh->keep_running)
-		ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
 	return ;
 }
 
@@ -65,11 +65,11 @@ static int	case_unclosed_quote(t_sh *sh, int *is_legal, size_t arr_len)
 	if (msg)
 	{
 		msg[ft_strlen(msg) - 2] = *p_quote;
-		output_error(2, compose_err_msg(SHELL, 0, 0, msg));
+		output_error(ENOENT, compose_err_msg(SHELL, 0, 0, msg));
 		free(msg);
 	}
-	sh->exit_code = output_error(2, compose_err_msg(SHELL, 0, "syntax error",
-				"unexpected end of file"));
+	sh->exit_code = output_error(ENOENT, compose_err_msg(SHELL, 0,
+				"syntax error", "unexpected end of file"));
 	sh->keep_running = 1;
 	if (is_legal)
 		*is_legal = 0;
@@ -93,8 +93,8 @@ static int	case_missing_right_operand(t_sh *sh, int *is_legal)
 {
 	if (check_right_operand_and_parentheses(sh, 0))
 		return (0);
-	sh->exit_code = output_error(2, compose_err_msg(SHELL, 0, "syntax error",
-				"unexpected end of file"));
+	sh->exit_code = output_error(ENOENT, compose_err_msg(SHELL, 0,
+				"syntax error", "unexpected end of file"));
 	if (is_legal)
 		*is_legal = 0;
 	return (1);

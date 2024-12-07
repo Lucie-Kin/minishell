@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:36:47 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:29:32 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:36:50 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	display_heredoc_warning(const char *delimiter)
 				delimiter);
 	tmp2 = ft_strjoin(tmp1, "')");
 	free(tmp1);
-	output_error(1, compose_err_msg(SHELL, 0, "warning", tmp2));
+	output_error(EPERM, compose_err_msg(SHELL, 0, "warning", tmp2));
 	free(tmp2);
 	return ;
 }

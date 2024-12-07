@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:21:04 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 17:24:49 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:45:57 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void	wait_for_subprocesses(t_sh *sh, int *pid, int options)
 		signal_number = WTERMSIG(status);
 		sh->ex->pl.exit_code = 128 + signal_number;
 		if (signal_number == SIGQUIT)
-			ft_putstr_fd("Quit (core dumped)", 2);
-		ft_putstr_fd("\n", 2);
+			ft_putstr_fd("Quit (core dumped)", STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 	}
 	return ;
 }

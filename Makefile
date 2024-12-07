@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Iinclude -g# -fsanitize=address
 LDFLAGS = -Llibft -lft -lncurses -lreadline -lhistory
 DBUG_FLAG = -DDBUG=1
 RM = rm -f
@@ -66,7 +66,7 @@ $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -Iinclude -o $@ -c $<
+	@$(CC) $(CFLAGS) -o $@ -c $<
 
 animation:
 	@bash animation.sh

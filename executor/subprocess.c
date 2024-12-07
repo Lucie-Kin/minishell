@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:38:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 16:27:14 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:12:34 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ static int	execute_subshell(t_sh *sh, t_pl *pl)
 static void	run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath)
 {
 	t_env	*exec_env;
+	char	**exec_arr;
 	char	*p_slash;
 
-	exec_env = merge_lst(sh->local, sh->env);
 	if (is_shell(sh->shells, cmd_fullpath))
 	{
 		update_shlvl(&sh->env, FALSE);
@@ -82,11 +82,14 @@ static void	run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath)
 			reset_title_and_background_color();
 	}
 	set_signals(1);
-	execve(cmd_fullpath, pl->cmdl[pl->index], convert_to_arr(exec_env));
+	exec_env = merge_lst(sh->local, sh->env);
+	exec_arr = convert_to_arr(exec_env);
+	execve(cmd_fullpath, pl->cmdl[pl->index], exec_arr);
 	pl->exit_code = errno;
 	pl->err_msg = compose_err_msg(0, pl->cmdl[pl->index][0], 0,
 			strerror(pl->exit_code));
 	lst_clear(&exec_env);
+	free_entire_array((void **)exec_arr, free);
 	return ;
 }
 

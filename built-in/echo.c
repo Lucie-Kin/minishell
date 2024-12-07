@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:06 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:23:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:14:20 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ int	bigerrno_echo(char **arg)
 	while (arg[++to_be_echoed])
 	{
 		if (to_be_echoed != count)
-			write(1, " ", 1);
+			ft_putstr_fd(" ", STDOUT_FILENO);
 		if (with_backlash > 0)
 		{
 			parsed = get_echo_escaped_token(arg[to_be_echoed], &skip_nl);
-			write(1, parsed, ft_strlen(parsed));
+			ft_putstr_fd(parsed, STDOUT_FILENO);
 			free(parsed);
 		}
 		else
-			write(1, arg[to_be_echoed], ft_strlen(arg[to_be_echoed]));
+			ft_putstr_fd(arg[to_be_echoed], STDOUT_FILENO);
 	}
 	if (skip_nl == FALSE)
-		write(1, "\n", 1);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (0);
 }
 

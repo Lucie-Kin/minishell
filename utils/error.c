@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:10:36 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 17:34:10 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:46:16 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	output_error(int code, char *msg)
 {
 	if (code)
 	{
-		ft_putstr_fd(msg, 2);
+		ft_putstr_fd(msg, STDERR_FILENO);
 		free(msg);
 	}
 	return (code);
