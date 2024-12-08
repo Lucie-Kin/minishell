@@ -6,7 +6,7 @@
 /*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 23:19:25 by libousse          #+#    #+#             */
-/*   Updated: 2024/10/12 18:11:50 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:35:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,36 @@
 
 static void	**duplicate_until_index(void **array, size_t *index,
 				size_t len_to_insert);
-static void	insert_end(void **new_array, void ***array, size_t index,
+static void	**insert_end(void **new_array, void ***array, size_t index,
 				size_t len_to_insert);
 
-void	insert_array_element(void ***array, void *to_insert, size_t index)
+void	**insert_array_element(void ***array, void *to_insert, size_t index)
 {
 	void	**new_array;
 
 	if (!array || !to_insert)
-		return ;
+		return (0);
 	new_array = duplicate_until_index(*array, &index, 1);
 	if (!new_array)
-		return ;
+		return (0);
 	new_array[index] = to_insert;
 	insert_end(new_array, array, index, 1);
 	*array = new_array;
-	return ;
+	return (*array);
 }
 
-void	insert_array_elements(void ***array, void **to_insert, size_t index)
+void	**insert_array_elements(void ***array, void **to_insert, size_t index)
 {
 	size_t	i;
 	size_t	len_to_insert;
 	void	**new_array;
 
 	if (!array || !to_insert)
-		return ;
+		return (0);
 	len_to_insert = get_array_length(to_insert);
 	new_array = duplicate_until_index(*array, &index, len_to_insert);
 	if (!new_array)
-		return ;
+		return (0);
 	i = 0;
 	while (to_insert[i])
 	{
@@ -53,7 +53,7 @@ void	insert_array_elements(void ***array, void **to_insert, size_t index)
 	free(to_insert);
 	insert_end(new_array, array, index, len_to_insert);
 	*array = new_array;
-	return ;
+	return (*array);
 }
 
 static void	**duplicate_until_index(void **array, size_t *index,
@@ -78,7 +78,7 @@ static void	**duplicate_until_index(void **array, size_t *index,
 	return (new_array);
 }
 
-static void	insert_end(void **new_array, void ***array, size_t index,
+static void	**insert_end(void **new_array, void ***array, size_t index,
 		size_t len_to_insert)
 {
 	if (*array)
@@ -90,5 +90,5 @@ static void	insert_end(void **new_array, void ***array, size_t index,
 		}
 		free(*array);
 	}
-	return ;
+	return (new_array);
 }

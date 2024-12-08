@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/04 16:33:19 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:48:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,13 @@ void	add_input_to_history(t_sh *sh);
 void	handle_ctrl_d(t_sh *sh, int *is_legal);
 char	*concatenate_all_cmdl_lines(t_sh *sh);
 char	**tokenize(const char *s, int meta_space, int (*cmp)(int));
+char	**tokenize_lazy(const char *s, int (*cmp)(int));
 int		is_metacharacter(char c);
 int		is_hex_digit(char c);
 void	expansion(t_sh *sh);
-char	*expand_tilde(t_sh *sh, const char *s);
-char	*expand_environment_variables(t_sh *sh, const char *s);
+char	**expand_tilde(t_sh *sh, const char *s);
+char	**expand_environment_variables(t_sh *sh, const char *s);
+char	*expand_environment_variables_in_heredocs(t_sh *sh, const char *s);
 char	**expand_asterisk_wildcard(const char *s);
 char	**get_filtered_dir_content(const char *path, const char *pattern,
 			int only_dirs);

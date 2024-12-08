@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:55 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:25:53 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/07 22:40:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 static size_t	get_tilde_index(const char *s);
 static char		*get_full_tilde_string(const char *s, size_t i, size_t len,
 					const char *var);
+static char		**compose_tilde_arr(char *s);
 
-char	*expand_tilde(t_sh *sh, const char *s)
+char	**expand_tilde(t_sh *sh, const char *s)
 {
 	size_t	i;
 	size_t	len;
@@ -38,7 +39,7 @@ char	*expand_tilde(t_sh *sh, const char *s)
 		var = get_var_value(sh, "PWD");
 	else if (!ft_strncmp(s + i, "~-", 2) && (!s[i + 2] || s[i + 2] == '/'))
 		var = get_var_value(sh, "OLDPWD");
-	return (get_full_tilde_string(s, i, len, var));
+	return (compose_tilde_arr(get_full_tilde_string(s, i, len, var)));
 }
 
 static size_t	get_tilde_index(const char *s)
@@ -81,4 +82,14 @@ static char	*get_full_tilde_string(const char *s, size_t i, size_t len,
 	free(tmp1);
 	free(tmp2);
 	return (tmp3);
+}
+
+static char	**compose_tilde_arr(char *s)
+{
+	char	**arr;
+
+	arr = 0;
+	if (!insert_array_element((void ***)&arr, s, 0))
+		free(s);
+	return (arr);
 }

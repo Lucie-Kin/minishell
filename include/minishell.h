@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/06 19:22:51 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:36:15 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,8 +241,8 @@ void	sort_strings_alpha(char **arr, int (*cmp)(const char *, const char *));
 
 size_t	get_array_length(void **array);
 size_t	find_array_index(void **array, int (*condition)(void *element));
-void	insert_array_element(void ***array, void *to_insert, size_t index);
-void	insert_array_elements(void ***array, void **to_insert, size_t index);
+void	**insert_array_element(void ***array, void *to_insert, size_t index);
+void	**insert_array_elements(void ***array, void **to_insert, size_t index);
 void	*extract_array_element(void **array, size_t index);
 void	**extract_array_elements(void **array, size_t from, size_t to);
 void	remove_array_elements(void **array, size_t from, size_t to,

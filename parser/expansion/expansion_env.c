@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 23:09:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:25:44 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:39:22 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,56 +17,61 @@ static char	*get_name(const char *s, size_t i);
 static char	*get_value(t_sh *sh, const char *var_name, char *quote);
 static char	*process_var_value_whitespaces(char *var_value);
 
-char	*expand_environment_variables(t_sh *sh, const char *s)
+char	**expand_environment_variables(t_sh *sh, const char *s)
 {
 	size_t	i;
-	char	*parsed;
+	char	*dup;
 	char	*quote;
+	char	**arr;
 
-	parsed = ft_strdup(s);
-	if (!parsed)
+	dup = ft_strdup(s);
+	if (!dup)
 		return (0);
 	i = 0;
 	quote = 0;
-	while (parsed[i])
+	while (dup[i])
 	{
-		if (is_char_start_of_quote(parsed, i, quote))
-			quote = parsed + i;
-		else if (is_char_end_of_quote(parsed, i, quote))
+		if ((!quote || *quote != '\'') && dup[i] == '$' && dup[i + 1] != '\''
+			&& (!i || dup[i - 1] != '\\') && dup[i + 1] != '"')
+			dup = handle_potential_var(sh, dup, &i, &quote);
+		else
+			++i;
+		if (is_char_start_of_quote(dup, i - 1, quote))
+			quote = dup + i - 1;
+		else if (is_char_end_of_quote(dup, i - 1, quote))
 			quote = 0;
-		else if ((!quote || *quote != '\'') && parsed[i] == '$'
-			&& (!i || parsed[i - 1] != '\\') && parsed[i + 1] != '"'
-			&& parsed[i + 1] != '\'')
-			parsed = handle_potential_var(sh, parsed, &i, &quote);
-		++i;
 	}
-	return (parsed);
+	arr = ft_split(dup, SEP);
+	free(dup);
+	return (arr);
 }
 
 static char	*handle_potential_var(t_sh *sh, char *s, size_t *i, char **quote)
 {
-	char	*var_name;
-	char	*var_value;
-	char	*tmp;
+	char	*tmp1;
+	char	*tmp2;
 	size_t	len;
 
-	var_name = get_name(s, *i);
-	if (!var_name)
-		return (s);
-	var_value = get_value(sh, var_name, *quote);
-	len = ft_strlen(var_name);
-	ft_memmove(s + *i, s + *i + len + 1, ft_strlen(s + *i + len + 1) + 1);
-	if (var_value)
+	tmp1 = get_name(s, *i);
+	if (!tmp1)
 	{
-		tmp = insert_str_before_char(s, *i, var_value);
-		if (*quote)
-			*quote = tmp + (*quote - s);
-		*i += ft_strlen(var_value) - 1;
-		free(s);
-		s = tmp;
+		++*i;
+		return (s);
 	}
-	free(var_name);
-	free(var_value);
+	tmp2 = get_value(sh, tmp1, *quote);
+	len = ft_strlen(tmp1);
+	free(tmp1);
+	ft_memmove(s + *i, s + *i + len + 1, ft_strlen(s + *i + len + 1) + 1);
+	if (tmp2)
+	{
+		tmp1 = insert_str_before_char(s, *i, tmp2);
+		if (*quote)
+			*quote = tmp2 + (*quote - s);
+		*i += ft_strlen(tmp2);
+		free(s);
+		s = tmp1;
+	}
+	free(tmp2);
 	return (s);
 }
 
@@ -121,26 +126,12 @@ static char	*get_value(t_sh *sh, const char *var_name, char *quote)
 static char	*process_var_value_whitespaces(char *var)
 {
 	size_t	i;
-	size_t	j;
 
-	i = 0;
-	while (ft_isspace(var[i]))
-		++i;
-	ft_memmove(var, var + i, ft_strlen(var + i) + 1);
 	i = 0;
 	while (var[i])
 	{
-		j = i;
-		while (ft_isspace(var[i]))
-			++i;
-		if (!var[i])
-			var[j] = 0;
-		else if (i > j)
-		{
-			ft_memmove(var + j + 1, var + i, ft_strlen(var + i) + 1);
-			var[j] = ' ';
-			i -= i - j;
-		}
+		if (ft_isspace(var[i]))
+			var[i] = SEP;
 		++i;
 	}
 	return (var);

@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:55:49 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:29:22 by libousse         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:41:54 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	fetch_heredoc(t_sh *sh, size_t *index, const char *delimiter);
 static int	compare_delimiter_and_line(const char *del, const char *line);
 static int	write_line_to_file(t_sh *sh, int fd, const char *s);
-static char	*get_expanded_heredoc_line(t_sh *sh, const char *s, char *tmp1);
+static char	*get_expanded_heredoc_line(t_sh *sh, char *tmp1);
 
 int	create_heredoc(t_sh *sh, size_t hd_index, size_t *index,
 	const char *delimiter)
@@ -115,22 +115,21 @@ static int	write_line_to_file(t_sh *sh, int fd, const char *s)
 		++i;
 	}
 	if (!tmp1)
-		tmp1 = (char *)s;
-	tmp1 = get_expanded_heredoc_line(sh, s, tmp1);
+		tmp1 = ft_strdup(s);
+	tmp1 = get_expanded_heredoc_line(sh, tmp1);
 	if (write(fd, tmp1, ft_strlen(tmp1)) < 0)
 		success = 0;
 	free(tmp1);
 	return (success);
 }
 
-static char	*get_expanded_heredoc_line(t_sh *sh, const char *s, char *tmp1)
+static char	*get_expanded_heredoc_line(t_sh *sh, char *tmp1)
 {
 	char	*dup;
 
 	if (!tmp1)
 		return (0);
-	dup = expand_environment_variables(sh, tmp1);
-	if (s != tmp1)
-		free(tmp1);
+	dup = expand_environment_variables_in_heredocs(sh, tmp1);
+	free(tmp1);
 	return (dup);
 }

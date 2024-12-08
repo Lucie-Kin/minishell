@@ -8,9 +8,10 @@ NAME = minishell
 
 SRC_PRS = parser/bridge.c                        parser/run_shell.c \
 	parser/expansion/ansi_c_quoting.c            parser/expansion/expansion.c \
-	parser/expansion/expansion_env.c             parser/expansion/expansion_tilde.c \
-	parser/expansion/expansion_wildcard.c        parser/expansion/filtered_dir_content.c \
-	parser/expansion/get_escaped_token.c         parser/expansion/is_pattern_for_subdirs.c \
+	parser/expansion/expansion_env.c             parser/expansion/expansion_env_hd.c \
+	parser/expansion/expansion_tilde.c           parser/expansion/expansion_wildcard.c \
+	parser/expansion/filtered_dir_content.c      parser/expansion/get_escaped_token.c \
+	parser/expansion/is_pattern_for_subdirs.c \
 	parser/extract_line/buffer.c                 parser/extract_line/check_right_operand_and_parentheses.c \
 	parser/extract_line/concatenate.c            parser/extract_line/delimiters.c \
 	parser/extract_line/extract_first_buf_line.c parser/extract_line/extract_first_command_line.c \
@@ -47,7 +48,7 @@ SRC_UTL = utils/array_delete.c utils/array_get.c          utils/array_update.c \
 	utils/lst.c                utils/node.c               utils/occurence.c \
 	utils/parse_builtin.c      utils/shlvl.c              utils/string.c
 
-SRC = $(SRC_BLT) $(SRC_EXC) $(SRC_PRS) $(SRC_UTL) main.c
+SRC = main.c $(SRC_BLT) $(SRC_EXC) $(SRC_PRS) $(SRC_UTL)
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR = libft
@@ -63,6 +64,7 @@ $(LIBFT_BIN):
 	@$(MAKE) -C $(LIBFT_DIR) --silent
 
 $(NAME): $(OBJ)
+	@norminette | grep -v "OK"
 	@$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c

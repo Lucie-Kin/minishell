@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:45:59 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/05 11:02:11 by lchauffo         ###   ########.fr       */
+/*   Updated: 2024/12/08 17:43:18 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,36 +47,31 @@ void	expansion(t_sh *sh)
 	return ;
 }
 
-/*
-	TODO:
-
-	export A="ls -l"
-	$A
-	-> Should execute `ls -l`
-*/
 static char	**get_expanded_token(t_sh *sh, const char *s)
 {
+	size_t	i;
 	char	**arr;
-	char	*tmp;
+	char	**tmp;
 
 	if (!s)
 		return (0);
-	arr = 0;
-	tmp = expand_tilde(sh, s);
-	if (tmp)
-	{
-		insert_array_element((void ***)&arr, (void **)tmp, 0);
-		return (arr);
-	}
-	tmp = expand_environment_variables(sh, s);
-	if (!tmp)
-		return (0);
-	arr = expand_asterisk_wildcard(tmp);
+	arr = expand_tilde(sh, s);
 	if (arr)
-	{
-		free(tmp);
 		return (arr);
+	arr = expand_environment_variables(sh, s);
+	if (!arr)
+		return (expand_asterisk_wildcard(s));
+	i = 0;
+	while (arr[i])
+	{
+		tmp = expand_asterisk_wildcard(arr[i]);
+		if (!insert_array_elements((void ***)&arr, (void **)tmp, i++))
+			free_entire_array((void **)tmp, free);
+		else
+		{
+			remove_array_elements((void **)arr, i - 1, i - 1, free);
+			i += get_array_length((void **)tmp) - 1;
+		}
 	}
-	insert_array_element((void ***)&arr, (void **)tmp, 0);
 	return (arr);
 }
