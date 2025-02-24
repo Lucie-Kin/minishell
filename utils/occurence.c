@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:38 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:19:08 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 int	firstocc(char *s, char c)
 {

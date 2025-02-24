@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: libousse <libousse@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 18:47:30 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 23:18:59 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 t_env	*add_node(t_env **lst, char *key, char *value)
 {

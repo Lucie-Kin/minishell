@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:59:58 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/16 11:44:08 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static int	is_escaped_character(const char *s);
 static void	replace_with_special_character(char *s);

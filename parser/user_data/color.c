@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 13:52:50 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/06 19:45:02 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 void	handle_default_background_color(int set)
 {

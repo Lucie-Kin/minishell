@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:42 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:22:54 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static void	node_clear(t_env *node);
 

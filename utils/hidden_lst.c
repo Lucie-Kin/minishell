@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:37:36 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:21:07 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static void	process_token(t_env **hidden, char *token);
 static void	update_value(t_env *node, char *key, char *value, int is_append);

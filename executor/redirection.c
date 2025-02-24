@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 16:40:19 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/26 16:58:40 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static int	perform_redirections(t_pl *pl);
 static int	redirect_src(t_pl *pl, int fd_dup[2], int io);

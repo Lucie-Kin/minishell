@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 11:31:07 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/07 14:49:40 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 #define MATRIX "clear; echo -e \"\\e[48;5;16m\"; while :; \
 do echo $LINES $COLUMNS $(( $RANDOM % $COLUMNS)) \

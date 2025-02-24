@@ -6,14 +6,14 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 23:22:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/07 23:48:06 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "minishell.h"
+# include "bigerrno.h"
 
 void	init_prompt(t_sh *sh);
 void	add_input_to_buffer(t_sh *sh, const char *prompt);

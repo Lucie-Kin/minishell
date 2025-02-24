@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:38:12 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/06 19:12:34 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static int		execute_subshell(t_sh *sh, t_pl *pl);
 static void		run_cmd(t_sh *sh, t_pl *pl, char *cmd_fullpath);

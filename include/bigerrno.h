@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   bigerrno.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:05:04 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/07 17:36:15 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:32:28 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef BIGERRNO_H
+# define BIGERRNO_H
 
 # ifndef DBUG
 #  define DBUG 0
@@ -205,7 +205,7 @@ void	close_unused_pipes(int index, int **pipes, int pipe_len);
 int		set_fd_src_from_files(t_pl *pl, int catch_err);
 int		redirect_io(t_pl *pl);
 int		restore_io(t_pl *pl);
-int		resolve_command(t_pl *pl, char *cmd_name, char **cmd_fullpath);
+int		resolve_command(t_pl *pl, char *cmd_path, char **cmd_fullpath);
 void	wait_for_subprocesses(t_sh *sh, int *pid, int options);
 
 /* Built-ins ---------------------------------------------------------------- */

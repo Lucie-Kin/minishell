@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:37 by lchauffo          #+#    #+#             */
-/*   Updated: 2024/12/03 23:23:18 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static char	*get_cwd(t_sh *sh, const char *arg, int *code_err);
 static void	update_oldpwd(t_sh *sh, t_env *pwd);

@@ -6,11 +6,11 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:46:15 by libousse          #+#    #+#             */
-/*   Updated: 2024/11/27 18:28:06 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:06 by lchauffo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "bigerrno.h"
 
 static int	open_infile(t_pl *pl, size_t i, int catch_err);
 static int	open_outfile(t_pl *pl, size_t i, int catch_err);
