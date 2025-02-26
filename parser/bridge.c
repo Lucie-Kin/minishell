@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:56:54 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/05 10:13:41 by lchauffo         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:38:35 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	interpret_and_process_cmd(t_sh *sh)
 	{
 		if (sh->ex->logop == LOGOP_COLON)
 			process_cmd(sh);
-		else if (sh->ex->logop == LOGOP_OR && sh->exit_code)
+		else if (sh->ex->logop == LOGOP_OR && sh->exit_code
+			&& sh->exit_code != 127 + SIGQUIT)
 			process_cmd(sh);
 		else if (sh->ex->logop == LOGOP_AND && !sh->exit_code)
 			process_cmd(sh);
