@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:12:05 by lchauffo          #+#    #+#             */
-/*   Updated: 2025/02/24 19:02:36 by lchauffo         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:44:06 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 /*
 List of exit tests: 
 exit
+exit 42 a
 exit 42
 exit 4a
 exit aa
+exit ""
 exit "   42   "
 exit "  4  2"
 exit "  4a"
@@ -28,7 +30,8 @@ exit -9223372036854775808
 exit -9223372036854775809
 exit -1
 
-nm minishell | grep "U "
+Exit code is EPERM if too many args
+Exit code is ENOENT otherwise
 */
 
 static long	ft_pow(const int factor, int exponent);
@@ -56,7 +59,8 @@ int	bigerrno_exit(t_sh *sh, char **arg)
 		i = 0;
 		digits = 0;
 		sign = 1;
-		parse_exit_arg(arg, &i, &digits, &sign);
+		if (parse_exit_arg(arg, &i, &digits, &sign) != 0)
+			return (ENOENT);
 		while (arg[1][i] && digits-- > 0)
 			numb += (arg[1][i++] - '0') * ft_pow(10, digits);
 		numb *= sign;
