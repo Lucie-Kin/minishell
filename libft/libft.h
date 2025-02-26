@@ -6,7 +6,7 @@
 /*   By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:31:10 by libousse          #+#    #+#             */
-/*   Updated: 2024/12/03 00:04:15 by libousse         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:58:37 by libousse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int		ft_isupper(int c);
 char	*ft_itoa(int n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
+long	ft_pow(const int factor, int exponent);
 void	ft_putstr_fd(char *s, int fd);
 char	**ft_split(char const *s, char c);
 int		ft_strcasecmp(const char *s1, const char *s2);
