@@ -6,7 +6,7 @@
 #    By: lchauffo <lchauffo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:37:14 by lchauffo          #+#    #+#              #
-#    Updated: 2024/12/04 15:37:50 by lchauffo         ###   ########.fr        #
+#    Updated: 2025/02/27 13:49:33 by libousse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ center_col=$((cols / 2))
 # Calculate maximum radius based on screen size, double the width
 max_radius_height=$((rows / 2 - 2))
 max_radius_width=$((cols / 2 - 2))
-word="BIGGERNO"
+word="BIGERRNO"
 colors=("34" "35" "31" "33" "32" "36")
 branches=6
 spiral_size=48
